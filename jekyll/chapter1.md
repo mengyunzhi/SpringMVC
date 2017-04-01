@@ -1,6 +1,6 @@
 ---
 layout: page_list
-title: 第一章：准备知识!
+title: 第一章：HelloWorld
 menuTitle: 第一章
 permalink: /chapter1/
 search_omit: true

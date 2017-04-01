@@ -1,6 +1,134 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-01T12:58:08+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
-</subtitle><entry><title type="html">第二节：idea</title><link href="http://localhost:4000/SpringMVC/chapter1/idea/" rel="alternate" type="text/html" title="第二节：idea" /><published>2017-04-01T11:39:20+08:00</published><updated>2017-04-01T11:39:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/idea</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/idea/">&lt;p&gt;TODO：下载安装，使用edu邮箱进行注册的链接。配置JDK。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">TODO：下载安装，使用edu邮箱进行注册的链接。配置JDK。</summary></entry><entry><title type="html">第二节：maven</title><link href="http://localhost:4000/SpringMVC/chapter1/maven/" rel="alternate" type="text/html" title="第二节：maven" /><published>2017-04-01T11:22:20+08:00</published><updated>2017-04-01T11:22:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/maven</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/maven/">&lt;p&gt;TODO：添加安装MAVEN的教程
-注意，在命令行中运行maven出现提示信息即可。不用过多的研究&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">TODO：添加安装MAVEN的教程 注意，在命令行中运行maven出现提示信息即可。不用过多的研究</summary></entry><entry><title type="html">第一节：JDK + Mysql + Navicat</title><link href="http://localhost:4000/SpringMVC/chapter1/jdk-mysql-navicat/" rel="alternate" type="text/html" title="第一节：JDK + Mysql + Navicat" /><published>2017-03-31T11:22:20+08:00</published><updated>2017-03-31T11:22:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/jdk-mysql-navicat</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/jdk-mysql-navicat/">&lt;p&gt;TODO:
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-01T16:45:33+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
+</subtitle><entry><title type="html">第五节：HelloWorld</title><link href="http://localhost:4000/SpringMVC/chapter1/5-hello-world/" rel="alternate" type="text/html" title="第五节：HelloWorld" /><published>2017-04-01T15:55:20+08:00</published><updated>2017-04-01T15:55:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/5-hello-world</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/5-hello-world/">&lt;h1 id=&quot;建立c层&quot;&gt;建立C层&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;建立第一个包，控制器&lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt;: 在&lt;code class=&quot;highlighter-rouge&quot;&gt;com.mengyunzhi&lt;/code&gt;上点击右键，选择&lt;code class=&quot;highlighter-rouge&quot;&gt;package&lt;/code&gt;, 然后输入&lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt; -&amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;ok&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt;上点右键，新建一个&lt;code class=&quot;highlighter-rouge&quot;&gt;java class&lt;/code&gt;, 文件名为&lt;code class=&quot;highlighter-rouge&quot;&gt;HelloController&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/12.png&quot; alt=&quot;new Hello class&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后&lt;b&gt;使用&lt;code class=&quot;highlighter-rouge&quot;&gt;RestController&lt;/code&gt;注解来说明该类是一个控制器。&lt;/b&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
+
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * Created by panjie on 17/4/1.
+ */
+@RestController
+public class HelloController {
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;在SpringMVC中，将大量的来使用注解&lt;code class=&quot;highlighter-rouge&quot;&gt;@&lt;/code&gt;来进行声明。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;新建-funciton&quot;&gt;新建 funciton&lt;/h1&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
+...
+@Controller
+public class HelloController {
+
+    public String world() {
+        return &quot;Hello World!&quot;;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;b&gt; 使用&lt;code class=&quot;highlighter-rouge&quot;&gt;RequestMapping&lt;/code&gt;注解来声明该方法是一个触发器，并设置该触发器对应的路由信息.&lt;/b&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
+...
+import org.springframework.web.bind.annotation.RequestMapping;
+...
+    // 设置该方法为一个触发器，并设置该触发器对应的路由信息&quot;/&quot;
+    @RequestMapping(&quot;/&quot;)
+    public String world() {
+        return &quot;Hello World!&quot;;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;最后，我们点击控制台左上角的重启按钮，重新启动应用（重新进行编译）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/13.png&quot; alt=&quot;rerun&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;IDEA在编写的过程中，没有提示错误，且启动时控制台无报错信息，则说明代码正确。&lt;/p&gt;
+
+&lt;h1 id=&quot;测试&quot;&gt;测试&lt;/h1&gt;
+&lt;p&gt;此时，我们打开浏览器，输入:&lt;code class=&quot;highlighter-rouge&quot;&gt;http://127.0.0.1:8080/&lt;/code&gt;
+将得到如下界面。
+&lt;img src=&quot;/SpringMVC/assets/image/chapter1/14.png&quot; alt=&quot;hello world&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;总结&quot;&gt;总结：&lt;/h3&gt;
+&lt;p&gt;没错，在强大的idea的帮助下，搭建一个SpringMVC API后台接口环境，就是如此的简单。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">建立C层 建立第一个包，控制器controller: 在com.mengyunzhi上点击右键，选择package, 然后输入controller -&amp;gt; ok 在controller上点右键，新建一个java class, 文件名为HelloController</summary></entry><entry><title type="html">第四节：项目初始化</title><link href="http://localhost:4000/SpringMVC/chapter1/4-init/" rel="alternate" type="text/html" title="第四节：项目初始化" /><published>2017-04-01T14:44:20+08:00</published><updated>2017-04-01T14:44:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/4-init</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/4-init/">&lt;h2 id=&quot;新建项目&quot;&gt;新建项目&lt;/h2&gt;
+&lt;p&gt;我们可以在欢迎界面上点击”create New Project”来新建项目
+&lt;img src=&quot;/SpringMVC/assets/image/chapter1/1.png&quot; alt=&quot;newproject&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后选择&lt;code class=&quot;highlighter-rouge&quot;&gt;Spring Initializr&lt;/code&gt;, 点击new， 新建 sdk, 选择本机SDK安装位置。
+&lt;img src=&quot;/SpringMVC/assets/image/chapter1/2.png&quot; alt=&quot;new sdk&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;TODO：补充图片&lt;/p&gt;
+
+&lt;p&gt;最后选择我们刚刚新建的sdk
+&lt;img src=&quot;/SpringMVC/assets/image/chapter1/3.png&quot; alt=&quot;choose sdk&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后点击下一步，按网速的快慢，等待的时间也会不同。
+&lt;img src=&quot;/SpringMVC/assets/image/chapter1/4.png&quot; alt=&quot;waiting&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;配置项目基本信息&quot;&gt;配置项目基本信息&lt;/h2&gt;
+&lt;p&gt;修改如下两处即可:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/5.png&quot; alt=&quot;base info&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;第一处：group组织名，我们可以随意起，原则上，为了避免和别人冲突，都会用域名。
+第二处：artifact，可以理解为项目名，在一个group中，artifact的值是唯一的。&lt;/p&gt;
+
+&lt;p&gt;其它的信息，idea会自动为我们生成.&lt;/p&gt;
+
+&lt;p&gt;然后我们点击next，来配置项目&lt;/p&gt;
+
+&lt;h2 id=&quot;配置项目&quot;&gt;配置项目&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;确定Spring Boot版本号,1.5.2&lt;/li&gt;
+  &lt;li&gt;选择依赖web&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/6.png&quot; alt=&quot;web&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;next -&amp;gt; finish。&lt;/p&gt;
+
+&lt;p&gt;idea将自动为我们加载项目所依赖的JAR包，视网速的不同，将有等待不同的时间，整体的进度将显示在idea的右下解。&lt;/p&gt;
+
+&lt;p&gt;最终，我们将得到如下项目目录。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/7.png&quot; alt=&quot;tree&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我们所需要编辑的源代码，位于&lt;code class=&quot;highlighter-rouge&quot;&gt;com.mengyunzhi&lt;/code&gt;文件夹中, 一些后期需要的配置信息，位于&lt;code class=&quot;highlighter-rouge&quot;&gt;application.properties&lt;/code&gt;中&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/8.png&quot; alt=&quot;source&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;启动项目&quot;&gt;启动项目&lt;/h2&gt;
+&lt;p&gt;点击IDEA右上角的启动按钮，进行项目的启动。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/9.png&quot; alt=&quot;run&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;最终，我们将在控制台，看到项目的启动信息, 当显示如下信息时，说明项目启动成功。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/10.png&quot; alt=&quot;run log&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;此时，我们打开浏览器，输入&lt;code class=&quot;highlighter-rouge&quot;&gt;http://127.0.0.1:8080/&lt;/code&gt;将会得到一个错误提示，这是由于我们并没有配置路由造成的。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/11.png&quot; alt=&quot;run error&quot; /&gt;&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">新建项目 我们可以在欢迎界面上点击”create New Project”来新建项目</summary></entry><entry><title type="html">第三节：idea</title><link href="http://localhost:4000/SpringMVC/chapter1/3-idea/" rel="alternate" type="text/html" title="第三节：idea" /><published>2017-04-01T11:39:20+08:00</published><updated>2017-04-01T11:39:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/3-idea</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/3-idea/">&lt;p&gt;TODO：下载安装，使用edu邮箱进行注册的链接。配置JDK。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">TODO：下载安装，使用edu邮箱进行注册的链接。配置JDK。</summary></entry><entry><title type="html">第二节：maven</title><link href="http://localhost:4000/SpringMVC/chapter1/2-maven/" rel="alternate" type="text/html" title="第二节：maven" /><published>2017-04-01T11:22:20+08:00</published><updated>2017-04-01T11:22:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/2-maven</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/2-maven/">&lt;p&gt;TODO：先安装idea，看maven是否被自动安装了。
+如果没有被自动安装，则添加安装MAVEN的教程
+注意，在命令行中运行maven出现提示信息即可。不用过多的研究&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">TODO：先安装idea，看maven是否被自动安装了。 如果没有被自动安装，则添加安装MAVEN的教程 注意，在命令行中运行maven出现提示信息即可。不用过多的研究</summary></entry><entry><title type="html">第一节：JDK + Mysql + Navicat</title><link href="http://localhost:4000/SpringMVC/chapter1/1-jdk-mysql-navicat/" rel="alternate" type="text/html" title="第一节：JDK + Mysql + Navicat" /><published>2017-03-31T11:22:20+08:00</published><updated>2017-03-31T11:22:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/1-jdk-mysql-navicat</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/1-jdk-mysql-navicat/">&lt;p&gt;TODO:
 按前面的教程，进行教程的补充。
 三个方面&lt;/p&gt;
 &lt;ul&gt;
