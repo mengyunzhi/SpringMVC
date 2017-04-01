@@ -1,9 +1,9 @@
 ---
 layout: page
-title: jekyll
+title: Hi, I'm jekyll!
 permalink: /jekyll/
 ---
-
+本文档使用`jekyll`自动化生成，如果你对你想了解更多关于jekyll的信息，请登录[http://jekyllrb.com/docs/usage/](http://jekyllrb.com/docs/usage/)
 # 操作说明
 *   `jekyll new projectName` 创建新项目
 *   `jekyll build --destination` 构建项目

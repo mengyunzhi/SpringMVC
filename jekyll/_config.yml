@@ -16,7 +16,7 @@
 title: SpringMVC API入门教程
 email: panjie@yunzhiclub.com
 description: > # this means to ignore newlines until "baseurl:"
- 这里是描述信息.
+ 技术支持：河北工业大学梦云智软件开发团队.
 baseurl: "/SpringMVC" # the subpath of your site, e.g. /blog
 url: "http://www.mengyunzhi.com" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  mengyunzhi
@@ -26,7 +26,7 @@ data:
 
 # Build settings
 markdown: kramdown
-theme: minima
+theme: jekyll-theme-cayman
 gems:
   - jekyll-feed
 exclude:

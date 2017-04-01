@@ -1,12 +1,40 @@
 ---
-layout: page
-title: 第一章
+layout: page_list
+title: 第一章：准备知识!
+menuTitle: 第一章
 permalink: /chapter1/
 search_omit: true
 ---
-
-<ul class="post-list">
-{% for post in site.categories.chapter1 %}
-  <li><article><a href="{{ site.url }}{{ post.url }}">{{ post.title }} <span class="entry-date"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time></span>{% if post.excerpt %} <span class="excerpt">{{ post.excerpt | remove: '\[ ... \]' | remove: '\( ... \)' | markdownify | strip_html | strip_newlines | escape_once }}</span>{% endif %}</a></article></li>
-{% endfor %}
-</ul>
+<section>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align: left" width="41%">标题</th>
+          <th style="text-align: left" width="41%">描述</th>
+          <th style="text-align: left" width="20%">创建时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% assign items = site.categories.chapter1 | sort:'date' %}
+        {% for post in items %}
+        <tr>
+          <td style="text-align: left">
+            <a href="{{ post.url | relative_url }}">
+                {{post.title}}
+            </a>
+          </td>
+          <td style="text-align: left">
+            {% if post.description %}
+                {{post.description}}
+            {% endif %}
+          </td>
+          <td style="text-align: left">
+            {% if post.date %}
+                {{post.date | date: "%b %-d, %Y" }}
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</section>
