@@ -11,6 +11,10 @@ permalink: /jekyll/
 *   `open $(bundle show minima)`打开模板并进行编辑
 *   修改`_config.yml`增加项目信息
     *   `destination: ./../docs`配置项目生成目标文件夹
+*   在Gemfile中，增加主题信息,比如：gem "jekyll-theme-awesome"
+*   执行`bundle install`安装主题信息
+*   配置_config.yml，设计主题: theme: jekyll-theme-awesome
+*   使用新的主题构建项目，并启动服务`bundle exec jekyll serve`
 
 参考：
 [http://jekyllrb.com/docs/usage/](http://jekyllrb.com/docs/usage/)
