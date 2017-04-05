@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-01T16:45:33+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-05T11:02:37+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
 </subtitle><entry><title type="html">第五节：HelloWorld</title><link href="http://localhost:4000/SpringMVC/chapter1/5-hello-world/" rel="alternate" type="text/html" title="第五节：HelloWorld" /><published>2017-04-01T15:55:20+08:00</published><updated>2017-04-01T15:55:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/5-hello-world</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/5-hello-world/">&lt;h1 id=&quot;建立c层&quot;&gt;建立C层&lt;/h1&gt;
 &lt;ul&gt;
   &lt;li&gt;建立第一个包，控制器&lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt;: 在&lt;code class=&quot;highlighter-rouge&quot;&gt;com.mengyunzhi&lt;/code&gt;上点击右键，选择&lt;code class=&quot;highlighter-rouge&quot;&gt;package&lt;/code&gt;, 然后输入&lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt; -&amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;ok&lt;/code&gt;&lt;/li&gt;
@@ -6,6 +6,8 @@
 &lt;/ul&gt;
 
 &lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/12.png&quot; alt=&quot;new Hello class&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;上述文件名及类名有误，应该为HelloController. todo:修正截图。&lt;/p&gt;
 
 &lt;p&gt;然后&lt;b&gt;使用&lt;code class=&quot;highlighter-rouge&quot;&gt;RestController&lt;/code&gt;注解来说明该类是一个控制器。&lt;/b&gt;&lt;/p&gt;
 
