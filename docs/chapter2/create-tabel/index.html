@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第三节：创建数据表</title>
+    <meta name="description" content="展示如何使用JAVA代码来创建数据表"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第三节：创建数据表</h1>
+    <p class="post-meta"><time datetime="2017-04-05T15:22:52+08:00" itemprop="datePublished">Apr 5, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p><code class="highlighter-rouge">SpringMVC</code>中集成了<code class="highlighter-rouge">hibernate</code>框架，所以在<code class="highlighter-rouge">SrpingMVC</code>,有关关系型数据库的部分，我们完全可以参考<code class="highlighter-rouge">hibernate</code>的开发文档。<code class="highlighter-rouge">hibernate</code>为我们提供了这样一个功能：将带有相关注解的<code class="highlighter-rouge">java</code>类自动与<code class="highlighter-rouge">数据表</code>进行关系。从而使我们可以完全的使用<code class="highlighter-rouge">java</code>代码来定义数据表。这样的做的优点当然很多，对于我们而言，我们再也不需要为了数据表不统一造成的各种莫名<code class="highlighter-rouge">BUG</code>而烦恼了。</p>
+
+<blockquote>
+  <p><code class="highlighter-rouge">JPA</code>全称<code class="highlighter-rouge">Java Persistence API</code>.<code class="highlighter-rouge">JPA</code>通过<code class="highlighter-rouge">JDK 5.0</code>注解或<code class="highlighter-rouge">XML</code>描述对象－关系表的映射关系，并将运行期的实体对象持久化到数据库中。<a href="http://baike.baidu.com/item/JPA">http://baike.baidu.com/item/JPA</a>。</p>
+</blockquote>
+
+<h1 id="新建实体类">新建实体类</h1>
+<p>我们新建<code class="highlighter-rouge">repository</code>包，并在该包中，新建<code class="highlighter-rouge">Teacher</code>类。
+<img src="/SpringMVC/assets/image/chapter2/3.png" alt="new table" /></p>
+
+<p>然后：</p>
+<ul>
+  <li>使用<code class="highlighter-rouge">@Entity</code>来说明该类对应一个数据表,数据表的名字与类名相同。</li>
+  <li>使用<code class="highlighter-rouge">@Id</code>来说明：此字段是该表的主键。</li>
+  <li>使用<code class="highlighter-rouge">@GeneratedValue(strategy = GenerationType.AUTO)</code>来说明：该主键的生成策略为自动，对应MySQL的属性为’Auto increment’</li>
+</ul>
+
+<blockquote>
+  <p>只所以要将上述3个注解单独拿出来，是因为以为我们要常与它们打交道。每新建一个实体，上述的操作都是必须的。</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>package com.mengyunzhi.repository;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+/**
+ * Created by panjie on 17/4/5.
+ */
+// 使用@Entity 来说明该类对应一个数据表
+@Entity
+public class Teacher {
+    //    声明主键
+    @Id
+    //    声明主键生成策略为 自动
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+}
+
+</code></pre>
+</div>
+<h2 id="测试">测试</h2>
+<p>我们再次点击<code class="highlighter-rouge">IDEA</code>的<code class="highlighter-rouge">Run</code>按钮，来重新启动项目。项目成功启动后，我们将得到一个<code class="highlighter-rouge">Teacher</code>表，这个表中，有一个字段<code class="highlighter-rouge">id</code>。该字段属性如下：
+<img src="/SpringMVC/assets/image/chapter2/4.png" alt="edit table" /></p>
+
+<h1 id="增加其它属性">增加其它属性</h1>
+<p>参考<code class="highlighter-rouge">ER</code>图:</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/6.png" alt="Logical model" /> 
+<img src="/SpringMVC/assets/image/chapter2/7.png" alt="physical model" /></p>
+
+<p>定制JAVA代码:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>package com.mengyunzhi.repository;
+
+import javax.persistence.*;
+
+/**
+ * Created by panjie on 17/4/5.
+ */
+// 使用@Entity 来说明该类对应一个数据表
+@Entity
+public class Teacher {
+    //    声明主键
+    @Id
+    //    声明主键生成策略为 自动
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(length = 25)    // 声明字段的长度为25
+    private String name;    // 姓名
+    @Column(length = 50)
+    private String email;   // 邮箱
+    private String address; // 地址. 不进行@Column声明，则默认长度为255
+    private Boolean sex;    // 性别：0，男。1，女.
+}
+</code></pre>
+</div>
+<p>然后我们重新启动项目，将得到拥有如下类型的数据表:
+<img src="/SpringMVC/assets/image/chapter2/5.png" alt="edit table" /></p>
+
+<p>最后，按照<code class="highlighter-rouge">jpa</code>的规范，我们增加<code class="highlighter-rouge">set\get</code>函数，构造函数及<code class="highlighter-rouge">toString</code>函数。
+最终完整代码如下：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>package com.mengyunzhi.repository;
+
+import javax.persistence.*;
+
+/**
+ * Created by panjie on 17/4/5.
+ */
+// 使用@Entity 来说明该类对应一个数据表
+@Entity
+public class Teacher {
+    //    声明主键
+    @Id
+    //    声明主键生成策略为 自动
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(length = 25)            // 声明字段的长度为25
+    private String name = "";       // 姓名
+    @Column(length = 50)
+    private String email = "";      // 邮箱
+    private String address = "";    // 地址. 不进行@Column声明，则默认长度为255
+    private Boolean sex = false;    // 性别：false(0)，男。true(1)，女.
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setSex(Boolean sex) {
+        this.sex = sex;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public Boolean getSex() {
+        return sex;
+    }
+
+    public Teacher(String name, String email, String address, Boolean sex) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.sex = sex;
+    }
+
+    public Teacher() {
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", sex=" + sex +
+                '}';
+    }
+}
+</code></pre>
+</div>
+<p>最后，我们重新运行项目，以确保未发生拼写错误。</p>
+
+<blockquote>
+  <p><a href="https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#basic-provided">官方文档：java 与 数据表类型对照</a></p>
+</blockquote>
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>

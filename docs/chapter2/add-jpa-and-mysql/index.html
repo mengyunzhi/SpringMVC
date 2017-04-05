@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第二节：添加jpa、mysql模块</title>
+    <meta name="description" content="添加jpa用于连接数据库，添加mysql用于指定数据库类型"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第二节：添加jpa、mysql模块</h1>
+    <p class="post-meta"><time datetime="2017-04-05T14:47:23+08:00" itemprop="datePublished">Apr 5, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>如果在项目刚刚生成时，你查看过生成项目的目录信息，不难发现我们在前面选择过一个叫做<code class="highlighter-rouge">web</code>的Spring核心模块，被写入了根目录下的<code class="highlighter-rouge">pom.xml</code>中。</p>
+
+<p>即如下代码：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+</div>
+
+<p>这是<code class="highlighter-rouge">SpringMVC</code>的核心模块。本章中，我们将使用<code class="highlighter-rouge">mysql</code>做为后台的数据库。此时，我们需要加入<code class="highlighter-rouge">jpa</code>模块来说明:本项目是需要关系型数据库来支撑的；我们需要加入<code class="highlighter-rouge">mysql</code>模块，来说明：本项目使用的关系型数据库的类型为<code class="highlighter-rouge">mysql</code>。</p>
+
+<blockquote>
+  <p>在本教程中，我们仍然使用XAMPP中集成的<code class="highlighter-rouge">mysql</code>。</p>
+</blockquote>
+
+<p>我们首先启动<code class="highlighter-rouge">xampp</code>中的<code class="highlighter-rouge">mysql</code>服务，并使用<code class="highlighter-rouge">navicat</code>来建立本项目要使用的数据库: <code class="highlighter-rouge">springmvc</code>。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/1.png" alt="new database springmvc" /></p>
+
+<h1 id="加入jpa模块">加入JPA模块</h1>
+<p>我们打开<code class="highlighter-rouge">/pom.xml</code>文件的如下代码段:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+</code></pre>
+</div>
+
+<p>增加<code class="highlighter-rouge">JPA</code>模块后：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+</code></pre>
+</div>
+
+<p>重新导入依赖模块:
+<img src="/SpringMVC/assets/image/chapter2/2.png" alt="new database springmvc" /></p>
+
+<p>在导入过程中,<code class="highlighter-rouge">IDEA</code>最下侧将有导入进度的提示。未报错，则导入成功。</p>
+
+<blockquote>
+  <p>当<code class="highlighter-rouge">pom.xml</code>第一次变化时，<code class="highlighter-rouge">idea</code>在右下角会弹出重新导入依赖模块的提示，我们可以进行点击导入，也可以点击提示中的”auto import”,这样在下次<code class="highlighter-rouge">pom.xml</code>变化时，将自动触发<code class="highlighter-rouge">maven</code>的重新导入命令.</p>
+</blockquote>
+
+<p><strong>参考:</strong> <a href="https://spring.io/guides/gs/accessing-data-jpa/">https://spring.io/guides/gs/accessing-data-jpa/</a></p>
+
+<h1 id="加入mysql模块">加入mysql模块</h1>
+<p>和<code class="highlighter-rouge">jpa</code>的步骤相似，我们用同样的方法，加入<code class="highlighter-rouge">mysql</code>模块，并重新导入该模块。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;!--jpa 模块：关系型数据库--&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;!--数据库类型：mysql--&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;mysql&lt;/groupId&gt;
+            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+</code></pre>
+</div>
+
+<p>重新导入依赖模块略。</p>
+
+<h1 id="测试">测试</h1>
+<p>我们点击右上角的运行按钮：
+<img src="/SpringMVC/assets/image/chapter1/9.png" alt="run project" />并查看<code class="highlighter-rouge">IDEA</code>下侧的控制台，将得到如下的错误提示。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Cannot determine embedded database driver class for database type NONE
+</code></pre>
+</div>
+<p>这是<code class="highlighter-rouge">jpa</code>模块给我们的一个提示，它在说，虽然我已经启动了，但是你没有告诉我要连接的数据库类型是什么。当然了，除了要告诉它要连接的数据库类型(mysql)以外，我们还需要告诉它要连接的数据名称是什么，对应的用户名和密码又都是什么。</p>
+
+<h2 id="配置jpa">配置JPA</h2>
+<p>打开，<code class="highlighter-rouge">/src/main/resources/application.properties</code></p>
+
+<p>配置以下信息：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code># 在项目初始化时，重新创建数据表
+spring.jpa.hibernate.ddl-auto=create
+# 指定连接的类型为mysql 连接的地址为：localhost 端口为3306 ，数据为springmvc
+spring.datasource.url=jdbc:mysql://localhost:3306/springmvc
+# 用户名为root
+spring.datasource.username=root
+# 密码为空
+spring.datasource.password=
+</code></pre>
+</div>
+
+<p>此时，我们再次启动项目，在<code class="highlighter-rouge">mysql</code>服务启动的前提下，将得到启动成功的提示:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>2017-04-05 15:16:17.776  INFO 4627 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8080 (http)
+2017-04-05 15:16:17.782  INFO 4627 --- [           main] com.mengyunzhi.SpringMvcApplication      : Started SpringMvcApplication in 6.929 seconds (JVM running for 7.965)
+</code></pre>
+</div>
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>
