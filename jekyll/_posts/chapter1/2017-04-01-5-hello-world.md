@@ -13,6 +13,8 @@ author: "潘杰"
 
 ![new Hello class]({{site.imageurl}}/chapter1/12.png)
 
+**注意：**上述文件名及类名有误，应该为HelloController. todo:修正截图。
+
 然后<b>使用`RestController`注解来说明该类是一个控制器。</b>
 
 ```
