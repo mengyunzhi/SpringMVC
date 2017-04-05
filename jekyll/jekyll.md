@@ -10,7 +10,6 @@ permalink: /jekyll/
 *   初次使用`bundle exec jekyll serve`构建项目，并启动服务.
 *   非初次使用，使用`jekyll serve`来启动服务.
 *   文章撰写，请参考已有文件结构及[http://jekyllcn.com/docs/posts/](http://jekyllcn.com/docs/posts/)
-*   编辑完成后，使用`jekyll build`来生成项目。项目生成后，将在`/docs`下生成静态的`html`文件。我们可以在项目的**根文件夹**下，执行`http-server`来启动浏览器查看生成效果。
 *   查看效果无误后，进行`pull request`进行代码的提交。
 
 # 操作说明(初始化)
