@@ -65,9 +65,9 @@ author: "潘杰"
 
 在导入过程中,`IDEA`最下侧将有导入进度的提示。未报错，则导入成功。
 
-> 当`pom.xml`第一次变化时，`idea`在右下角会弹出重新导入依赖模块的提示，我们可以进行点击导入，也可以点击提示中的"auto import",这样在下次`pom.xml`变化时，将自动触发`maven`的重新导入命令.
+**[注意]** 当`pom.xml`第一次变化时，`idea`在右下角会弹出重新导入依赖模块的提示，我们可以进行点击导入，也可以点击提示中的"auto import",这样在下次`pom.xml`变化时，将自动触发`maven`的重新导入命令.
 
-**参考:** [https://spring.io/guides/gs/accessing-data-jpa/](https://spring.io/guides/gs/accessing-data-jpa/)
+> 参考官方文档: [https://spring.io/guides/gs/accessing-data-jpa/](https://spring.io/guides/gs/accessing-data-jpa/)
 
 # 加入mysql模块
 和`jpa`的步骤相似，我们用同样的方法，加入`mysql`模块，并重新导入该模块。
@@ -126,8 +126,12 @@ spring.datasource.username=root
 spring.datasource.password=
 ```
 
+![new database springmvc]({{site.imageurl}}/chapter2/8.png)
+
 此时，我们再次启动项目，在`mysql`服务启动的前提下，将得到启动成功的提示:
 ```
 2017-04-05 15:16:17.776  INFO 4627 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8080 (http)
 2017-04-05 15:16:17.782  INFO 4627 --- [           main] com.mengyunzhi.SpringMvcApplication      : Started SpringMvcApplication in 6.929 seconds (JVM running for 7.965)
 ```
+
+> 参考官方文档：[https://spring.io/guides/gs/accessing-data-mysql/](https://spring.io/guides/gs/accessing-data-mysql/)

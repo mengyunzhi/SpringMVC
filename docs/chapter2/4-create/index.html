@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第四节：增加数据--create</title>
+    <meta name="description" content="展示如何继承SpringMVC的内置类，来快速实现数据的增加操作"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第四节：增加数据--create</h1>
+    <p class="post-meta"><time datetime="2017-04-06T08:08:09+08:00" itemprop="datePublished">Apr 6, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>和我们以前学习的框架基本一致，框架已经为我们封装好了大部分的基本操作，我们只需要做适当的继承操作就可以实现大部的数据操作了。</p>
+
+<h1 id="crudrepository">CrudRepository</h1>
+<p>在SpringMVC中，为我提供了用于进行数据增查删改删的<code class="highlighter-rouge">CrudRepository</code>接口。下面，我们来新建第一个用于数据表操作的接口文件 – <code class="highlighter-rouge">TeacherRepository</code>。</p>
+
+<blockquote>
+  <p>没错，是<code class="highlighter-rouge">接口</code>，而不是<code class="highlighter-rouge">类</code>。<code class="highlighter-rouge">SpringMVC</code>做自动的为我们的接口做相关的实现。而我们并不需要关心<code class="highlighter-rouge">Spring</code>是怎么做到的。</p>
+</blockquote>
+
+<p><img src="/SpringMVC/assets/image/chapter2/9.png" alt="TeacherRepository" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>package com.mengyunzhi.repository;
+
+import org.springframework.data.repository.CrudRepository;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+public interface TeacherRepository extends CrudRepository&lt;Teacher, Long&gt; {
+}
+</code></pre>
+</div>
+
+<h2 id="测试">测试</h2>
+<p>我们在<code class="highlighter-rouge">test</code>文件夹中的同名位置上新建对应的测试类。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/10.png" alt="TeacherRepositoryTest" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>package com.mengyunzhi.repository;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+// 使用以下两个注解来说明：本测试类基于SpringBoot。(必须)
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class TeacherRepositoryTest {
+    // @Autowired注解：自动加载Spring为我们自动实例化的实现了TeacherRepository接口的对象
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    // @Test：本方法为一个单元测试方法
+    @Test
+    public void addTeacher() {
+        // 执行数据保存操作
+        teacherRepository.save(new Teacher());
+
+        // 打印Spring为我们自动实例化的对象
+        System.out.println(teacherRepository);
+    }
+}
+</code></pre>
+</div>
+
+<p>然后我们点击方法前面的<code class="highlighter-rouge">Run Test</code>小图标<img src="/SpringMVC/assets/image/chapter2/11.png" alt="run test" />
+来启动单元测试。</p>
+
+<p>我们将在控制台，得到如下信息：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>org.springframework.data.jpa.repository.support.SimpleJpaRepository@340cb97f
+</code></pre>
+</div>
+<blockquote>
+  <p>没错，这就是<code class="highlighter-rouge">Spring</code>自动实例化的<code class="highlighter-rouge">teacherRepository</code>。</p>
+</blockquote>
+
+<p>此时，我们使用<code class="highlighter-rouge">Navicat</code>，打开数据表，发现里面已经成功的增加了一条数据。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/12.png" alt="add data" /></p>
+
+<p>在实际的开发过程中，每新增一条数据，都去数据表中进行查看，效率还是比较低的。我们还可以通过修改配置文件的方法，来直接输出<code class="highlighter-rouge">sql</code>语句，来查看是否执行了我们想要的操作。</p>
+
+<p>在配置文件中，增加一行:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code># 显示SQL语句
+spring.jpa.show-sql=true
+</code></pre>
+</div>
+
+<p>增加后，整体配置文件如下：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code># 在项目初始化时，重新创建数据表
+spring.jpa.hibernate.ddl-auto=create
+# 指定连接的类型为mysql 连接的地址为：localhost 端口为3306 ，数据为springmvc
+spring.datasource.url=jdbc:mysql://localhost:3306/springmvc
+# 用户名为root
+spring.datasource.username=root
+# 密码为空
+spring.datasource.password=
+# 显示SQL语句
+spring.jpa.show-sql=true
+</code></pre>
+</div>
+
+<p>此时，当我们再次<code class="highlighter-rouge">Run Test</code>的时候，在控制台中，将得到如下信息:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Hibernate: insert into teacher (address, email, name, sex) values (?, ?, ?, ?)
+</code></pre>
+</div>
+<p>当我们看到这条语句时，就可以放心的认为：数据文件已经成功的插入到数据表中了。</p>
+
+<blockquote>
+  <p>参考官方文档：<a href="http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/#repositories.core-concepts">http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/#repositories.core-concepts</a></p>
+</blockquote>
+
+<h1 id="对接c层">对接C层</h1>
+<p>有了上面的测试代码，C层对接起来，也相应的容易的多了。但对接以前，我们需要做了解以下几点。</p>
+<ul>
+  <li>数据发送请求的方式为<code class="highlighter-rouge">post</code>。</li>
+  <li>数据以<code class="highlighter-rouge">json</code>的格式进行发送。</li>
+  <li>在<code class="highlighter-rouge">json</code>数据中，发送新增教师的姓名、地址、邮箱、性别信息。</li>
+  <li>除性别的变量类型是<code class="highlighter-rouge">boolean</code>外，其它的全部为<code class="highlighter-rouge">String</code></li>
+</ul>
+
+<p>有了以上几点，那我们如下定义后台。</p>
+<ul>
+  <li>接收<code class="highlighter-rouge">post</code>数据</li>
+  <li>按收<code class="highlighter-rouge">json</code>格式传入的数据</li>
+  <li>接收数据后，进行数据表的存储操作</li>
+</ul>
+
+<h2 id="新建控制器">新建控制器</h2>
+
+<p><img src="/SpringMVC/assets/image/chapter2/13.png" alt="new controller" /></p>
+
+<p>自动装入<code class="highlighter-rouge">TeacherRepository</code></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>...
+@RestController
+public class TeacherController {
+    @Autowired
+    private TeacherRepository teacherRepository;
+    ...
+</code></pre>
+</div>
+
+<p>添加方法，并设置路由:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    ...
+    // 设置路由
+    @RequestMapping("/teacher/save")
+    public Teacher saveTeacher() {
+    }
+    ...
+</code></pre>
+</div>
+
+<p>获取请求数据，并装入<code class="highlighter-rouge">Teacher</code></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    ...
+    // 设置路由
+    @RequestMapping("/teacher/save")
+    // 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象
+    public Teacher saveTeacher(@RequestBody Teacher teacher) {
+    ...
+</code></pre>
+</div>
+
+<p>打印获取的数据，并执行保存操作:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    ...
+    public Teacher saveTeacher(@RequestBody Teacher teacher) {
+        // 打印加载的数据
+        System.out.println(teacher);
+
+        // 调用保存操作
+        return teacherRepository.save(teacher);
+    }
+    ...
+</code></pre>
+</div>
+
+<p>最终的代码如下：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>package com.mengyunzhi.controller;
+
+import com.mengyunzhi.repository.Teacher;
+import com.mengyunzhi.repository.TeacherRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+// 声明为Rest控制器（支持前后台分离）
+@RestController
+public class TeacherController {
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    // 设置路由
+    @RequestMapping("/teacher/save")
+    // 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象
+    public Teacher saveTeacher(@RequestBody Teacher teacher) {
+        // 打印加载的数据
+        System.out.println(teacher);
+
+        // 调用保存操作
+        return teacherRepository.save(teacher);
+    }
+}
+
+</code></pre>
+</div>
+<h2 id="测试-1">测试</h2>
+<p>重新启动应用, 我们可以点击<code class="highlighter-rouge">SpringMvcApplication</code>中<code class="highlighter-rouge">main</code>函数左侧的启动按钮，也可以点击右上角的启动按钮。如果你点击的为右上角按钮，那么需要注意进行切换（这是由于我们刚刚建立过测试类，而测试类也是可以直接启动的）。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/14.png" alt="run" /></p>
+
+<p>启动<code class="highlighter-rouge">postMan</code>, 并发送请求。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/15.png" alt="post man" /></p>
+
+<p>请求结果：
+<img src="/SpringMVC/assets/image/chapter2/16.png" alt="post man" /></p>
+
+<p>控制台信息：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Teacher{id=null, name='zhangsan', email='zhangsan@yunzhiclub.com', address='scse of hebut', sex=false}
+Hibernate: insert into teacher (address, email, name, sex) values (?, ?, ?, ?)
+</code></pre>
+</div>
+
+<p>此时，我们看到了<code class="highlighter-rouge">insert</code>的<code class="highlighter-rouge">sql</code>语句，至此，基本确认数据已经被成功增加到数据库了，如果你还不放心，可以打开<code class="highlighter-rouge">navicat</code>来查看并确认一下。</p>
+
+<p>我们在前面，按照<code class="highlighter-rouge">Teacher</code>构造函数中，变量的顺序使用<code class="highlighter-rouge">postman</code>将变量按顺序一一进行了传入。那么是否可以改变变量传入的顺序呢？比如说，我们将请求的<code class="highlighter-rouge">json</code>数据变更为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"address"</span><span class="p">:</span><span class="s2">"scse of hebut"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"LISI"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="s2">"zhangsan@yunzhiclub.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"sex"</span><span class="p">:</span><span class="mi">0</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+<p>尝试并总结一下它的规律吧。</p>
+
+<h1 id="pagingandsortingrepository">PagingAndSortingRepository</h1>
+<hr />
+
+<blockquote>
+  <p>以下内容后期将迁入至其它章节，本节请直接略过</p>
+</blockquote>
+<hr />
+
+<p><code class="highlighter-rouge">CrudRepository</code>只能实现基本的增查改删，大多数的时候，我们还需要对数据进行分页、排序。强大的<code class="highlighter-rouge">Spring</code>当然想到了这点– <code class="highlighter-rouge">PagingAndSortingRepository</code></p>
+
+<p>在官方文档中，我们看到是这样介绍<code class="highlighter-rouge">PagingAndSortingRepository</code>的:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>public interface PagingAndSortingRepository&lt;T, ID extends Serializable&gt;
+  extends CrudRepository&lt;T, ID&gt; {
+
+  Iterable&lt;T&gt; findAll(Sort sort);
+
+  Page&lt;T&gt; findAll(Pageable pageable);
+}
+</code></pre>
+</div>
+
+<p>是的，正如我们看到的一样：<code class="highlighter-rouge">PagingAndSortingRepository</code>继承了<code class="highlighter-rouge">CrudRepository</code>，因而<code class="highlighter-rouge">PagingAndSortingRepository</code>具有<code class="highlighter-rouge">CrudRepository</code>的全部功能，并且在此之上，补充了两个用于排序和分页的功能。</p>
+
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>

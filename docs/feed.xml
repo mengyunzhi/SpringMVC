@@ -1,5 +1,428 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://www.mengyunzhi.com/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://www.mengyunzhi.com/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-05T16:39:43+08:00</updated><id>http://www.mengyunzhi.com/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
-</subtitle><entry><title type="html">第三节：创建数据表</title><link href="http://www.mengyunzhi.com/SpringMVC/chapter2/create-tabel/" rel="alternate" type="text/html" title="第三节：创建数据表" /><published>2017-04-05T15:22:52+08:00</published><updated>2017-04-05T15:22:52+08:00</updated><id>http://www.mengyunzhi.com/SpringMVC/chapter2/create-tabel</id><content type="html" xml:base="http://www.mengyunzhi.com/SpringMVC/chapter2/create-tabel/">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;中集成了&lt;code class=&quot;highlighter-rouge&quot;&gt;hibernate&lt;/code&gt;框架，所以在&lt;code class=&quot;highlighter-rouge&quot;&gt;SrpingMVC&lt;/code&gt;,有关关系型数据库的部分，我们完全可以参考&lt;code class=&quot;highlighter-rouge&quot;&gt;hibernate&lt;/code&gt;的开发文档。&lt;code class=&quot;highlighter-rouge&quot;&gt;hibernate&lt;/code&gt;为我们提供了这样一个功能：将带有相关注解的&lt;code class=&quot;highlighter-rouge&quot;&gt;java&lt;/code&gt;类自动与&lt;code class=&quot;highlighter-rouge&quot;&gt;数据表&lt;/code&gt;进行关系。从而使我们可以完全的使用&lt;code class=&quot;highlighter-rouge&quot;&gt;java&lt;/code&gt;代码来定义数据表。这样的做的优点当然很多，对于我们而言，我们再也不需要为了数据表不统一造成的各种莫名&lt;code class=&quot;highlighter-rouge&quot;&gt;BUG&lt;/code&gt;而烦恼了。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-06T14:32:05+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
+</subtitle><entry><title type="html">第六节：读取数据 – read</title><link href="http://localhost:4000/SpringMVC/chapter2/read/" rel="alternate" type="text/html" title="第六节：读取数据 -- read" /><published>2017-04-06T13:34:07+08:00</published><updated>2017-04-06T13:34:07+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/read</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/read/">&lt;p&gt;在上节中，我们给出了参考的官方文档。如果我们基础相对较好，而且已经具备了一定的英文阅读能力的话，相信本节的内容对你来讲会很轻松。因为本节及至后面几个小节，我们要用的，就是官方文档中提供给我们的方法。&lt;/p&gt;
+
+&lt;p&gt;在上一小节中，我们新建了&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherRepository&lt;/code&gt;接口。本节中，我们仍然使用该接口，来实现数据的查询操作。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">在上节中，我们给出了参考的官方文档。如果我们基础相对较好，而且已经具备了一定的英文阅读能力的话，相信本节的内容对你来讲会很轻松。因为本节及至后面几个小节，我们要用的，就是官方文档中提供给我们的方法。</summary></entry><entry><title type="html">第五节：数据验证</title><link href="http://localhost:4000/SpringMVC/chapter2/5-validate/" rel="alternate" type="text/html" title="第五节：数据验证" /><published>2017-04-06T13:33:17+08:00</published><updated>2017-04-06T13:33:17+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/5-validate</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/5-validate/">&lt;p&gt;有数据输入，就必然涉及到数据的验证以及数据验证失败后的处理。本节中，让我们共同学习&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;是如何进行数据验证的。&lt;/p&gt;
+
+&lt;p&gt;通过上节的学习，我们得知，&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;@RequestBody&lt;/code&gt;注解将请求数据绑定到相应的实体中(对象)。数据绑定，其实是利用实体的&lt;code class=&quot;highlighter-rouge&quot;&gt;set&lt;/code&gt;方法进行了赋值的过程。数据的验证的过程我们也放置于此。&lt;/p&gt;
+
+&lt;p&gt;我们找到&lt;code class=&quot;highlighter-rouge&quot;&gt;Teacher&lt;/code&gt;实体，使用注解的方法设置如下验证规则:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    @Column(length = 25)            // 声明字段的长度为25
+    @Size(min = 2, max = 25)        // 最小长度为2（不能为空），最大长度为25
+    private String name = &quot;&quot;;       // 姓名
+
+    @Column(length = 50)
+    @NotNull                        // 此列不能为空
+    @Email                          // 邮箱验证
+    @Size(max = 50)                 // 最大长度为50
+    private String email = &quot;&quot;;      // 邮箱
+
+    @Size(max = 255)                // 最大长度为255
+    private String address = &quot;&quot;;    // 地址. 不进行@Column声明，则默认长度为255
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;完整代码如下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.repository;
+
+
+import org.hibernate.validator.constraints.Email;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+/**
+ * Created by panjie on 17/4/5.
+ */
+// 使用@Entity 来说明该类对应一个数据表
+@Entity
+public class Teacher {
+    //    声明主键
+    @Id
+    //    声明主键生成策略为 自动
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(length = 25)            // 声明字段的长度为25
+    @Size(min = 2, max = 25)        // 最小长度为2（不能为空），最大长度为25
+    private String name = &quot;&quot;;       // 姓名
+
+    @Column(length = 50)
+    @NotNull                        // 此列不能为空
+    @Email                          // 邮箱验证
+    @Size(max = 50)                 // 最大长度为50
+    private String email = &quot;&quot;;      // 邮箱
+
+    @Size(max = 255)                // 最大长度为255
+    private String address = &quot;&quot;;    // 地址. 不进行@Column声明，则默认长度为255
+
+    private Boolean sex = false;    // 性别：false(0)，男。true(1)，女.
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setSex(Boolean sex) {
+        this.sex = sex;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public Boolean getSex() {
+        return sex;
+    }
+
+    public Teacher(String name, String email, String address, Boolean sex) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.sex = sex;
+    }
+
+    public Teacher() {
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Teacher{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, name='&quot; + name + '\'' +
+                &quot;, email='&quot; + email + '\'' +
+                &quot;, address='&quot; + address + '\'' +
+                &quot;, sex=&quot; + sex +
+                '}';
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;重新启动应用:&lt;/p&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;正常数据:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/17.png&quot; alt=&quot;validate&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;姓名过短:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/18.png&quot; alt=&quot;validate name&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;邮箱格式不合法:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/19.png&quot; alt=&quot;validate email&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其它的自行验证一下吧。&lt;/p&gt;
+
+&lt;h2 id=&quot;格式化验证错误信息&quot;&gt;格式化验证错误信息&lt;/h2&gt;
+&lt;p&gt;前面，我们虽然得到了错误的验证信息，但是错误的信息全部在&lt;code class=&quot;highlighter-rouge&quot;&gt;message&lt;/code&gt;字段中，这无疑为我们前台排错增加了一定的难度。&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;当然想到了这点。
+我们打开&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherController&lt;/code&gt;控制器，为&lt;code class=&quot;highlighter-rouge&quot;&gt;saveTeacher&lt;/code&gt;方法增加一个&lt;code class=&quot;highlighter-rouge&quot;&gt;@Valid&lt;/code&gt;注解，并重新启动应用。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    ...
+    public Teacher saveTeacher(@Valid @RequestBody Teacher teacher) {
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;该注解位于：javax.validation.Valid;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;此时，当我们再次发送一些数据而未验证成功时，将得到如下的错误信息:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/20.png&quot; alt=&quot;validate format&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;没错，这就是我们想要的。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;参考官方文档：
+&lt;a href=&quot;https://spring.io/guides/gs/validating-form-input/&quot;&gt;https://spring.io/guides/gs/validating-form-input/&lt;/a&gt;
+&lt;a href=&quot;http://hibernate.org/validator/&quot;&gt;http://hibernate.org/validator/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>潘杰</name></author><summary type="html">有数据输入，就必然涉及到数据的验证以及数据验证失败后的处理。本节中，让我们共同学习SpringMVC是如何进行数据验证的。</summary></entry><entry><title type="html">第四节：增加数据–create</title><link href="http://localhost:4000/SpringMVC/chapter2/4-create/" rel="alternate" type="text/html" title="第四节：增加数据--create" /><published>2017-04-06T08:08:09+08:00</published><updated>2017-04-06T08:08:09+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/4-create</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/4-create/">&lt;p&gt;和我们以前学习的框架基本一致，框架已经为我们封装好了大部分的基本操作，我们只需要做适当的继承操作就可以实现大部的数据操作了。&lt;/p&gt;
+
+&lt;h1 id=&quot;crudrepository&quot;&gt;CrudRepository&lt;/h1&gt;
+&lt;p&gt;在SpringMVC中，为我提供了用于进行数据增查删改删的&lt;code class=&quot;highlighter-rouge&quot;&gt;CrudRepository&lt;/code&gt;接口。下面，我们来新建第一个用于数据表操作的接口文件 – &lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherRepository&lt;/code&gt;。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;没错，是&lt;code class=&quot;highlighter-rouge&quot;&gt;接口&lt;/code&gt;，而不是&lt;code class=&quot;highlighter-rouge&quot;&gt;类&lt;/code&gt;。&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;做自动的为我们的接口做相关的实现。而我们并不需要关心&lt;code class=&quot;highlighter-rouge&quot;&gt;Spring&lt;/code&gt;是怎么做到的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/9.png&quot; alt=&quot;TeacherRepository&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.repository;
+
+import org.springframework.data.repository.CrudRepository;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+public interface TeacherRepository extends CrudRepository&amp;lt;Teacher, Long&amp;gt; {
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;测试&quot;&gt;测试&lt;/h2&gt;
+&lt;p&gt;我们在&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;文件夹中的同名位置上新建对应的测试类。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/10.png&quot; alt=&quot;TeacherRepositoryTest&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.repository;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+// 使用以下两个注解来说明：本测试类基于SpringBoot。(必须)
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class TeacherRepositoryTest {
+    // @Autowired注解：自动加载Spring为我们自动实例化的实现了TeacherRepository接口的对象
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    // @Test：本方法为一个单元测试方法
+    @Test
+    public void addTeacher() {
+        // 执行数据保存操作
+        teacherRepository.save(new Teacher());
+
+        // 打印Spring为我们自动实例化的对象
+        System.out.println(teacherRepository);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;然后我们点击方法前面的&lt;code class=&quot;highlighter-rouge&quot;&gt;Run Test&lt;/code&gt;小图标&lt;img src=&quot;/SpringMVC/assets/image/chapter2/11.png&quot; alt=&quot;run test&quot; /&gt;
+来启动单元测试。&lt;/p&gt;
+
+&lt;p&gt;我们将在控制台，得到如下信息：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;org.springframework.data.jpa.repository.support.SimpleJpaRepository@340cb97f
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;没错，这就是&lt;code class=&quot;highlighter-rouge&quot;&gt;Spring&lt;/code&gt;自动实例化的&lt;code class=&quot;highlighter-rouge&quot;&gt;teacherRepository&lt;/code&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;此时，我们使用&lt;code class=&quot;highlighter-rouge&quot;&gt;Navicat&lt;/code&gt;，打开数据表，发现里面已经成功的增加了一条数据。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/12.png&quot; alt=&quot;add data&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在实际的开发过程中，每新增一条数据，都去数据表中进行查看，效率还是比较低的。我们还可以通过修改配置文件的方法，来直接输出&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;语句，来查看是否执行了我们想要的操作。&lt;/p&gt;
+
+&lt;p&gt;在配置文件中，增加一行:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 显示SQL语句
+spring.jpa.show-sql=true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;增加后，整体配置文件如下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 在项目初始化时，重新创建数据表
+spring.jpa.hibernate.ddl-auto=create
+# 指定连接的类型为mysql 连接的地址为：localhost 端口为3306 ，数据为springmvc
+spring.datasource.url=jdbc:mysql://localhost:3306/springmvc
+# 用户名为root
+spring.datasource.username=root
+# 密码为空
+spring.datasource.password=
+# 显示SQL语句
+spring.jpa.show-sql=true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;此时，当我们再次&lt;code class=&quot;highlighter-rouge&quot;&gt;Run Test&lt;/code&gt;的时候，在控制台中，将得到如下信息:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Hibernate: insert into teacher (address, email, name, sex) values (?, ?, ?, ?)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;当我们看到这条语句时，就可以放心的认为：数据文件已经成功的插入到数据表中了。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;参考官方文档：&lt;a href=&quot;http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/#repositories.core-concepts&quot;&gt;http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/#repositories.core-concepts&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;对接c层&quot;&gt;对接C层&lt;/h1&gt;
+&lt;p&gt;有了上面的测试代码，C层对接起来，也相应的容易的多了。但对接以前，我们需要做了解以下几点。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;数据发送请求的方式为&lt;code class=&quot;highlighter-rouge&quot;&gt;post&lt;/code&gt;。&lt;/li&gt;
+  &lt;li&gt;数据以&lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt;的格式进行发送。&lt;/li&gt;
+  &lt;li&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt;数据中，发送新增教师的姓名、地址、邮箱、性别信息。&lt;/li&gt;
+  &lt;li&gt;除性别的变量类型是&lt;code class=&quot;highlighter-rouge&quot;&gt;boolean&lt;/code&gt;外，其它的全部为&lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;有了以上几点，那我们如下定义后台。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;接收&lt;code class=&quot;highlighter-rouge&quot;&gt;post&lt;/code&gt;数据&lt;/li&gt;
+  &lt;li&gt;按收&lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt;格式传入的数据&lt;/li&gt;
+  &lt;li&gt;接收数据后，进行数据表的存储操作&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;新建控制器&quot;&gt;新建控制器&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/13.png&quot; alt=&quot;new controller&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;自动装入&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherRepository&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
+@RestController
+public class TeacherController {
+    @Autowired
+    private TeacherRepository teacherRepository;
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;添加方法，并设置路由:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    ...
+    // 设置路由
+    @RequestMapping(&quot;/teacher/save&quot;)
+    public Teacher saveTeacher() {
+    }
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;获取请求数据，并装入&lt;code class=&quot;highlighter-rouge&quot;&gt;Teacher&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    ...
+    // 设置路由
+    @RequestMapping(&quot;/teacher/save&quot;)
+    // 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象
+    public Teacher saveTeacher(@RequestBody Teacher teacher) {
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;打印获取的数据，并执行保存操作:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    ...
+    public Teacher saveTeacher(@RequestBody Teacher teacher) {
+        // 打印加载的数据
+        System.out.println(teacher);
+
+        // 调用保存操作
+        return teacherRepository.save(teacher);
+    }
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;最终的代码如下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
+
+import com.mengyunzhi.repository.Teacher;
+import com.mengyunzhi.repository.TeacherRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+// 声明为Rest控制器（支持前后台分离）
+@RestController
+public class TeacherController {
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    // 设置路由
+    @RequestMapping(&quot;/teacher/save&quot;)
+    // 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象
+    public Teacher saveTeacher(@RequestBody Teacher teacher) {
+        // 打印加载的数据
+        System.out.println(teacher);
+
+        // 调用保存操作
+        return teacherRepository.save(teacher);
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;测试-1&quot;&gt;测试&lt;/h2&gt;
+&lt;p&gt;重新启动应用, 我们可以点击&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMvcApplication&lt;/code&gt;中&lt;code class=&quot;highlighter-rouge&quot;&gt;main&lt;/code&gt;函数左侧的启动按钮，也可以点击右上角的启动按钮。如果你点击的为右上角按钮，那么需要注意进行切换（这是由于我们刚刚建立过测试类，而测试类也是可以直接启动的）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/14.png&quot; alt=&quot;run&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;启动&lt;code class=&quot;highlighter-rouge&quot;&gt;postMan&lt;/code&gt;, 并发送请求。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/15.png&quot; alt=&quot;post man&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;请求结果：
+&lt;img src=&quot;/SpringMVC/assets/image/chapter2/16.png&quot; alt=&quot;post man&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;控制台信息：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Teacher{id=null, name='zhangsan', email='zhangsan@yunzhiclub.com', address='scse of hebut', sex=false}
+Hibernate: insert into teacher (address, email, name, sex) values (?, ?, ?, ?)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;此时，我们看到了&lt;code class=&quot;highlighter-rouge&quot;&gt;insert&lt;/code&gt;的&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;语句，至此，基本确认数据已经被成功增加到数据库了，如果你还不放心，可以打开&lt;code class=&quot;highlighter-rouge&quot;&gt;navicat&lt;/code&gt;来查看并确认一下。&lt;/p&gt;
+
+&lt;p&gt;我们在前面，按照&lt;code class=&quot;highlighter-rouge&quot;&gt;Teacher&lt;/code&gt;构造函数中，变量的顺序使用&lt;code class=&quot;highlighter-rouge&quot;&gt;postman&lt;/code&gt;将变量按顺序一一进行了传入。那么是否可以改变变量传入的顺序呢？比如说，我们将请求的&lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt;数据变更为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;address&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;scse of hebut&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;LISI&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;email&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;zhangsan@yunzhiclub.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;sex&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;尝试并总结一下它的规律吧。&lt;/p&gt;
+
+&lt;h1 id=&quot;pagingandsortingrepository&quot;&gt;PagingAndSortingRepository&lt;/h1&gt;
+&lt;hr /&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;以下内容后期将迁入至其它章节，本节请直接略过&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;CrudRepository&lt;/code&gt;只能实现基本的增查改删，大多数的时候，我们还需要对数据进行分页、排序。强大的&lt;code class=&quot;highlighter-rouge&quot;&gt;Spring&lt;/code&gt;当然想到了这点– &lt;code class=&quot;highlighter-rouge&quot;&gt;PagingAndSortingRepository&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;在官方文档中，我们看到是这样介绍&lt;code class=&quot;highlighter-rouge&quot;&gt;PagingAndSortingRepository&lt;/code&gt;的:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public interface PagingAndSortingRepository&amp;lt;T, ID extends Serializable&amp;gt;
+  extends CrudRepository&amp;lt;T, ID&amp;gt; {
+
+  Iterable&amp;lt;T&amp;gt; findAll(Sort sort);
+
+  Page&amp;lt;T&amp;gt; findAll(Pageable pageable);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;是的，正如我们看到的一样：&lt;code class=&quot;highlighter-rouge&quot;&gt;PagingAndSortingRepository&lt;/code&gt;继承了&lt;code class=&quot;highlighter-rouge&quot;&gt;CrudRepository&lt;/code&gt;，因而&lt;code class=&quot;highlighter-rouge&quot;&gt;PagingAndSortingRepository&lt;/code&gt;具有&lt;code class=&quot;highlighter-rouge&quot;&gt;CrudRepository&lt;/code&gt;的全部功能，并且在此之上，补充了两个用于排序和分页的功能。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">和我们以前学习的框架基本一致，框架已经为我们封装好了大部分的基本操作，我们只需要做适当的继承操作就可以实现大部的数据操作了。</summary></entry><entry><title type="html">第三节：创建数据表</title><link href="http://localhost:4000/SpringMVC/chapter2/create-tabel/" rel="alternate" type="text/html" title="第三节：创建数据表" /><published>2017-04-05T15:22:52+08:00</published><updated>2017-04-05T15:22:52+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/create-tabel</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/create-tabel/">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;中集成了&lt;code class=&quot;highlighter-rouge&quot;&gt;hibernate&lt;/code&gt;框架，所以在&lt;code class=&quot;highlighter-rouge&quot;&gt;SrpingMVC&lt;/code&gt;,有关关系型数据库的部分，我们完全可以参考&lt;code class=&quot;highlighter-rouge&quot;&gt;hibernate&lt;/code&gt;的开发文档。&lt;code class=&quot;highlighter-rouge&quot;&gt;hibernate&lt;/code&gt;为我们提供了这样一个功能：将带有相关注解的&lt;code class=&quot;highlighter-rouge&quot;&gt;java&lt;/code&gt;类自动与&lt;code class=&quot;highlighter-rouge&quot;&gt;数据表&lt;/code&gt;进行关系。从而使我们可以完全的使用&lt;code class=&quot;highlighter-rouge&quot;&gt;java&lt;/code&gt;代码来定义数据表。这样的做的优点当然很多，对于我们而言，我们再也不需要为了数据表不统一造成的各种莫名&lt;code class=&quot;highlighter-rouge&quot;&gt;BUG&lt;/code&gt;而烦恼了。&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;JPA&lt;/code&gt;全称&lt;code class=&quot;highlighter-rouge&quot;&gt;Java Persistence API&lt;/code&gt;.&lt;code class=&quot;highlighter-rouge&quot;&gt;JPA&lt;/code&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;JDK 5.0&lt;/code&gt;注解或&lt;code class=&quot;highlighter-rouge&quot;&gt;XML&lt;/code&gt;描述对象－关系表的映射关系，并将运行期的实体对象持久化到数据库中。&lt;a href=&quot;http://baike.baidu.com/item/JPA&quot;&gt;http://baike.baidu.com/item/JPA&lt;/a&gt;。&lt;/p&gt;
@@ -80,98 +503,105 @@ public class Teacher {
 &lt;p&gt;然后我们重新启动项目，将得到拥有如下类型的数据表:
 &lt;img src=&quot;/SpringMVC/assets/image/chapter2/5.png&quot; alt=&quot;edit table&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;最后，按照&lt;code class=&quot;highlighter-rouge&quot;&gt;jpa&lt;/code&gt;的规范，我们增加&lt;code class=&quot;highlighter-rouge&quot;&gt;set\get&lt;/code&gt;函数，构造函数及&lt;code class=&quot;highlighter-rouge&quot;&gt;toString&lt;/code&gt;函数。
-最终完整代码如下：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.repository;
+&lt;p&gt;最后，按照&lt;code class=&quot;highlighter-rouge&quot;&gt;jpa&lt;/code&gt;的规范，我们增加&lt;code class=&quot;highlighter-rouge&quot;&gt;set\get&lt;/code&gt;函数，构造函数及&lt;code class=&quot;highlighter-rouge&quot;&gt;toString&lt;/code&gt;函数。&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;你可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;ctrl&lt;/code&gt;+&lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt;来快速生成上面所提到的函数。
+最终完整代码如下：
+```
+package com.mengyunzhi.repository;&lt;/p&gt;
+&lt;/blockquote&gt;
 
-import javax.persistence.*;
+&lt;p&gt;import javax.persistence.*;&lt;/p&gt;
 
-/**
- * Created by panjie on 17/4/5.
+&lt;p&gt;/**&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Created by panjie on 17/4/5.
  */
 // 使用@Entity 来说明该类对应一个数据表
 @Entity
 public class Teacher {
-    //    声明主键
-    @Id
-    //    声明主键生成策略为 自动
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @Column(length = 25)            // 声明字段的长度为25
-    private String name = &quot;&quot;;       // 姓名
-    @Column(length = 50)
-    private String email = &quot;&quot;;      // 邮箱
-    private String address = &quot;&quot;;    // 地址. 不进行@Column声明，则默认长度为255
-    private Boolean sex = false;    // 性别：false(0)，男。true(1)，女.
+ //    声明主键
+ @Id
+ //    声明主键生成策略为 自动
+ @GeneratedValue(strategy = GenerationType.AUTO)
+ private Long id;
+ @Column(length = 25)            // 声明字段的长度为25
+ private String name = “”;       // 姓名
+ @Column(length = 50)
+ private String email = “”;      // 邮箱
+ private String address = “”;    // 地址. 不进行@Column声明，则默认长度为255
+ private Boolean sex = false;    // 性别：false(0)，男。true(1)，女.&lt;/p&gt;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    &lt;p&gt;public void setId(Long id) {
+     this.id = id;
+ }&lt;/p&gt;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    &lt;p&gt;public void setName(String name) {
+     this.name = name;
+ }&lt;/p&gt;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    &lt;p&gt;public void setEmail(String email) {
+     this.email = email;
+ }&lt;/p&gt;
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+    &lt;p&gt;public void setAddress(String address) {
+     this.address = address;
+ }&lt;/p&gt;
 
-    public void setSex(Boolean sex) {
-        this.sex = sex;
-    }
+    &lt;p&gt;public void setSex(Boolean sex) {
+     this.sex = sex;
+ }&lt;/p&gt;
 
-    public Long getId() {
-        return id;
-    }
+    &lt;p&gt;public Long getId() {
+     return id;
+ }&lt;/p&gt;
 
-    public String getName() {
-        return name;
-    }
+    &lt;p&gt;public String getName() {
+     return name;
+ }&lt;/p&gt;
 
-    public String getEmail() {
-        return email;
-    }
+    &lt;p&gt;public String getEmail() {
+     return email;
+ }&lt;/p&gt;
 
-    public String getAddress() {
-        return address;
-    }
+    &lt;p&gt;public String getAddress() {
+     return address;
+ }&lt;/p&gt;
 
-    public Boolean getSex() {
-        return sex;
-    }
+    &lt;p&gt;public Boolean getSex() {
+     return sex;
+ }&lt;/p&gt;
 
-    public Teacher(String name, String email, String address, Boolean sex) {
-        this.name = name;
-        this.email = email;
-        this.address = address;
-        this.sex = sex;
-    }
+    &lt;p&gt;public Teacher(String name, String email, String address, Boolean sex) {
+     this.name = name;
+     this.email = email;
+     this.address = address;
+     this.sex = sex;
+ }&lt;/p&gt;
 
-    public Teacher() {
-    }
+    &lt;p&gt;public Teacher() {
+ }&lt;/p&gt;
 
-    @Override
-    public String toString() {
-        return &quot;Teacher{&quot; +
-                &quot;id=&quot; + id +
-                &quot;, name='&quot; + name + '\'' +
-                &quot;, email='&quot; + email + '\'' +
-                &quot;, address='&quot; + address + '\'' +
-                &quot;, sex=&quot; + sex +
-                '}';
-    }
+    &lt;p&gt;@Override
+ public String toString() {
+     return “Teacher{“ +
+             “id=” + id +
+             “, name=’” + name + ‘'’ +
+             “, email=’” + email + ‘'’ +
+             “, address=’” + address + ‘'’ +
+             “, sex=” + sex +
+             ‘}’;
+ }
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;最后，我们重新运行项目，以确保未发生拼写错误。&lt;/p&gt;
+```
+最后，我们重新运行项目，以确保未发生拼写错误。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;&lt;a href=&quot;https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#basic-provided&quot;&gt;官方文档：java 与 数据表类型对照&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>潘杰</name></author><summary type="html">SpringMVC中集成了hibernate框架，所以在SrpingMVC,有关关系型数据库的部分，我们完全可以参考hibernate的开发文档。hibernate为我们提供了这样一个功能：将带有相关注解的java类自动与数据表进行关系。从而使我们可以完全的使用java代码来定义数据表。这样的做的优点当然很多，对于我们而言，我们再也不需要为了数据表不统一造成的各种莫名BUG而烦恼了。</summary></entry><entry><title type="html">第二节：添加jpa、mysql模块</title><link href="http://www.mengyunzhi.com/SpringMVC/chapter2/add-jpa-and-mysql/" rel="alternate" type="text/html" title="第二节：添加jpa、mysql模块" /><published>2017-04-05T14:47:23+08:00</published><updated>2017-04-05T14:47:23+08:00</updated><id>http://www.mengyunzhi.com/SpringMVC/chapter2/add-jpa-and-mysql</id><content type="html" xml:base="http://www.mengyunzhi.com/SpringMVC/chapter2/add-jpa-and-mysql/">&lt;p&gt;如果在项目刚刚生成时，你查看过生成项目的目录信息，不难发现我们在前面选择过一个叫做&lt;code class=&quot;highlighter-rouge&quot;&gt;web&lt;/code&gt;的Spring核心模块，被写入了根目录下的&lt;code class=&quot;highlighter-rouge&quot;&gt;pom.xml&lt;/code&gt;中。&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>潘杰</name></author><summary type="html">SpringMVC中集成了hibernate框架，所以在SrpingMVC,有关关系型数据库的部分，我们完全可以参考hibernate的开发文档。hibernate为我们提供了这样一个功能：将带有相关注解的java类自动与数据表进行关系。从而使我们可以完全的使用java代码来定义数据表。这样的做的优点当然很多，对于我们而言，我们再也不需要为了数据表不统一造成的各种莫名BUG而烦恼了。</summary></entry><entry><title type="html">第二节：添加jpa、mysql模块</title><link href="http://localhost:4000/SpringMVC/chapter2/add-jpa-and-mysql/" rel="alternate" type="text/html" title="第二节：添加jpa、mysql模块" /><published>2017-04-05T14:47:23+08:00</published><updated>2017-04-05T14:47:23+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/add-jpa-and-mysql</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/add-jpa-and-mysql/">&lt;p&gt;如果在项目刚刚生成时，你查看过生成项目的目录信息，不难发现我们在前面选择过一个叫做&lt;code class=&quot;highlighter-rouge&quot;&gt;web&lt;/code&gt;的Spring核心模块，被写入了根目录下的&lt;code class=&quot;highlighter-rouge&quot;&gt;pom.xml&lt;/code&gt;中。&lt;/p&gt;
 
 &lt;p&gt;即如下代码：&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;        &amp;lt;dependency&amp;gt;
@@ -232,11 +662,11 @@ public class Teacher {
 
 &lt;p&gt;在导入过程中,&lt;code class=&quot;highlighter-rouge&quot;&gt;IDEA&lt;/code&gt;最下侧将有导入进度的提示。未报错，则导入成功。&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;当&lt;code class=&quot;highlighter-rouge&quot;&gt;pom.xml&lt;/code&gt;第一次变化时，&lt;code class=&quot;highlighter-rouge&quot;&gt;idea&lt;/code&gt;在右下角会弹出重新导入依赖模块的提示，我们可以进行点击导入，也可以点击提示中的”auto import”,这样在下次&lt;code class=&quot;highlighter-rouge&quot;&gt;pom.xml&lt;/code&gt;变化时，将自动触发&lt;code class=&quot;highlighter-rouge&quot;&gt;maven&lt;/code&gt;的重新导入命令.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;[注意]&lt;/strong&gt; 当&lt;code class=&quot;highlighter-rouge&quot;&gt;pom.xml&lt;/code&gt;第一次变化时，&lt;code class=&quot;highlighter-rouge&quot;&gt;idea&lt;/code&gt;在右下角会弹出重新导入依赖模块的提示，我们可以进行点击导入，也可以点击提示中的”auto import”,这样在下次&lt;code class=&quot;highlighter-rouge&quot;&gt;pom.xml&lt;/code&gt;变化时，将自动触发&lt;code class=&quot;highlighter-rouge&quot;&gt;maven&lt;/code&gt;的重新导入命令.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;参考:&lt;/strong&gt; &lt;a href=&quot;https://spring.io/guides/gs/accessing-data-jpa/&quot;&gt;https://spring.io/guides/gs/accessing-data-jpa/&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;参考官方文档: &lt;a href=&quot;https://spring.io/guides/gs/accessing-data-jpa/&quot;&gt;https://spring.io/guides/gs/accessing-data-jpa/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 
 &lt;h1 id=&quot;加入mysql模块&quot;&gt;加入mysql模块&lt;/h1&gt;
 &lt;p&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;jpa&lt;/code&gt;的步骤相似，我们用同样的方法，加入&lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt;模块，并重新导入该模块。&lt;/p&gt;
@@ -295,18 +725,24 @@ spring.datasource.password=
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/8.png&quot; alt=&quot;new database springmvc&quot; /&gt;&lt;/p&gt;
+
 &lt;p&gt;此时，我们再次启动项目，在&lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt;服务启动的前提下，将得到启动成功的提示:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2017-04-05 15:16:17.776  INFO 4627 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8080 (http)
 2017-04-05 15:16:17.782  INFO 4627 --- [           main] com.mengyunzhi.SpringMvcApplication      : Started SpringMvcApplication in 6.929 seconds (JVM running for 7.965)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>潘杰</name></author><summary type="html">如果在项目刚刚生成时，你查看过生成项目的目录信息，不难发现我们在前面选择过一个叫做web的Spring核心模块，被写入了根目录下的pom.xml中。</summary></entry><entry><title type="html">第一节：ER图</title><link href="http://www.mengyunzhi.com/SpringMVC/chapter2/er-diagram/" rel="alternate" type="text/html" title="第一节：ER图" /><published>2017-04-05T14:26:57+08:00</published><updated>2017-04-05T14:26:57+08:00</updated><id>http://www.mengyunzhi.com/SpringMVC/chapter2/er-diagram</id><content type="html" xml:base="http://www.mengyunzhi.com/SpringMVC/chapter2/er-diagram/">&lt;p&gt;和以前的我们接触到的教程一下，在教师管理中，我们也会按照增查改删（CRUD）的顺序，来进行程序的开发。
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;参考官方文档：&lt;a href=&quot;https://spring.io/guides/gs/accessing-data-mysql/&quot;&gt;https://spring.io/guides/gs/accessing-data-mysql/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>潘杰</name></author><summary type="html">如果在项目刚刚生成时，你查看过生成项目的目录信息，不难发现我们在前面选择过一个叫做web的Spring核心模块，被写入了根目录下的pom.xml中。</summary></entry><entry><title type="html">第一节：ER图</title><link href="http://localhost:4000/SpringMVC/chapter2/er-diagram/" rel="alternate" type="text/html" title="第一节：ER图" /><published>2017-04-05T14:26:57+08:00</published><updated>2017-04-05T14:26:57+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/er-diagram</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/er-diagram/">&lt;p&gt;和以前的我们接触到的教程一下，在教师管理中，我们也会按照增查改删（CRUD）的顺序，来进行程序的开发。
 在进行数据的增加操作前，我们参照的ER图如下。&lt;/p&gt;
 
 &lt;p&gt;逻辑模型：
 &lt;img src=&quot;/SpringMVC/assets/image/chapter2/6.png&quot; alt=&quot;Logical model&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;物理模型：
-&lt;img src=&quot;/SpringMVC/assets/image/chapter2/7.png&quot; alt=&quot;physical model&quot; /&gt;&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">和以前的我们接触到的教程一下，在教师管理中，我们也会按照增查改删（CRUD）的顺序，来进行程序的开发。 在进行数据的增加操作前，我们参照的ER图如下。</summary></entry><entry><title type="html">第五节：HelloWorld</title><link href="http://www.mengyunzhi.com/SpringMVC/chapter1/5-hello-world/" rel="alternate" type="text/html" title="第五节：HelloWorld" /><published>2017-04-01T15:55:20+08:00</published><updated>2017-04-01T15:55:20+08:00</updated><id>http://www.mengyunzhi.com/SpringMVC/chapter1/5-hello-world</id><content type="html" xml:base="http://www.mengyunzhi.com/SpringMVC/chapter1/5-hello-world/">&lt;h1 id=&quot;建立c层&quot;&gt;建立C层&lt;/h1&gt;
+&lt;img src=&quot;/SpringMVC/assets/image/chapter2/7.png&quot; alt=&quot;physical model&quot; /&gt;&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">和以前的我们接触到的教程一下，在教师管理中，我们也会按照增查改删（CRUD）的顺序，来进行程序的开发。 在进行数据的增加操作前，我们参照的ER图如下。</summary></entry><entry><title type="html">第五节：HelloWorld</title><link href="http://localhost:4000/SpringMVC/chapter1/5-hello-world/" rel="alternate" type="text/html" title="第五节：HelloWorld" /><published>2017-04-01T15:55:20+08:00</published><updated>2017-04-01T15:55:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/5-hello-world</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/5-hello-world/">&lt;h1 id=&quot;建立c层&quot;&gt;建立C层&lt;/h1&gt;
 &lt;ul&gt;
   &lt;li&gt;建立第一个包，控制器&lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt;: 在&lt;code class=&quot;highlighter-rouge&quot;&gt;com.mengyunzhi&lt;/code&gt;上点击右键，选择&lt;code class=&quot;highlighter-rouge&quot;&gt;package&lt;/code&gt;, 然后输入&lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt; -&amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;ok&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt;上点右键，新建一个&lt;code class=&quot;highlighter-rouge&quot;&gt;java class&lt;/code&gt;, 文件名为&lt;code class=&quot;highlighter-rouge&quot;&gt;HelloController&lt;/code&gt;&lt;/li&gt;
@@ -377,7 +813,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;总结&quot;&gt;总结：&lt;/h3&gt;
-&lt;p&gt;没错，在强大的idea的帮助下，搭建一个SpringMVC API后台接口环境，就是如此的简单。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">建立C层 建立第一个包，控制器controller: 在com.mengyunzhi上点击右键，选择package, 然后输入controller -&amp;gt; ok 在controller上点右键，新建一个java class, 文件名为HelloController</summary></entry><entry><title type="html">第四节：项目初始化</title><link href="http://www.mengyunzhi.com/SpringMVC/chapter1/4-init/" rel="alternate" type="text/html" title="第四节：项目初始化" /><published>2017-04-01T14:44:20+08:00</published><updated>2017-04-01T14:44:20+08:00</updated><id>http://www.mengyunzhi.com/SpringMVC/chapter1/4-init</id><content type="html" xml:base="http://www.mengyunzhi.com/SpringMVC/chapter1/4-init/">&lt;h2 id=&quot;新建项目&quot;&gt;新建项目&lt;/h2&gt;
+&lt;p&gt;没错，在强大的idea的帮助下，搭建一个SpringMVC API后台接口环境，就是如此的简单。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">建立C层 建立第一个包，控制器controller: 在com.mengyunzhi上点击右键，选择package, 然后输入controller -&amp;gt; ok 在controller上点右键，新建一个java class, 文件名为HelloController</summary></entry><entry><title type="html">第四节：项目初始化</title><link href="http://localhost:4000/SpringMVC/chapter1/4-init/" rel="alternate" type="text/html" title="第四节：项目初始化" /><published>2017-04-01T14:44:20+08:00</published><updated>2017-04-01T14:44:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/4-init</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/4-init/">&lt;h2 id=&quot;新建项目&quot;&gt;新建项目&lt;/h2&gt;
 &lt;p&gt;我们可以在欢迎界面上点击”create New Project”来新建项目
 &lt;img src=&quot;/SpringMVC/assets/image/chapter1/1.png&quot; alt=&quot;newproject&quot; /&gt;&lt;/p&gt;
 
@@ -435,25 +871,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 &lt;p&gt;此时，我们打开浏览器，输入&lt;code class=&quot;highlighter-rouge&quot;&gt;http://127.0.0.1:8080/&lt;/code&gt;将会得到一个错误提示，这是由于我们并没有配置路由造成的。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/11.png&quot; alt=&quot;run error&quot; /&gt;&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">新建项目 我们可以在欢迎界面上点击”create New Project”来新建项目</summary></entry><entry><title type="html">第三节：idea</title><link href="http://www.mengyunzhi.com/SpringMVC/chapter1/3-idea/" rel="alternate" type="text/html" title="第三节：idea" /><published>2017-04-01T11:39:20+08:00</published><updated>2017-04-01T11:39:20+08:00</updated><id>http://www.mengyunzhi.com/SpringMVC/chapter1/3-idea</id><content type="html" xml:base="http://www.mengyunzhi.com/SpringMVC/chapter1/3-idea/">&lt;p&gt;TODO：下载安装，使用edu邮箱进行注册的链接。配置JDK。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">TODO：下载安装，使用edu邮箱进行注册的链接。配置JDK。</summary></entry><entry><title type="html">第二节：maven</title><link href="http://www.mengyunzhi.com/SpringMVC/chapter1/2-maven/" rel="alternate" type="text/html" title="第二节：maven" /><published>2017-04-01T11:22:20+08:00</published><updated>2017-04-01T11:22:20+08:00</updated><id>http://www.mengyunzhi.com/SpringMVC/chapter1/2-maven</id><content type="html" xml:base="http://www.mengyunzhi.com/SpringMVC/chapter1/2-maven/">&lt;p&gt;TODO：先安装idea，看maven是否被自动安装了。
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/11.png&quot; alt=&quot;run error&quot; /&gt;&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">新建项目 我们可以在欢迎界面上点击”create New Project”来新建项目</summary></entry><entry><title type="html">第三节：idea</title><link href="http://localhost:4000/SpringMVC/chapter1/3-idea/" rel="alternate" type="text/html" title="第三节：idea" /><published>2017-04-01T11:39:20+08:00</published><updated>2017-04-01T11:39:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/3-idea</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/3-idea/">&lt;p&gt;TODO：下载安装，使用edu邮箱进行注册的链接。配置JDK。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">TODO：下载安装，使用edu邮箱进行注册的链接。配置JDK。</summary></entry><entry><title type="html">第二节：maven</title><link href="http://localhost:4000/SpringMVC/chapter1/2-maven/" rel="alternate" type="text/html" title="第二节：maven" /><published>2017-04-01T11:22:20+08:00</published><updated>2017-04-01T11:22:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/2-maven</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/2-maven/">&lt;p&gt;TODO：先安装idea，看maven是否被自动安装了。
 如果没有被自动安装，则添加安装MAVEN的教程
-注意，在命令行中运行maven出现提示信息即可。不用过多的研究&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">TODO：先安装idea，看maven是否被自动安装了。 如果没有被自动安装，则添加安装MAVEN的教程 注意，在命令行中运行maven出现提示信息即可。不用过多的研究</summary></entry><entry><title type="html">第一节：JDK + Mysql + Navicat</title><link href="http://www.mengyunzhi.com/SpringMVC/chapter1/1-jdk-mysql-navicat/" rel="alternate" type="text/html" title="第一节：JDK + Mysql + Navicat" /><published>2017-03-31T11:22:20+08:00</published><updated>2017-03-31T11:22:20+08:00</updated><id>http://www.mengyunzhi.com/SpringMVC/chapter1/1-jdk-mysql-navicat</id><content type="html" xml:base="http://www.mengyunzhi.com/SpringMVC/chapter1/1-jdk-mysql-navicat/">&lt;p&gt;TODO:
-按前面的教程，进行教程的补充。
-三个方面&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;下载JDK，并安装&lt;/li&gt;
-  &lt;li&gt;下载mysql (可以使用xampp集成环境)&lt;/li&gt;
-  &lt;li&gt;下载navicat并安装&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>潘杰 邢彦年</name></author><summary type="html">TODO: 按前面的教程，进行教程的补充。 三个方面 下载JDK，并安装 下载mysql (可以使用xampp集成环境) 下载navicat并安装</summary></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://www.mengyunzhi.com/SpringMVC/jekyll/update/welcome-to-jekyll/" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2017-03-31T11:22:20+08:00</published><updated>2017-03-31T11:22:20+08:00</updated><id>http://www.mengyunzhi.com/SpringMVC/jekyll/update/welcome-to-jekyll</id><content type="html" xml:base="http://www.mengyunzhi.com/SpringMVC/jekyll/update/welcome-to-jekyll/">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
-
-&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
-
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry></feed>
+注意，在命令行中运行maven出现提示信息即可。不用过多的研究&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">TODO：先安装idea，看maven是否被自动安装了。 如果没有被自动安装，则添加安装MAVEN的教程 注意，在命令行中运行maven出现提示信息即可。不用过多的研究</summary></entry></feed>

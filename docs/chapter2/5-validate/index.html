@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第五节：数据验证</title>
+    <meta name="description" content="这里是数据验证的信息"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第五节：数据验证</h1>
+    <p class="post-meta"><time datetime="2017-04-06T13:33:17+08:00" itemprop="datePublished">Apr 6, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>有数据输入，就必然涉及到数据的验证以及数据验证失败后的处理。本节中，让我们共同学习<code class="highlighter-rouge">SpringMVC</code>是如何进行数据验证的。</p>
+
+<p>通过上节的学习，我们得知，<code class="highlighter-rouge">SpringMVC</code>通过<code class="highlighter-rouge">@RequestBody</code>注解将请求数据绑定到相应的实体中(对象)。数据绑定，其实是利用实体的<code class="highlighter-rouge">set</code>方法进行了赋值的过程。数据的验证的过程我们也放置于此。</p>
+
+<p>我们找到<code class="highlighter-rouge">Teacher</code>实体，使用注解的方法设置如下验证规则:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    @Column(length = 25)            // 声明字段的长度为25
+    @Size(min = 2, max = 25)        // 最小长度为2（不能为空），最大长度为25
+    private String name = "";       // 姓名
+
+    @Column(length = 50)
+    @NotNull                        // 此列不能为空
+    @Email                          // 邮箱验证
+    @Size(max = 50)                 // 最大长度为50
+    private String email = "";      // 邮箱
+
+    @Size(max = 255)                // 最大长度为255
+    private String address = "";    // 地址. 不进行@Column声明，则默认长度为255
+
+</code></pre>
+</div>
+
+<p>完整代码如下：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>package com.mengyunzhi.repository;
+
+
+import org.hibernate.validator.constraints.Email;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+/**
+ * Created by panjie on 17/4/5.
+ */
+// 使用@Entity 来说明该类对应一个数据表
+@Entity
+public class Teacher {
+    //    声明主键
+    @Id
+    //    声明主键生成策略为 自动
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(length = 25)            // 声明字段的长度为25
+    @Size(min = 2, max = 25)        // 最小长度为2（不能为空），最大长度为25
+    private String name = "";       // 姓名
+
+    @Column(length = 50)
+    @NotNull                        // 此列不能为空
+    @Email                          // 邮箱验证
+    @Size(max = 50)                 // 最大长度为50
+    private String email = "";      // 邮箱
+
+    @Size(max = 255)                // 最大长度为255
+    private String address = "";    // 地址. 不进行@Column声明，则默认长度为255
+
+    private Boolean sex = false;    // 性别：false(0)，男。true(1)，女.
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setSex(Boolean sex) {
+        this.sex = sex;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public Boolean getSex() {
+        return sex;
+    }
+
+    public Teacher(String name, String email, String address, Boolean sex) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.sex = sex;
+    }
+
+    public Teacher() {
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", sex=" + sex +
+                '}';
+    }
+}
+</code></pre>
+</div>
+<p>重新启动应用:</p>
+<hr />
+
+<p>正常数据:</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/17.png" alt="validate" /></p>
+
+<hr />
+
+<p>姓名过短:</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/18.png" alt="validate name" /></p>
+
+<hr />
+
+<p>邮箱格式不合法:</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/19.png" alt="validate email" /></p>
+
+<p>其它的自行验证一下吧。</p>
+
+<h2 id="格式化验证错误信息">格式化验证错误信息</h2>
+<p>前面，我们虽然得到了错误的验证信息，但是错误的信息全部在<code class="highlighter-rouge">message</code>字段中，这无疑为我们前台排错增加了一定的难度。<code class="highlighter-rouge">SpringMVC</code>当然想到了这点。
+我们打开<code class="highlighter-rouge">TeacherController</code>控制器，为<code class="highlighter-rouge">saveTeacher</code>方法增加一个<code class="highlighter-rouge">@Valid</code>注解，并重新启动应用。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    ...
+    public Teacher saveTeacher(@Valid @RequestBody Teacher teacher) {
+    ...
+</code></pre>
+</div>
+
+<blockquote>
+  <p>该注解位于：javax.validation.Valid;</p>
+</blockquote>
+
+<p>此时，当我们再次发送一些数据而未验证成功时，将得到如下的错误信息:</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/20.png" alt="validate format" /></p>
+
+<p>没错，这就是我们想要的。</p>
+
+<blockquote>
+  <p>参考官方文档：
+<a href="https://spring.io/guides/gs/validating-form-input/">https://spring.io/guides/gs/validating-form-input/</a>
+<a href="http://hibernate.org/validator/">http://hibernate.org/validator/</a></p>
+</blockquote>
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>

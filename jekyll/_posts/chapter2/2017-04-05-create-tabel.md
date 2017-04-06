@@ -84,6 +84,7 @@ public class Teacher {
 ![edit table]({{site.imageurl}}/chapter2/5.png)
 
 最后，按照`jpa`的规范，我们增加`set\get`函数，构造函数及`toString`函数。
+> 你可以使用`ctrl`+`n`来快速生成上面所提到的函数。
 最终完整代码如下：
 ```
 package com.mengyunzhi.repository;

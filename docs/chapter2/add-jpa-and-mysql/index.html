@@ -91,11 +91,11 @@
 
 <p>在导入过程中,<code class="highlighter-rouge">IDEA</code>最下侧将有导入进度的提示。未报错，则导入成功。</p>
 
-<blockquote>
-  <p>当<code class="highlighter-rouge">pom.xml</code>第一次变化时，<code class="highlighter-rouge">idea</code>在右下角会弹出重新导入依赖模块的提示，我们可以进行点击导入，也可以点击提示中的”auto import”,这样在下次<code class="highlighter-rouge">pom.xml</code>变化时，将自动触发<code class="highlighter-rouge">maven</code>的重新导入命令.</p>
-</blockquote>
+<p><strong>[注意]</strong> 当<code class="highlighter-rouge">pom.xml</code>第一次变化时，<code class="highlighter-rouge">idea</code>在右下角会弹出重新导入依赖模块的提示，我们可以进行点击导入，也可以点击提示中的”auto import”,这样在下次<code class="highlighter-rouge">pom.xml</code>变化时，将自动触发<code class="highlighter-rouge">maven</code>的重新导入命令.</p>
 
-<p><strong>参考:</strong> <a href="https://spring.io/guides/gs/accessing-data-jpa/">https://spring.io/guides/gs/accessing-data-jpa/</a></p>
+<blockquote>
+  <p>参考官方文档: <a href="https://spring.io/guides/gs/accessing-data-jpa/">https://spring.io/guides/gs/accessing-data-jpa/</a></p>
+</blockquote>
 
 <h1 id="加入mysql模块">加入mysql模块</h1>
 <p>和<code class="highlighter-rouge">jpa</code>的步骤相似，我们用同样的方法，加入<code class="highlighter-rouge">mysql</code>模块，并重新导入该模块。</p>
@@ -154,11 +154,17 @@ spring.datasource.password=
 </code></pre>
 </div>
 
+<p><img src="/SpringMVC/assets/image/chapter2/8.png" alt="new database springmvc" /></p>
+
 <p>此时，我们再次启动项目，在<code class="highlighter-rouge">mysql</code>服务启动的前提下，将得到启动成功的提示:</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>2017-04-05 15:16:17.776  INFO 4627 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8080 (http)
 2017-04-05 15:16:17.782  INFO 4627 --- [           main] com.mengyunzhi.SpringMvcApplication      : Started SpringMvcApplication in 6.929 seconds (JVM running for 7.965)
 </code></pre>
 </div>
+
+<blockquote>
+  <p>参考官方文档：<a href="https://spring.io/guides/gs/accessing-data-mysql/">https://spring.io/guides/gs/accessing-data-mysql/</a></p>
+</blockquote>
 
   </div>
 
