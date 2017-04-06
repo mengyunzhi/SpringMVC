@@ -1,6 +1,11 @@
 package com.mengyunzhi.repository;
 
+
+import org.hibernate.validator.constraints.Email;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Created by panjie on 17/4/5.
@@ -13,11 +18,20 @@ public class Teacher {
     //    声明主键生成策略为 自动
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(length = 25)            // 声明字段的长度为25
+    @Size(min = 2, max = 25)        // 最小长度为2（不能为空），最大长度为25
     private String name = "";       // 姓名
+
     @Column(length = 50)
+    @NotNull                        // 此列不能为空
+    @Email                          // 邮箱验证
+    @Size(max = 50)                 // 最大长度为50
     private String email = "";      // 邮箱
+
+    @Size(max = 255)                // 最大长度为255
     private String address = "";    // 地址. 不进行@Column声明，则默认长度为255
+
     private Boolean sex = false;    // 性别：false(0)，男。true(1)，女.
 
     public void setId(Long id) {
