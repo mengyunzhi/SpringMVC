@@ -12,3 +12,4 @@ TODO:
 *   下载JDK，并安装
 *   下载mysql (可以使用xampp集成环境)
 *   下载navicat并安装
+*   下载chrome浏览器，及该浏览器下的插件postman

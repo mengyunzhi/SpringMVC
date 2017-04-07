@@ -1,7 +1,743 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-06T14:32:05+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
-</subtitle><entry><title type="html">第六节：读取数据 – read</title><link href="http://localhost:4000/SpringMVC/chapter2/read/" rel="alternate" type="text/html" title="第六节：读取数据 -- read" /><published>2017-04-06T13:34:07+08:00</published><updated>2017-04-06T13:34:07+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/read</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/read/">&lt;p&gt;在上节中，我们给出了参考的官方文档。如果我们基础相对较好，而且已经具备了一定的英文阅读能力的话，相信本节的内容对你来讲会很轻松。因为本节及至后面几个小节，我们要用的，就是官方文档中提供给我们的方法。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-07T16:03:14+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
+</subtitle><entry><title type="html">第七节：更新数据 – 对接C层</title><link href="http://localhost:4000/SpringMVC/chapter2/7-update-to-controller/" rel="alternate" type="text/html" title="第七节：更新数据 -- 对接C层" /><published>2017-04-07T15:25:59+08:00</published><updated>2017-04-07T15:25:59+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/7-update-to-controller</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/7-update-to-controller/">&lt;p&gt;以数据更新为例，在&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;的世界里，大体的操作是这样的：
+&lt;img src=&quot;/SpringMVC/assets/image/chapter2/29.png&quot; alt=&quot;springmvc seq&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;在上一小节中，我们新建了&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherRepository&lt;/code&gt;接口。本节中，我们仍然使用该接口，来实现数据的查询操作。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">在上节中，我们给出了参考的官方文档。如果我们基础相对较好，而且已经具备了一定的英文阅读能力的话，相信本节的内容对你来讲会很轻松。因为本节及至后面几个小节，我们要用的，就是官方文档中提供给我们的方法。</summary></entry><entry><title type="html">第五节：数据验证</title><link href="http://localhost:4000/SpringMVC/chapter2/5-validate/" rel="alternate" type="text/html" title="第五节：数据验证" /><published>2017-04-06T13:33:17+08:00</published><updated>2017-04-06T13:33:17+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/5-validate</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/5-validate/">&lt;p&gt;有数据输入，就必然涉及到数据的验证以及数据验证失败后的处理。本节中，让我们共同学习&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;是如何进行数据验证的。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Spring&lt;/code&gt;为我们自动实现了&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherRepository&lt;/code&gt;接口，我们手动的实现了&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherService&lt;/code&gt;接口，并进行单元测试。在以上两个接口可用并测试的基础上，我们的C层所要做的工作就是，直接将数据转发给&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // @PutMapping 表明该方法只接收 put 请求.
+    @PutMapping(&quot;/{id}&quot;)
+    public Teacher updateTeacher(@PathVariable Long id, @RequestBody Teacher teacher) throws EntityNotFoundException {
+        // 数据转发
+        return teacherService.saveTeacher(id, teacher);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;由于&lt;code class=&quot;highlighter-rouge&quot;&gt;teacherService&lt;/code&gt;在执行&lt;code class=&quot;highlighter-rouge&quot;&gt;saveTeacher&lt;/code&gt;时，可能会抛出一个异常。我们在这里，可以手动的使用&lt;code class=&quot;highlighter-rouge&quot;&gt;try catch&lt;/code&gt;来进行处理后，重新定制一个新的异常，返回给&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;，也可以在函数声明中，加入&lt;code class=&quot;highlighter-rouge&quot;&gt;throws EntityNotFoundException&lt;/code&gt;来直接抛出这个异常。在这里，我们直接将异常向上抛出。&lt;/p&gt;
+
+&lt;p&gt;完整代码：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
+
+import com.mengyunzhi.repository.Teacher;
+import com.mengyunzhi.repository.TeacherRepository;
+import com.mengyunzhi.service.TeacherService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+// 声明为Rest控制器（支持前后台分离）
+@RestController
+@RequestMapping(&quot;/teacher&quot;)
+public class TeacherController {
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    @Autowired
+    private TeacherService teacherService;
+
+    // 设置路由
+    @PostMapping(&quot;/save&quot;)
+    // 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象
+    public Teacher saveTeacher(@Valid @RequestBody Teacher teacher) {
+        // 打印加载的数据
+        System.out.println(teacher);
+
+        // 调用保存操作
+        return teacherRepository.save(teacher);
+    }
+
+    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping(&quot;/{id}&quot;)
+    // @PathVariable 获取路由中的id值
+    public Teacher getTeacherById(@PathVariable Long id) {
+        return teacherRepository.findOne(id);
+    }
+
+    // @PutMapping 表明该方法只接收 put 请求.
+    @PutMapping(&quot;/{id}&quot;)
+    public Teacher updateTeacher(@PathVariable Long id, @RequestBody Teacher teacher) throws EntityNotFoundException {
+        // 数据转发
+        return teacherService.saveTeacher(id, teacher);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;测试&quot;&gt;测试&lt;/h2&gt;
+&lt;p&gt;正确用例，略。
+错误用例：
+&lt;img src=&quot;/SpringMVC/assets/image/chapter2/30.png&quot; alt=&quot;update error unit test&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;作业&quot;&gt;作业&lt;/h2&gt;
+&lt;p&gt;将数据增加与删除，由直接调用&lt;code class=&quot;highlighter-rouge&quot;&gt;repository&lt;/code&gt;改写为调用&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">以数据更新为例，在SpringMVC的世界里，大体的操作是这样的：</summary></entry><entry><title type="html">第七节：更新数据 – service</title><link href="http://localhost:4000/SpringMVC/chapter2/7-update-service/" rel="alternate" type="text/html" title="第七节：更新数据 -- service" /><published>2017-04-07T15:20:42+08:00</published><updated>2017-04-07T15:20:42+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/7-update-service</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/7-update-service/">&lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;中，&lt;code class=&quot;highlighter-rouge&quot;&gt;C&lt;/code&gt;层更多在功能是：数据转发，数据验证，数据绑定，路由设定等。而不负责具体的数据的处理。显然的，我们上述代码的C层中，对数据进行逻辑处理。这违背了上述的原则。&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;中，&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;层负责对进行逻辑运算及数据的处理。&lt;/p&gt;
+
+&lt;p&gt;我们在使用&lt;code class=&quot;highlighter-rouge&quot;&gt;teacherRepository&lt;/code&gt;时，已经体验了&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;面向接口编程的魅力。和前面一样，在建立&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;时，同样也是面向接口的。我们在其实类中引用的，也是接口，而非对象。&lt;/p&gt;
+
+&lt;h2 id=&quot;建立接口&quot;&gt;建立接口&lt;/h2&gt;
+&lt;p&gt;建立文件&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.service;
+
+/**
+ * Created by panjie on 17/4/7.
+ */
+public interface TeacherService {
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;建立方法&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.service;
+
+import com.mengyunzhi.repository.Teacher;
+
+/**
+ * Created by panjie on 17/4/7.
+ */
+public interface TeacherService {
+    /**
+     * 保存
+     * @param id 关键字
+     * @param teacher 教师
+     * @return 保存后的教师
+     */
+    Teacher saveTeacher(Long id, Teacher teacher);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;声明抛出异常类型&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
+import javax.persistence.EntityNotFoundException;
+    ...
+    Teacher saveTeacher(Long id, Teacher teacher) throws EntityNotFoundException;
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;实现接口&quot;&gt;实现接口&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/2.gif&quot; alt=&quot;imp interface&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;没错，有了&lt;code class=&quot;highlighter-rouge&quot;&gt;IDEA&lt;/code&gt;一切操作就是如此的简单。如果再结合快捷键的话，相信还将是另一番天地。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;加入&lt;code class=&quot;highlighter-rouge&quot;&gt;Service&lt;/code&gt;注解&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Service            // 说明本类是一个Service，Spring在进行自动注入的时候，会将有此类注入到相应的TeacherService中。
+public class TeacherServiceImpl implements TeacherService {
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;自动注入&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherRepository&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    @Autowired
+    private TeacherRepository teacherRepository;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;实现数据更新&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    @Override
+    public Teacher saveTeacher(Long id, Teacher teacher) throws EntityNotFoundException {
+        // 判断是否存在该实体，如果不存在，则报错
+        if (teacherRepository.findOne(id) == null) {
+            throw new EntityNotFoundException(&quot;传入的ID值：&quot; + id.toString() + &quot;有误。未找到对应的实体&quot;);
+        }
+
+        // 对实体ID赋值, 并执行更新操作
+        teacher.setId(id);
+        return teacherRepository.save(teacher);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;单元测试&quot;&gt;单元测试&lt;/h2&gt;
+&lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;文件夹中，新建对应的测试类，进行单元测试。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/26.png&quot; alt=&quot;new unit test&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;增加单元测试注解&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@RunWith(SpringRunner.class)
+@SpringBootTest
+public class TeacherServiceImplTest {
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;编写测试方法:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    @Test
+    public void saveTeacherTest() {
+        // 实例化教师 李四
+       
+        // 保存李四至数据库
+        
+        // 打印李四的数据
+
+        // 实例化教师 张三
+       
+        // 将张三的数据更新到原李四的数据中
+
+        // 查询并打印更新后的数据
+        
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;代码实现：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    @Test
+    public void saveTeacherTest() {
+        // 实例化教师 李四
+        Teacher teacherLisi = new Teacher(&quot;lisi&quot;,
+                &quot;lisi@email.com&quot;,
+                &quot;scse of hebut&quot;,
+                false);
+
+        // 保存李四至数据库
+        teacherLisi = teacherRepository.save(teacherLisi);
+
+        // 打印李四的数据
+        System.out.println(teacherLisi);
+
+        // 实例化教师 张三
+        Teacher teacherZhangsan = new Teacher(
+                &quot;zhangsan&quot;,
+                &quot;zhangsan@yunzhiclub.com&quot;,
+                &quot;scse of hebut&quot;,
+                true);
+
+        // 将张三的数据更新到原李四的数据中
+        Teacher newTeacher = teacherService.saveTeacher(teacherLisi.getId(), teacherZhangsan);
+
+        // 查询并打印更新后的数据
+        System.out.println(newTeacher);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;在代码实现中，我们使用到了&lt;code class=&quot;highlighter-rouge&quot;&gt;teacherRepository&lt;/code&gt;及&lt;code class=&quot;highlighter-rouge&quot;&gt;teacherService&lt;/code&gt;, 这两个对象也是通过&lt;code class=&quot;highlighter-rouge&quot;&gt;@Autowired&lt;/code&gt;来由&lt;code class=&quot;highlighter-rouge&quot;&gt;Spring&lt;/code&gt;完成的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;完整代码如下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.service;
+
+import com.mengyunzhi.repository.Teacher;
+import com.mengyunzhi.repository.TeacherRepository;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+/**
+ * Created by panjie on 17/4/7.
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class TeacherServiceImplTest {
+    @Autowired
+    private TeacherService teacherService;
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    @Test
+    public void saveTeacherTest() {
+        // 实例化教师 李四
+        Teacher teacherLisi = new Teacher(&quot;lisi&quot;,
+                &quot;lisi@email.com&quot;,
+                &quot;scse of hebut&quot;,
+                false);
+
+        // 保存李四至数据库
+        teacherLisi = teacherRepository.save(teacherLisi);
+
+        // 打印李四的数据
+        System.out.println(teacherLisi);
+
+        // 实例化教师 张三
+        Teacher teacherZhangsan = new Teacher(
+                &quot;zhangsan&quot;,
+                &quot;zhangsan@yunzhiclub.com&quot;,
+                &quot;scse of hebut&quot;,
+                true);
+
+        // 将张三的数据更新到原李四的数据中
+        Teacher newTeacher = teacherService.saveTeacher(teacherLisi.getId(), teacherZhangsan);
+
+        // 查询并打印更新后的数据
+        System.out.println(newTeacher);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;我们点击方法前面的绿色启动按钮，来启动单元测试，最终将在控制台得到如下信息：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Hibernate: insert into teacher (address, email, name, sex) values (?, ?, ?, ?)
+Teacher{id=1, name='lisi', email='lisi@email.com', address='scse of hebut', sex=false}
+Hibernate: select teacher0_.id as id1_0_0_, teacher0_.address as address2_0_0_, teacher0_.email as email3_0_0_, teacher0_.name as name4_0_0_, teacher0_.sex as sex5_0_0_ from teacher teacher0_ where teacher0_.id=?
+Hibernate: select teacher0_.id as id1_0_0_, teacher0_.address as address2_0_0_, teacher0_.email as email3_0_0_, teacher0_.name as name4_0_0_, teacher0_.sex as sex5_0_0_ from teacher teacher0_ where teacher0_.id=?
+Hibernate: update teacher set address=?, email=?, name=?, sex=? where id=?
+Teacher{id=1, name='zhangsan', email='zhangsan@yunzhiclub.com', address='scse of hebut', sex=true}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;其中，有&lt;code class=&quot;highlighter-rouge&quot;&gt;Hibernate: &lt;/code&gt;前缀的，为&lt;code class=&quot;highlighter-rouge&quot;&gt;Hibernate&lt;/code&gt;生成的数据库操作语句。
+通过观察，我们不难发现，先后进行数据的插入、更新操作。&lt;/p&gt;
+
+&lt;h2 id=&quot;完善测试&quot;&gt;完善测试&lt;/h2&gt;
+&lt;p&gt;有了正确的用例，我们也需要错误的用例。
+新建方法，并加入注释：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    /**
+     * 更新的数据不存在于数据表中时，发生错误，并抛出异常
+     */
+    @Test
+    public void saveTeacherErrorTest() {
+        // 指定id为0
+
+        // 实例化教师张三
+
+        // 使用张三的数据来更新0号教师的数据
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;代码实现：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    /**
+     * 更新的数据不存在于数据表中时，发生错误，并抛出异常
+     */
+    @Test
+    public void saveTeacherErrorTest() {
+        // 指定id为0
+        Long id = 0L;
+
+        // 实例化教师张三
+        Teacher teacherZhangsan = new Teacher(
+                &quot;zhangsan&quot;,
+                &quot;zhangsan@yunzhiclub.com&quot;,
+                &quot;scse of hebut&quot;,
+                true);
+
+        // 使用张三的数据来更新0号教师的数据
+        teacherService.saveTeacher(id, teacherZhangsan);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;测试用例：
+&lt;img src=&quot;/SpringMVC/assets/image/chapter2/27.png&quot; alt=&quot;update error unit test&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;虽然这样达到了我们测试的目的，但从单元测试的规范上讲，红色代表测试发生异常，绿色才是我们想看到的。为此，我们为&lt;code class=&quot;highlighter-rouge&quot;&gt;@Test&lt;/code&gt;指定一个参数，进而表明，此测试方法的期待结果是获取一个&lt;code class=&quot;highlighter-rouge&quot;&gt;EntityNotFoundException&lt;/code&gt;类型的异常。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    @Test(expected = EntityNotFoundException.class)
+    public void saveTeacherErrorTest() {
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;此时，当我们再次进行测试时，发现控制台没有报告异常，而且测试结果显示为绿色，表示测试通过。
+&lt;img src=&quot;/SpringMVC/assets/image/chapter2/28.png&quot; alt=&quot;update error unit test&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;完整代码如下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.service;
+
+import com.mengyunzhi.repository.Teacher;
+import com.mengyunzhi.repository.TeacherRepository;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.persistence.EntityNotFoundException;
+
+/**
+ * Created by panjie on 17/4/7.
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class TeacherServiceImplTest {
+    @Autowired
+    private TeacherService teacherService;
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    @Test
+    public void saveTeacherTest() {
+        // 实例化教师 李四
+        Teacher teacherLisi = new Teacher(&quot;lisi&quot;,
+                &quot;lisi@email.com&quot;,
+                &quot;scse of hebut&quot;,
+                false);
+
+        // 保存李四至数据库
+        teacherLisi = teacherRepository.save(teacherLisi);
+
+        // 打印李四的数据
+        System.out.println(teacherLisi);
+
+        // 实例化教师 张三
+        Teacher teacherZhangsan = new Teacher(
+                &quot;zhangsan&quot;,
+                &quot;zhangsan@yunzhiclub.com&quot;,
+                &quot;scse of hebut&quot;,
+                true);
+
+        // 将张三的数据更新到原李四的数据中
+        Teacher newTeacher = teacherService.saveTeacher(teacherLisi.getId(), teacherZhangsan);
+
+        // 查询并打印更新后的数据
+        System.out.println(newTeacher);
+    }
+
+    /**
+     * 更新的数据不存在于数据表中时，发生错误，并抛出异常
+     */
+    @Test(expected = EntityNotFoundException.class)     // 此方法的预期结果是获取到一个EntityNotFoundException异常
+    public void saveTeacherErrorTest() {
+        // 指定id为0
+        Long id = 0L;
+
+        // 实例化教师张三
+        Teacher teacherZhangsan = new Teacher(
+                &quot;zhangsan&quot;,
+                &quot;zhangsan@yunzhiclub.com&quot;,
+                &quot;scse of hebut&quot;,
+                true);
+
+        // 使用张三的数据来更新0号教师的数据
+        teacherService.saveTeacher(id, teacherZhangsan);
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;单元测试参考文档：&lt;a href=&quot;http://wiki.jikexueyuan.com/project/junit/exceptions-test.html&quot;&gt;http://wiki.jikexueyuan.com/project/junit/exceptions-test.html&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>潘杰</name></author><summary type="html">在SpringMVC中，C层更多在功能是：数据转发，数据验证，数据绑定，路由设定等。而不负责具体的数据的处理。显然的，我们上述代码的C层中，对数据进行逻辑处理。这违背了上述的原则。SpringMVC中，service层负责对进行逻辑运算及数据的处理。</summary></entry><entry><title type="html">第七节：更新数据 – update</title><link href="http://localhost:4000/SpringMVC/chapter2/7-update/" rel="alternate" type="text/html" title="第七节：更新数据 -- update" /><published>2017-04-07T08:50:55+08:00</published><updated>2017-04-07T08:50:55+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/7-update</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/7-update/">&lt;p&gt;和其它框架一样，在数据更新中，&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;调用的方法同&lt;code class=&quot;highlighter-rouge&quot;&gt;Create&lt;/code&gt;，即均为&lt;code class=&quot;highlighter-rouge&quot;&gt;save()&lt;/code&gt;方法。则按照前面章节的思想，我们不难写出如下数据更新的代码。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // @PutMapping 表明该方法只接收 put 请求.
+    @PutMapping(&quot;/{id}&quot;)
+    public Teacher updateTeacher(@PathVariable Long id, @RequestBody Teacher teacher) {
+        // 对实体ID赋值, 并执行更新操作
+        teacher.setId(id);
+        return teacherRepository.save(teacher);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这里，我们使用了&lt;code class=&quot;highlighter-rouge&quot;&gt;put&lt;/code&gt;方法，其实和&lt;code class=&quot;highlighter-rouge&quot;&gt;get&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;post&lt;/code&gt;一样，这仅仅是一个请求的方法而已。除了&lt;code class=&quot;highlighter-rouge&quot;&gt;get&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;post&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;put&lt;/code&gt;方法外，我们还会接触到&lt;code class=&quot;highlighter-rouge&quot;&gt;patch&lt;/code&gt;及&lt;code class=&quot;highlighter-rouge&quot;&gt;delete&lt;/code&gt;方法。
+我们简单做个汇总：&lt;/p&gt;
+&lt;table&gt;
+    &lt;tr&gt;
+        &lt;th&gt;方法名&lt;/th&gt;
+        &lt;th&gt;描述&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;get&lt;/td&gt;
+        &lt;td&gt;用于数据的查询操作&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;post&lt;/td&gt;
+        &lt;td&gt;用于数据的新增操作&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;put&lt;/td&gt;
+        &lt;td&gt;用于数据的更新操作（更新实体的全部字段）&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;patch&lt;/td&gt;
+        &lt;td&gt;用于数据的更新操作（更新实体的部分字段）&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;delete&lt;/td&gt;
+        &lt;td&gt;用于数据的删除操作&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;测试&quot;&gt;测试&lt;/h2&gt;
+&lt;p&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;read&lt;/code&gt;操作相同，我们在进行数据的更新前，需要先新增一个实体。然后再对这个实体进行修改。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/1.gif&quot; alt=&quot;update&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;完善代码&quot;&gt;完善代码&lt;/h1&gt;
+&lt;p&gt;我们看到，我们新增了一个教师，然后进行查询得到了这个教师的数据，再进行修改，然后再查询，发现教师的数据的确被我们修改了。&lt;/p&gt;
+
+&lt;p&gt;不过，如果我们测试充分的话，也会很容易的发现：在数据修改的过程中，如果并不存在我们要修改的数据，那么则会自动的新增一条记录。而这，并不是我们想看到的。我们想要的结果是，如果有这条记录，则更新，如果没有，则提示我们不存在该条记录。&lt;/p&gt;
+
+&lt;p&gt;完善代码如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // @PutMapping 表明该方法只接收 put 请求.
+    @PutMapping(&quot;/{id}&quot;)
+    public Teacher updateTeacher(@PathVariable Long id, @RequestBody Teacher teacher) throws EntityNotFoundException {
+        // 判断是否存在该实体，如果不存在，则报错
+        if (teacherRepository.findOne(id) == null) {
+            throw new EntityNotFoundException(&quot;传入的ID值：&quot; + id.toString() + &quot;有误。未找到对应的实体&quot;);
+        }
+
+        // 对实体ID赋值, 并执行更新操作
+        teacher.setId(id);
+        return teacherRepository.save(teacher);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;增加了传入&lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt;是否对应实体的判断, 如果没有找到，则抛出一个&lt;code class=&quot;highlighter-rouge&quot;&gt;javax.persistence.EntityNotFoundException&lt;/code&gt;异常。同时，。&lt;/li&gt;
+  &lt;li&gt;在函数定义时，增加了&lt;code class=&quot;highlighter-rouge&quot;&gt;throws EntityNotFoundException&lt;/code&gt;来声明抛出的异常类型。该异常能够被&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;捕获，并且转化为&lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt;格式的报错信息进行输出&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;我们输入一个并不存在实体&lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt;并进行测试，将得到如下提示信息：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/25.png&quot; alt=&quot;entity not found exception&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;除此以外，根据具体的实际情况，我们还可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;为我们准备好的其它异常类型，比如&lt;code class=&quot;highlighter-rouge&quot;&gt;BindException&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;ConversionNotSupportedException&lt;/code&gt;等等。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;参考官方文档：&lt;a href=&quot;https://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#mvc-ann-rest-spring-mvc-exceptions&quot;&gt;https://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#mvc-ann-rest-spring-mvc-exceptions&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;完整代码如下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
+
+import com.mengyunzhi.repository.Teacher;
+import com.mengyunzhi.repository.TeacherRepository;
+import com.mengyunzhi.service.TeacherService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+// 声明为Rest控制器（支持前后台分离）
+@RestController
+@RequestMapping(&quot;/teacher&quot;)
+public class TeacherController {
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    @Autowired
+    private TeacherService teacherService;
+
+    // 设置路由
+    @PostMapping(&quot;/save&quot;)
+    // 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象
+    public Teacher saveTeacher(@Valid @RequestBody Teacher teacher) {
+        // 打印加载的数据
+        System.out.println(teacher);
+
+        // 调用保存操作
+        return teacherRepository.save(teacher);
+    }
+
+    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping(&quot;/{id}&quot;)
+    // @PathVariable 获取路由中的id值
+    public Teacher getTeacherById(@PathVariable Long id) {
+        return teacherRepository.findOne(id);
+    }
+
+    // @PutMapping 表明该方法只接收 put 请求.
+    @PutMapping(&quot;/{id}&quot;)
+    public Teacher updateTeacher(@PathVariable Long id, @RequestBody Teacher teacher) throws EntityNotFoundException {
+        // 判断是否存在该实体，如果不存在，则报错
+        if (teacherRepository.findOne(id) == null) {
+            throw new EntityNotFoundException(&quot;传入的ID值：&quot; + id.toString() + &quot;有误。未找到对应的实体&quot;);
+        }
+
+        // 对实体ID赋值, 并执行更新操作
+        teacher.setId(id);
+        return teacherRepository.save(teacher);
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content><author><name>潘杰</name></author><summary type="html">和其它框架一样，在数据更新中，SpringMVC调用的方法同Create，即均为save()方法。则按照前面章节的思想，我们不难写出如下数据更新的代码。 // @PutMapping 表明该方法只接收 put 请求. @PutMapping(&quot;/{id}&quot;) public Teacher updateTeacher(@PathVariable Long id, @RequestBody Teacher teacher) { // 对实体ID赋值, 并执行更新操作 teacher.setId(id); return teacherRepository.save(teacher); }</summary></entry><entry><title type="html">第六节：读取数据 – read</title><link href="http://localhost:4000/SpringMVC/chapter2/6-read/" rel="alternate" type="text/html" title="第六节：读取数据 -- read" /><published>2017-04-06T13:34:07+08:00</published><updated>2017-04-06T13:34:07+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/6-read</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/6-read/">&lt;p&gt;在上节中，我们给出了参考的官方文档，并且新建了接口。本节中，仍然使用上节中给出参考文档中提及到的方法，使用&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherRepository&lt;/code&gt;来实现数据的读取。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;[说明]&lt;/strong&gt;  由于在上节中，新建&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherRepository&lt;/code&gt;时，已经进行过测试操作，本节再次使用该接口时，则可以直接跳过单元测试的内容。在实际的开发中也是这样的，如果该类是由你创建的，你需要对自己创建的类负责，必须进行相关的测试操作也保证类的可靠性。而如果类不是我们自己创建的，则假设该类经过了单元测试，并且可以直接被我们调用。&lt;/p&gt;
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;c层对接&quot;&gt;C层对接&lt;/h1&gt;
+&lt;p&gt;在进行正式的对接前，我们首先要制定相关的API规范，即接收的数据都有什么，又期待返回什么样的数据。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;接收教师ID&lt;/li&gt;
+  &lt;li&gt;返回该ID对应的教师实体&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;下面，我们按上述的说明，对&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherController&lt;/code&gt;类进行如下补充:&lt;/p&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;新建方法&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    public Teacher getTeacherById() {
+        
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;添加路由&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping(&quot;/teacher/{id}&quot;)
+    public Teacher getTeacherById() {
+
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;添加接收参数&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping(&quot;/teacher/{id}&quot;)
+    // @PathVariable 获取路由中的id值
+    public Teacher getTeacherById(@PathVariable Long id) {
+
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;获取教师实体并返回&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping(&quot;/teacher/{id}&quot;)
+    // @PathVariable 获取路由中的id值
+    public Teacher getTeacherById(@PathVariable Long id) {  
+        return teacherRepository.findOne(id);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;测试&quot;&gt;测试&lt;/h2&gt;
+&lt;p&gt;启动项目及MySQL数据库服务，并启动postMan对上述方法进行测试.&lt;/p&gt;
+
+&lt;h3 id=&quot;添加一条数据&quot;&gt;添加一条数据&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/21.png&quot; alt=&quot;add data&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;查询刚刚添加的数据&quot;&gt;查询刚刚添加的数据&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/22.png&quot; alt=&quot;find data&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;查询不存在的数据&quot;&gt;查询不存在的数据&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/22.png&quot; alt=&quot;find not exist data&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;完事代码如下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
+
+import com.mengyunzhi.repository.Teacher;
+import com.mengyunzhi.repository.TeacherRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+// 声明为Rest控制器（支持前后台分离）
+@RestController
+public class TeacherController {
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    // 设置路由
+    @RequestMapping(&quot;/teacher/save&quot;)
+    // 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象
+    public Teacher saveTeacher(@Valid @RequestBody Teacher teacher) {
+        // 打印加载的数据
+        System.out.println(teacher);
+
+        // 调用保存操作
+        return teacherRepository.save(teacher);
+    }
+
+    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping(&quot;/teacher/{id}&quot;)
+    // @PathVariable 获取路由中的id值
+    public Teacher getTeacherById(@PathVariable Long id) {
+        return teacherRepository.findOne(id);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;重构&quot;&gt;重构&lt;/h1&gt;
+&lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherController&lt;/code&gt;中，我们定义了两处路由，都有&lt;code class=&quot;highlighter-rouge&quot;&gt;/teacher&lt;/code&gt;字符串，下面，我们通过对类添加路由的方式来进行重构，以降低代码的冗余。同时，更加明确的指定请求方式。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
+@RestController
+@RequestMapping(&quot;/teacher&quot;)
+public class TeacherController {
+    ...
+    @PostMapping(&quot;/save&quot;)
+    ...
+    @GetMapping(&quot;/{id}&quot;)
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;完整代码：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
+
+import com.mengyunzhi.repository.Teacher;
+import com.mengyunzhi.repository.TeacherRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+// 声明为Rest控制器（支持前后台分离）
+@RestController
+@RequestMapping(&quot;/teacher&quot;)
+public class TeacherController {
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    // 设置路由
+    @PostMapping(&quot;/save&quot;)
+    // 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象
+    public Teacher saveTeacher(@Valid @RequestBody Teacher teacher) {
+        // 打印加载的数据
+        System.out.println(teacher);
+
+        // 调用保存操作
+        return teacherRepository.save(teacher);
+    }
+
+    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping(&quot;/{id}&quot;)
+    // @PathVariable 获取路由中的id值
+    public Teacher getTeacherById(@PathVariable Long id) {
+        return teacherRepository.findOne(id);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;参考官方文档：&lt;a href=&quot;http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/#repositories.core-concepts&quot;&gt;http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/#repositories.core-concepts&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;如果你感觉很轻松的就学习完了本节内容，那么说明你的基础打的比较牢固，具有很好的学习精神，具备了一定的英文阅读能力。恭喜你，在计算机工程的道路上，你将越走越加平坦。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">在上节中，我们给出了参考的官方文档，并且新建了接口。本节中，仍然使用上节中给出参考文档中提及到的方法，使用TeacherRepository来实现数据的读取。</summary></entry><entry><title type="html">第五节：数据验证</title><link href="http://localhost:4000/SpringMVC/chapter2/5-validate/" rel="alternate" type="text/html" title="第五节：数据验证" /><published>2017-04-06T13:33:17+08:00</published><updated>2017-04-06T13:33:17+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/5-validate</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/5-validate/">&lt;p&gt;有数据输入，就必然涉及到数据的验证以及数据验证失败后的处理。本节中，让我们共同学习&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;是如何进行数据验证的。&lt;/p&gt;
 
 &lt;p&gt;通过上节的学习，我们得知，&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;@RequestBody&lt;/code&gt;注解将请求数据绑定到相应的实体中(对象)。数据绑定，其实是利用实体的&lt;code class=&quot;highlighter-rouge&quot;&gt;set&lt;/code&gt;方法进行了赋值的过程。数据的验证的过程我们也放置于此。&lt;/p&gt;
 
@@ -167,8 +903,8 @@ public class Teacher {
 &lt;blockquote&gt;
   &lt;p&gt;参考官方文档：
 &lt;a href=&quot;https://spring.io/guides/gs/validating-form-input/&quot;&gt;https://spring.io/guides/gs/validating-form-input/&lt;/a&gt;
-&lt;a href=&quot;http://hibernate.org/validator/&quot;&gt;http://hibernate.org/validator/&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>潘杰</name></author><summary type="html">有数据输入，就必然涉及到数据的验证以及数据验证失败后的处理。本节中，让我们共同学习SpringMVC是如何进行数据验证的。</summary></entry><entry><title type="html">第四节：增加数据–create</title><link href="http://localhost:4000/SpringMVC/chapter2/4-create/" rel="alternate" type="text/html" title="第四节：增加数据--create" /><published>2017-04-06T08:08:09+08:00</published><updated>2017-04-06T08:08:09+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/4-create</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/4-create/">&lt;p&gt;和我们以前学习的框架基本一致，框架已经为我们封装好了大部分的基本操作，我们只需要做适当的继承操作就可以实现大部的数据操作了。&lt;/p&gt;
+&lt;a href=&quot;http://hibernate.org/validator/&quot;&gt;http://hibernate.org/validator/&lt;/a&gt; &lt;a href=&quot;https://www.ibm.com/developerworks/cn/java/j-lo-jsr303/&quot;&gt;https://www.ibm.com/developerworks/cn/java/j-lo-jsr303/&lt;/a&gt; &lt;a href=&quot;https://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html&quot;&gt;https://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>潘杰</name></author><summary type="html">有数据输入，就必然涉及到数据的验证以及数据验证失败后的处理。本节中，让我们共同学习SpringMVC是如何进行数据验证的。</summary></entry><entry><title type="html">第四节：增加数据 – create</title><link href="http://localhost:4000/SpringMVC/chapter2/4-create/" rel="alternate" type="text/html" title="第四节：增加数据 -- create" /><published>2017-04-06T08:08:09+08:00</published><updated>2017-04-06T08:08:09+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/4-create</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/4-create/">&lt;p&gt;和我们以前学习的框架基本一致，框架已经为我们封装好了大部分的基本操作，我们只需要做适当的继承操作就可以实现大部的数据操作了。&lt;/p&gt;
 
 &lt;h1 id=&quot;crudrepository&quot;&gt;CrudRepository&lt;/h1&gt;
 &lt;p&gt;在SpringMVC中，为我提供了用于进行数据增查删改删的&lt;code class=&quot;highlighter-rouge&quot;&gt;CrudRepository&lt;/code&gt;接口。下面，我们来新建第一个用于数据表操作的接口文件 – &lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherRepository&lt;/code&gt;。&lt;/p&gt;
@@ -466,7 +1202,7 @@ public class Teacher {
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;h2 id=&quot;测试&quot;&gt;测试&lt;/h2&gt;
-&lt;p&gt;我们再次点击&lt;code class=&quot;highlighter-rouge&quot;&gt;IDEA&lt;/code&gt;的&lt;code class=&quot;highlighter-rouge&quot;&gt;Run&lt;/code&gt;按钮，来重新启动项目。项目成功启动后，我们将得到一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Teacher&lt;/code&gt;表，这个表中，有一个字段&lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt;。该字段属性如下：
+&lt;p&gt;我们再次点击&lt;code class=&quot;highlighter-rouge&quot;&gt;IDEA&lt;/code&gt;的&lt;code class=&quot;highlighter-rouge&quot;&gt;Run&lt;/code&gt;按钮，来重新启动项目。项目成功启动后，我们将得到一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Teacher&lt;/code&gt;表，这个表中，有一个字段&lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt;，该字段为表的主键，该字段被设置了&lt;code class=&quot;highlighter-rouge&quot;&gt;Auto increment&lt;/code&gt;属性。如下：
 &lt;img src=&quot;/SpringMVC/assets/image/chapter2/4.png&quot; alt=&quot;edit table&quot; /&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;增加其它属性&quot;&gt;增加其它属性&lt;/h1&gt;
@@ -505,99 +1241,96 @@ public class Teacher {
 
 &lt;p&gt;最后，按照&lt;code class=&quot;highlighter-rouge&quot;&gt;jpa&lt;/code&gt;的规范，我们增加&lt;code class=&quot;highlighter-rouge&quot;&gt;set\get&lt;/code&gt;函数，构造函数及&lt;code class=&quot;highlighter-rouge&quot;&gt;toString&lt;/code&gt;函数。&lt;/p&gt;
 &lt;blockquote&gt;
-  &lt;p&gt;你可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;ctrl&lt;/code&gt;+&lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt;来快速生成上面所提到的函数。
-最终完整代码如下：
-```
-package com.mengyunzhi.repository;&lt;/p&gt;
+  &lt;p&gt;你可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;ctrl&lt;/code&gt;+&lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt;来快速生成上面所提到的函数。&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;import javax.persistence.*;&lt;/p&gt;
+&lt;p&gt;最终完整代码如下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.repository;
 
-&lt;p&gt;/**&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Created by panjie on 17/4/5.
+import javax.persistence.*;
+
+/**
+ * Created by panjie on 17/4/5.
  */
 // 使用@Entity 来说明该类对应一个数据表
 @Entity
 public class Teacher {
- //    声明主键
- @Id
- //    声明主键生成策略为 自动
- @GeneratedValue(strategy = GenerationType.AUTO)
- private Long id;
- @Column(length = 25)            // 声明字段的长度为25
- private String name = “”;       // 姓名
- @Column(length = 50)
- private String email = “”;      // 邮箱
- private String address = “”;    // 地址. 不进行@Column声明，则默认长度为255
- private Boolean sex = false;    // 性别：false(0)，男。true(1)，女.&lt;/p&gt;
+    //    声明主键
+    @Id
+    //    声明主键生成策略为 自动
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(length = 25)            // 声明字段的长度为25
+    private String name = &quot;&quot;;       // 姓名
+    @Column(length = 50)
+    private String email = &quot;&quot;;      // 邮箱
+    private String address = &quot;&quot;;    // 地址. 不进行@Column声明，则默认长度为255
+    private Boolean sex = false;    // 性别：false(0)，男。true(1)，女.
 
-    &lt;p&gt;public void setId(Long id) {
-     this.id = id;
- }&lt;/p&gt;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    &lt;p&gt;public void setName(String name) {
-     this.name = name;
- }&lt;/p&gt;
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    &lt;p&gt;public void setEmail(String email) {
-     this.email = email;
- }&lt;/p&gt;
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    &lt;p&gt;public void setAddress(String address) {
-     this.address = address;
- }&lt;/p&gt;
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-    &lt;p&gt;public void setSex(Boolean sex) {
-     this.sex = sex;
- }&lt;/p&gt;
+    public void setSex(Boolean sex) {
+        this.sex = sex;
+    }
 
-    &lt;p&gt;public Long getId() {
-     return id;
- }&lt;/p&gt;
+    public Long getId() {
+        return id;
+    }
 
-    &lt;p&gt;public String getName() {
-     return name;
- }&lt;/p&gt;
+    public String getName() {
+        return name;
+    }
 
-    &lt;p&gt;public String getEmail() {
-     return email;
- }&lt;/p&gt;
+    public String getEmail() {
+        return email;
+    }
 
-    &lt;p&gt;public String getAddress() {
-     return address;
- }&lt;/p&gt;
+    public String getAddress() {
+        return address;
+    }
 
-    &lt;p&gt;public Boolean getSex() {
-     return sex;
- }&lt;/p&gt;
+    public Boolean getSex() {
+        return sex;
+    }
 
-    &lt;p&gt;public Teacher(String name, String email, String address, Boolean sex) {
-     this.name = name;
-     this.email = email;
-     this.address = address;
-     this.sex = sex;
- }&lt;/p&gt;
+    public Teacher(String name, String email, String address, Boolean sex) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.sex = sex;
+    }
 
-    &lt;p&gt;public Teacher() {
- }&lt;/p&gt;
+    public Teacher() {
+    }
 
-    &lt;p&gt;@Override
- public String toString() {
-     return “Teacher{“ +
-             “id=” + id +
-             “, name=’” + name + ‘'’ +
-             “, email=’” + email + ‘'’ +
-             “, address=’” + address + ‘'’ +
-             “, sex=” + sex +
-             ‘}’;
- }
+    @Override
+    public String toString() {
+        return &quot;Teacher{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, name='&quot; + name + '\'' +
+                &quot;, email='&quot; + email + '\'' +
+                &quot;, address='&quot; + address + '\'' +
+                &quot;, sex=&quot; + sex +
+                '}';
+    }
 }
-```
-最后，我们重新运行项目，以确保未发生拼写错误。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;最后，我们重新运行项目，以确保未发生拼写错误。&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;&lt;a href=&quot;https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#basic-provided&quot;&gt;官方文档：java 与 数据表类型对照&lt;/a&gt;&lt;/p&gt;
@@ -813,64 +1546,4 @@ import org.springframework.web.bind.annotation.RequestMapping;
 &lt;hr /&gt;
 
 &lt;h3 id=&quot;总结&quot;&gt;总结：&lt;/h3&gt;
-&lt;p&gt;没错，在强大的idea的帮助下，搭建一个SpringMVC API后台接口环境，就是如此的简单。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">建立C层 建立第一个包，控制器controller: 在com.mengyunzhi上点击右键，选择package, 然后输入controller -&amp;gt; ok 在controller上点右键，新建一个java class, 文件名为HelloController</summary></entry><entry><title type="html">第四节：项目初始化</title><link href="http://localhost:4000/SpringMVC/chapter1/4-init/" rel="alternate" type="text/html" title="第四节：项目初始化" /><published>2017-04-01T14:44:20+08:00</published><updated>2017-04-01T14:44:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/4-init</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/4-init/">&lt;h2 id=&quot;新建项目&quot;&gt;新建项目&lt;/h2&gt;
-&lt;p&gt;我们可以在欢迎界面上点击”create New Project”来新建项目
-&lt;img src=&quot;/SpringMVC/assets/image/chapter1/1.png&quot; alt=&quot;newproject&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;然后选择&lt;code class=&quot;highlighter-rouge&quot;&gt;Spring Initializr&lt;/code&gt;, 点击new， 新建 sdk, 选择本机SDK安装位置。
-&lt;img src=&quot;/SpringMVC/assets/image/chapter1/2.png&quot; alt=&quot;new sdk&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;TODO：补充图片&lt;/p&gt;
-
-&lt;p&gt;最后选择我们刚刚新建的sdk
-&lt;img src=&quot;/SpringMVC/assets/image/chapter1/3.png&quot; alt=&quot;choose sdk&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;然后点击下一步，按网速的快慢，等待的时间也会不同。
-&lt;img src=&quot;/SpringMVC/assets/image/chapter1/4.png&quot; alt=&quot;waiting&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;配置项目基本信息&quot;&gt;配置项目基本信息&lt;/h2&gt;
-&lt;p&gt;修改如下两处即可:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/5.png&quot; alt=&quot;base info&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;第一处：group组织名，我们可以随意起，原则上，为了避免和别人冲突，都会用域名。
-第二处：artifact，可以理解为项目名，在一个group中，artifact的值是唯一的。&lt;/p&gt;
-
-&lt;p&gt;其它的信息，idea会自动为我们生成.&lt;/p&gt;
-
-&lt;p&gt;然后我们点击next，来配置项目&lt;/p&gt;
-
-&lt;h2 id=&quot;配置项目&quot;&gt;配置项目&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;确定Spring Boot版本号,1.5.2&lt;/li&gt;
-  &lt;li&gt;选择依赖web&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/6.png&quot; alt=&quot;web&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;next -&amp;gt; finish。&lt;/p&gt;
-
-&lt;p&gt;idea将自动为我们加载项目所依赖的JAR包，视网速的不同，将有等待不同的时间，整体的进度将显示在idea的右下解。&lt;/p&gt;
-
-&lt;p&gt;最终，我们将得到如下项目目录。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/7.png&quot; alt=&quot;tree&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;我们所需要编辑的源代码，位于&lt;code class=&quot;highlighter-rouge&quot;&gt;com.mengyunzhi&lt;/code&gt;文件夹中, 一些后期需要的配置信息，位于&lt;code class=&quot;highlighter-rouge&quot;&gt;application.properties&lt;/code&gt;中&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/8.png&quot; alt=&quot;source&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;启动项目&quot;&gt;启动项目&lt;/h2&gt;
-&lt;p&gt;点击IDEA右上角的启动按钮，进行项目的启动。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/9.png&quot; alt=&quot;run&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;最终，我们将在控制台，看到项目的启动信息, 当显示如下信息时，说明项目启动成功。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/10.png&quot; alt=&quot;run log&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;此时，我们打开浏览器，输入&lt;code class=&quot;highlighter-rouge&quot;&gt;http://127.0.0.1:8080/&lt;/code&gt;将会得到一个错误提示，这是由于我们并没有配置路由造成的。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/11.png&quot; alt=&quot;run error&quot; /&gt;&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">新建项目 我们可以在欢迎界面上点击”create New Project”来新建项目</summary></entry><entry><title type="html">第三节：idea</title><link href="http://localhost:4000/SpringMVC/chapter1/3-idea/" rel="alternate" type="text/html" title="第三节：idea" /><published>2017-04-01T11:39:20+08:00</published><updated>2017-04-01T11:39:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/3-idea</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/3-idea/">&lt;p&gt;TODO：下载安装，使用edu邮箱进行注册的链接。配置JDK。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">TODO：下载安装，使用edu邮箱进行注册的链接。配置JDK。</summary></entry><entry><title type="html">第二节：maven</title><link href="http://localhost:4000/SpringMVC/chapter1/2-maven/" rel="alternate" type="text/html" title="第二节：maven" /><published>2017-04-01T11:22:20+08:00</published><updated>2017-04-01T11:22:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/2-maven</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/2-maven/">&lt;p&gt;TODO：先安装idea，看maven是否被自动安装了。
-如果没有被自动安装，则添加安装MAVEN的教程
-注意，在命令行中运行maven出现提示信息即可。不用过多的研究&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">TODO：先安装idea，看maven是否被自动安装了。 如果没有被自动安装，则添加安装MAVEN的教程 注意，在命令行中运行maven出现提示信息即可。不用过多的研究</summary></entry></feed>
+&lt;p&gt;没错，在强大的idea的帮助下，搭建一个SpringMVC API后台接口环境，就是如此的简单。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">建立C层 建立第一个包，控制器controller: 在com.mengyunzhi上点击右键，选择package, 然后输入controller -&amp;gt; ok 在controller上点右键，新建一个java class, 文件名为HelloController</summary></entry></feed>

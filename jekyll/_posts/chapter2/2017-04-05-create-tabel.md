@@ -45,8 +45,9 @@ public class Teacher {
 
 ```
 ## 测试
-我们再次点击`IDEA`的`Run`按钮，来重新启动项目。项目成功启动后，我们将得到一个`Teacher`表，这个表中，有一个字段`id`。该字段属性如下：
+我们再次点击`IDEA`的`Run`按钮，来重新启动项目。项目成功启动后，我们将得到一个`Teacher`表，这个表中，有一个字段`id`，该字段为表的主键，该字段被设置了`Auto increment`属性。如下：
 ![edit table]({{site.imageurl}}/chapter2/4.png)
+
 
 # 增加其它属性
 参考`ER`图:
@@ -85,6 +86,7 @@ public class Teacher {
 
 最后，按照`jpa`的规范，我们增加`set\get`函数，构造函数及`toString`函数。
 > 你可以使用`ctrl`+`n`来快速生成上面所提到的函数。
+
 最终完整代码如下：
 ```
 package com.mengyunzhi.repository;

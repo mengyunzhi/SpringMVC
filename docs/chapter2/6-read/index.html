@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第六节：读取数据 -- read</title>
+    <meta name="description" content="进行数据的读取"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第六节：读取数据 -- read</h1>
+    <p class="post-meta"><time datetime="2017-04-06T13:34:07+08:00" itemprop="datePublished">Apr 6, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>在上节中，我们给出了参考的官方文档，并且新建了接口。本节中，仍然使用上节中给出参考文档中提及到的方法，使用<code class="highlighter-rouge">TeacherRepository</code>来实现数据的读取。</p>
+
+<hr />
+
+<p><strong>[说明]</strong>  由于在上节中，新建<code class="highlighter-rouge">TeacherRepository</code>时，已经进行过测试操作，本节再次使用该接口时，则可以直接跳过单元测试的内容。在实际的开发中也是这样的，如果该类是由你创建的，你需要对自己创建的类负责，必须进行相关的测试操作也保证类的可靠性。而如果类不是我们自己创建的，则假设该类经过了单元测试，并且可以直接被我们调用。</p>
+<hr />
+
+<h1 id="c层对接">C层对接</h1>
+<p>在进行正式的对接前，我们首先要制定相关的API规范，即接收的数据都有什么，又期待返回什么样的数据。</p>
+<ul>
+  <li>接收教师ID</li>
+  <li>返回该ID对应的教师实体</li>
+</ul>
+
+<p>下面，我们按上述的说明，对<code class="highlighter-rouge">TeacherController</code>类进行如下补充:</p>
+<hr />
+
+<p>新建方法</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    public Teacher getTeacherById() {
+        
+    }
+</code></pre>
+</div>
+<hr />
+
+<p>添加路由</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping("/teacher/{id}")
+    public Teacher getTeacherById() {
+
+    }
+</code></pre>
+</div>
+<hr />
+
+<p>添加接收参数</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping("/teacher/{id}")
+    // @PathVariable 获取路由中的id值
+    public Teacher getTeacherById(@PathVariable Long id) {
+
+    }
+</code></pre>
+</div>
+<hr />
+
+<p>获取教师实体并返回</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping("/teacher/{id}")
+    // @PathVariable 获取路由中的id值
+    public Teacher getTeacherById(@PathVariable Long id) {  
+        return teacherRepository.findOne(id);
+    }
+</code></pre>
+</div>
+
+<h2 id="测试">测试</h2>
+<p>启动项目及MySQL数据库服务，并启动postMan对上述方法进行测试.</p>
+
+<h3 id="添加一条数据">添加一条数据</h3>
+<p><img src="/SpringMVC/assets/image/chapter2/21.png" alt="add data" /></p>
+
+<h3 id="查询刚刚添加的数据">查询刚刚添加的数据</h3>
+<p><img src="/SpringMVC/assets/image/chapter2/22.png" alt="find data" /></p>
+
+<h3 id="查询不存在的数据">查询不存在的数据</h3>
+<p><img src="/SpringMVC/assets/image/chapter2/22.png" alt="find not exist data" /></p>
+
+<p>完事代码如下：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>package com.mengyunzhi.controller;
+
+import com.mengyunzhi.repository.Teacher;
+import com.mengyunzhi.repository.TeacherRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+// 声明为Rest控制器（支持前后台分离）
+@RestController
+public class TeacherController {
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    // 设置路由
+    @RequestMapping("/teacher/save")
+    // 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象
+    public Teacher saveTeacher(@Valid @RequestBody Teacher teacher) {
+        // 打印加载的数据
+        System.out.println(teacher);
+
+        // 调用保存操作
+        return teacherRepository.save(teacher);
+    }
+
+    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping("/teacher/{id}")
+    // @PathVariable 获取路由中的id值
+    public Teacher getTeacherById(@PathVariable Long id) {
+        return teacherRepository.findOne(id);
+    }
+}
+</code></pre>
+</div>
+
+<h1 id="重构">重构</h1>
+<p>在<code class="highlighter-rouge">TeacherController</code>中，我们定义了两处路由，都有<code class="highlighter-rouge">/teacher</code>字符串，下面，我们通过对类添加路由的方式来进行重构，以降低代码的冗余。同时，更加明确的指定请求方式。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>...
+@RestController
+@RequestMapping("/teacher")
+public class TeacherController {
+    ...
+    @PostMapping("/save")
+    ...
+    @GetMapping("/{id}")
+    ...
+</code></pre>
+</div>
+
+<p>完整代码：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>package com.mengyunzhi.controller;
+
+import com.mengyunzhi.repository.Teacher;
+import com.mengyunzhi.repository.TeacherRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+/**
+ * Created by panjie on 17/4/6.
+ */
+// 声明为Rest控制器（支持前后台分离）
+@RestController
+@RequestMapping("/teacher")
+public class TeacherController {
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    // 设置路由
+    @PostMapping("/save")
+    // 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象
+    public Teacher saveTeacher(@Valid @RequestBody Teacher teacher) {
+        // 打印加载的数据
+        System.out.println(teacher);
+
+        // 调用保存操作
+        return teacherRepository.save(teacher);
+    }
+
+    // @GetMapping 表明该方法只接收 get 请求.
+    // {id}即为url中传入教师关键字
+    @GetMapping("/{id}")
+    // @PathVariable 获取路由中的id值
+    public Teacher getTeacherById(@PathVariable Long id) {
+        return teacherRepository.findOne(id);
+    }
+}
+</code></pre>
+</div>
+
+<blockquote>
+  <p>参考官方文档：<a href="http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/#repositories.core-concepts">http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/#repositories.core-concepts</a></p>
+</blockquote>
+
+<hr />
+
+<p>如果你感觉很轻松的就学习完了本节内容，那么说明你的基础打的比较牢固，具有很好的学习精神，具备了一定的英文阅读能力。恭喜你，在计算机工程的道路上，你将越走越加平坦。</p>
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>
