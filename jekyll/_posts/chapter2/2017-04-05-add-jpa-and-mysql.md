@@ -67,7 +67,8 @@ author: "潘杰"
 
 **[注意]** 当`pom.xml`第一次变化时，`idea`在右下角会弹出重新导入依赖模块的提示，我们可以进行点击导入，也可以点击提示中的"auto import",这样在下次`pom.xml`变化时，将自动触发`maven`的重新导入命令.
 
-如果你的`IDEA`最没有导入成功，那么我们需要启动控制台，并将目录切换至`pom.xml`文件所在的目录，执行`maven compile`以使`maven`来完成依赖包的导入工作[https://spring.io/guides/gs/maven/](https://spring.io/guides/gs/maven/)。
+如果你的`IDEA`最没有导入成功，那么我们需要启动控制台，并将目录切换至`pom.xml`文件所在的目录，执行`maven compile`以使`maven`来完成依赖包的导入工作[https://spring.io/guides/gs/maven/](https://spring.io/guides/gs/maven/)。然后再按下图进行依赖的添加。
+![new database springmvc]({{site.imageurl}}/chapter2/31.png)
 
 > 参考官方文档: [https://spring.io/guides/gs/accessing-data-jpa/](https://spring.io/guides/gs/accessing-data-jpa/)
 
