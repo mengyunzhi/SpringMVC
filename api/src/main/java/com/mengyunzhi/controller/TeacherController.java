@@ -47,4 +47,12 @@ public class TeacherController {
         // 数据转发
         return teacherService.saveTeacher(id, teacher);
     }
+
+    // @DeleteMapping 表明该方法只接收 delete 请求.
+    @DeleteMapping("/{id}")
+    public void deleteTeacher(@PathVariable Long id) {
+        Teacher teacher = teacherRepository.findOne(id);
+        teacherService.deleteTeacher(teacher);
+        return;
+    }
 }

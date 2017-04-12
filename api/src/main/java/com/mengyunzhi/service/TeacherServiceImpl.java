@@ -26,4 +26,17 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setId(id);
         return teacherRepository.save(teacher);
     }
+
+    @Override
+    public void deleteTeacher(Teacher teacher) {
+        teacherRepository.delete(teacher);
+        return;
+    }
+
+    @Override
+    public void deleteTeacherById(Long id) {
+        teacherRepository.delete(id);
+        return;
+    }
+
 }

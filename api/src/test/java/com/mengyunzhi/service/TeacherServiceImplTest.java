@@ -4,6 +4,7 @@ import com.mengyunzhi.repository.Teacher;
 import com.mengyunzhi.repository.TeacherRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -66,5 +67,46 @@ public class TeacherServiceImplTest {
 
         // 使用张三的数据来更新0号教师的数据
         teacherService.saveTeacher(id, teacherZhangsan);
+    }
+
+    @Test
+    public void deleteTeacherTest() {
+        // 实例化教师 李四
+        Teacher teacherLisi = new Teacher("lisi",
+                "lisi@email.com",
+                "scse of hebut",
+                false);
+
+        // 保存李四至数据库
+        teacherLisi = teacherRepository.save(teacherLisi);
+        System.out.println(teacherLisi);
+
+        // 执行删除操作
+        teacherService.deleteTeacher(teacherLisi);
+
+        // 数据查找，看数据是否进行了删除
+        Teacher teacher = teacherRepository.findOne(teacherLisi.getId());
+        System.out.println(teacher);
+    }
+
+    @Test
+    public void deleteTeacherByIdTest() {
+        // 实例化教师 李四
+        Teacher teacherLisi = new Teacher("lisi",
+                "lisi@email.com",
+                "scse of hebut",
+                false);
+
+        // 保存李四至数据库
+        teacherLisi = teacherRepository.save(teacherLisi);
+        System.out.println(teacherLisi);
+
+        // 删除关键字对应的实体
+        teacherService.deleteTeacherById(teacherLisi.getId());
+
+        // 数据查找，看数据是否进行了删除
+        Teacher teacher = teacherRepository.findOne(teacherLisi.getId());
+        System.out.println(teacher);
+
     }
 }
