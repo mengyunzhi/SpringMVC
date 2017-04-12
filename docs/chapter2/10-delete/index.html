@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第十节：删除数据 -- delete</title>
+    <meta name="description" content="进行数据的delete操作"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第十节：删除数据 -- delete</h1>
+    <p class="post-meta"><time datetime="2017-04-12T08:45:20+08:00" itemprop="datePublished">Apr 12, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>数据删除的时序图与更新相同，由<code class="highlighter-rouge">C</code>层调用<code class="highlighter-rouge">service</code>，然后由<code class="highlighter-rouge">service</code>调用<code class="highlighter-rouge">repository</code>来完成删除操作。</p>
+
+<p>我们参考<code class="highlighter-rouge">spring data jpa</code>的开发文档<a href="http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/">http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/</a>, 找到4.1 Core concepts。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/32.png" alt="4.1 Core concepts" /></p>
+
+<p>此时，我们使用的便是其为我们提供的删除操作。</p>
+
+<h2 id="在接口中建立方法">在接口中建立方法</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">TeacherService</span> <span class="o">{</span>
+    <span class="n">Teacher</span> <span class="nf">saveTeacher</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">,</span> <span class="n">Teacher</span> <span class="n">teacher</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">EntityNotFoundException</span><span class="o">;</span>
+    <span class="kt">void</span> <span class="nf">deleteTeacher</span><span class="o">(</span><span class="n">Teacher</span> <span class="n">teacher</span><span class="o">);</span>    <span class="c1">// 删除实体</span>
+<span class="o">}</span></code></pre></figure>
+
+<h2 id="实现接口中的方法">实现接口中的方法</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteTeacher</span><span class="o">(</span><span class="n">Teacher</span> <span class="n">teacher</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">teacherRepository</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">teacher</span><span class="o">);</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span></code></pre></figure>
+
+<h2 id="测试">测试</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteTeacherTest</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 实例化教师 李四</span>
+        <span class="n">Teacher</span> <span class="n">teacherLisi</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Teacher</span><span class="o">(</span><span class="s">"lisi"</span><span class="o">,</span>
+                <span class="s">"lisi@email.com"</span><span class="o">,</span>
+                <span class="s">"scse of hebut"</span><span class="o">,</span>
+                <span class="kc">false</span><span class="o">);</span>
+
+        <span class="c1">// 保存李四至数据库</span>
+        <span class="n">teacherLisi</span> <span class="o">=</span> <span class="n">teacherRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">);</span>    <span class="c1">// 打印插入的数据</span>
+
+        <span class="c1">// 执行删除操作</span>
+        <span class="n">teacherService</span><span class="o">.</span><span class="na">deleteTeacher</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">);</span>
+
+        <span class="c1">// 数据查找，看数据是否进行了删除</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="n">teacherRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">teacher</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>控制台：</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>// 插入新数据 -- 在执行save()操作时， Hibernate 自动生成
+Hibernate: insert into teacher (address, email, name, sex) values (?, ?, ?, ?)
+// 打印插入的数据 -- System.out.println(teacherLisi)
+Teacher{id=1, name='lisi', email='lisi@email.com', address='scse of hebut', sex=false}
+// 在删除前，先查询数据表中是否存在该条数据 -- 执行delelteTacher操作时, Hibernate 自动生成
+Hibernate: select teacher0_.id as id1_0_0_, teacher0_.address as address2_0_0_, teacher0_.email as email3_0_0_, teacher0_.name as name4_0_0_, teacher0_.sex as sex5_0_0_ from teacher teacher0_ where teacher0_.id=?
+// 删除数据 -- 执行delelteTacher操作时, Hibernate 自动生成
+Hibernate: delete from teacher where id=?
+// 查打数据 -- 执行findOne操作时，Hibernate 自动生成
+Hibernate: select teacher0_.id as id1_0_0_, teacher0_.address as address2_0_0_, teacher0_.email as email3_0_0_, teacher0_.name as name4_0_0_, teacher0_.sex as sex5_0_0_ from teacher teacher0_ where teacher0_.id=?
+// 打印查询到的数据 -- System.out.println(teacher);
+null
+</code></pre>
+</div>
+
+<h2 id="对接c层">对接C层</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="c1">// @DeleteMapping 表明该方法只接收 delete 请求.</span>
+    <span class="nd">@DeleteMapping</span><span class="o">(</span><span class="s">"/{id}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteTeacher</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="n">teacherRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+        <span class="n">teacherService</span><span class="o">.</span><span class="na">deleteTeacher</span><span class="o">(</span><span class="n">teacher</span><span class="o">);</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span></code></pre></figure>
+
+<h2 id="测试-1">测试</h2>
+<ol>
+  <li>增加数据</li>
+  <li>查询数据</li>
+  <li>删除数据</li>
+  <li>再查询数据</li>
+</ol>
+
+<p><img src="/SpringMVC/assets/image/chapter2/4.gif" alt="delete action test" /></p>
+
+<p>有人可能会有一些疑问：我们进行删除操作时，并没有返回任何值，我们怎么知道删除成功了呢？当删除失败时，又会得到什么样的提示呢？</p>
+
+<p>在<code class="highlighter-rouge">SpringMVC</code>中，返回的结果状态值存在于<code class="highlighter-rouge">header</code>中。当<code class="highlighter-rouge">header</code>中的<code class="highlighter-rouge">status</code>为<code class="highlighter-rouge">200</code>时，表示操作成功。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/33.png" alt="status 200" /></p>
+
+<h1 id="更多方法">更多方法</h1>
+<p>相信在上面书写代码的过程中，我们已经发现了<code class="highlighter-rouge">SpringMVC</code>给我们提供的不止一个删除方法。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/34.png" alt="more delete" /></p>
+
+<p>当我们调用<code class="highlighter-rouge">delete()</code>时，会提示我们有3个参数可选。这说明有3个<code class="highlighter-rouge">delete()</code>方法，分别接收了3种参数类型:</p>
+<ul>
+  <li>第一种是<code class="highlighter-rouge">Long</code>类型，表示要删除的实体的关键字。</li>
+  <li>第二种是<code class="highlighter-rouge">Teacher</code>实体类型，表示要删除的实体。</li>
+  <li>第三种是<code class="highlighter-rouge">Iterable</code>类型，表示要删除的<code class="highlighter-rouge">Teacher</code>实体迭代器（单向链表，链表上的每个节点为一个<code class="highlighter-rouge">Teacher</code>实体）</li>
+</ul>
+
+<p>官方的<a href="http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/#repositories.core-concepts">说明文档</a>中注释中的一句<code class="highlighter-rouge">// … more functionality omitted.</code>也充分的说明了这个问题。</p>
+
+<p>在此，我们在<code class="highlighter-rouge">service</code>补充<code class="highlighter-rouge">deleteTeacherById()</code>方法。</p>
+
+<h3 id="增加接口">增加接口</h3>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">TeacherService</span> <span class="o">{</span>
+    <span class="cm">/**
+     * 保存
+     * @param id 关键字
+     * @param teacher 教师
+     * @return 保存后的教师
+     */</span>
+    <span class="n">Teacher</span> <span class="nf">saveTeacher</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">,</span> <span class="n">Teacher</span> <span class="n">teacher</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">EntityNotFoundException</span><span class="o">;</span>
+    <span class="kt">void</span> <span class="nf">deleteTeacher</span><span class="o">(</span><span class="n">Teacher</span> <span class="n">teacher</span><span class="o">);</span>    <span class="c1">// 删除实体</span>
+    <span class="kt">void</span> <span class="nf">deleteTeacherById</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">);</span>        <span class="c1">// 删除实体</span>
+<span class="o">}</span></code></pre></figure>
+
+<h3 id="实现接口">实现接口</h3>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteTeacherById</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">teacherRepository</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span></code></pre></figure>
+
+<h3 id="测试-2">测试</h3>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteTeacherByIdTest</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 实例化教师 李四</span>
+        <span class="n">Teacher</span> <span class="n">teacherLisi</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Teacher</span><span class="o">(</span><span class="s">"lisi"</span><span class="o">,</span>
+                <span class="s">"lisi@email.com"</span><span class="o">,</span>
+                <span class="s">"scse of hebut"</span><span class="o">,</span>
+                <span class="kc">false</span><span class="o">);</span>
+
+        <span class="c1">// 保存李四至数据库</span>
+        <span class="n">teacherLisi</span> <span class="o">=</span> <span class="n">teacherRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">);</span>
+
+        <span class="c1">// 删除关键字对应的实体</span>
+        <span class="n">teacherService</span><span class="o">.</span><span class="na">deleteTeacherById</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+
+        <span class="c1">// 数据查找，看数据是否进行了删除</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="n">teacherRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">teacher</span><span class="o">);</span>
+
+    <span class="o">}</span></code></pre></figure>
+
+<p>控制台：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Hibernate: insert into teacher (address, email, name, sex) values (?, ?, ?, ?)
+Teacher{id=1, name='lisi', email='lisi@email.com', address='scse of hebut', sex=false}
+Hibernate: select teacher0_.id as id1_0_0_, teacher0_.address as address2_0_0_, teacher0_.email as email3_0_0_, teacher0_.name as name4_0_0_, teacher0_.sex as sex5_0_0_ from teacher teacher0_ where teacher0_.id=?
+Hibernate: delete from teacher where id=?
+Hibernate: select teacher0_.id as id1_0_0_, teacher0_.address as address2_0_0_, teacher0_.email as email3_0_0_, teacher0_.name as name4_0_0_, teacher0_.sex as sex5_0_0_ from teacher teacher0_ where teacher0_.id=?
+null
+</code></pre>
+</div>
+<hr />
+
+<p>自本节开始，不再提供完整代码。如果有参考完整代码的需求，请参考<code class="highlighter-rouge">github</code>中的项目仓库中的<code class="highlighter-rouge">api</code>文件夹。</p>
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>

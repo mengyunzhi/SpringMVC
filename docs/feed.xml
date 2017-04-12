@@ -1,79 +1,333 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-07T16:28:08+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
-</subtitle><entry><title type="html">第七节：更新数据 – 对接C层</title><link href="http://localhost:4000/SpringMVC/chapter2/7-update-to-controller/" rel="alternate" type="text/html" title="第七节：更新数据 -- 对接C层" /><published>2017-04-07T15:25:59+08:00</published><updated>2017-04-07T15:25:59+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/7-update-to-controller</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/7-update-to-controller/">&lt;p&gt;以数据更新为例，在&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;的世界里，大体的操作是这样的：
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-12T16:19:06+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
+</subtitle><entry><title type="html">第十一节：完善测试</title><link href="http://localhost:4000/SpringMVC/chapter2/delete-test/" rel="alternate" type="text/html" title="第十一节：完善测试" /><published>2017-04-12T15:12:37+08:00</published><updated>2017-04-12T15:12:37+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/delete-test</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/delete-test/">&lt;p&gt;我们在前面进行单元测试时，启动测试程序后，需要查看控制台来提到是否达到了我们的预期。这在一些基本的&lt;code class=&quot;highlighter-rouge&quot;&gt;CRUD&lt;/code&gt;操作中，还可以实现。但如果实现的逻辑过多，再使用这种办法，便会捉襟见肘了。&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;为我们提供了更加强大的测试方法。&lt;/p&gt;
+
+&lt;p&gt;本节中，让我们共同学习使用&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;的&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;依赖来进行单元测试。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;table&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td&gt;官方教程:&lt;/td&gt;
+        &lt;td&gt;&lt;a href=&quot;https://spring.io/guides/gs/testing-web/&quot;&gt;https://spring.io/guides/gs/testing-web/&lt;/a&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;测试是否新增成功&quot;&gt;测试是否新增成功&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// import static :导入的类为静态类，在本测试用例中只导入一次&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;assertj&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;core&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Assertions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;unitDeleteTest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 实例化教师 李四&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;lisi&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;s&quot;&gt;&quot;lisi@email.com&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;s&quot;&gt;&quot;scse of hebut&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 断言新增教程的ID为null&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isNull&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 保存李四至数据库&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 断言李四的id不是null&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isNotNull&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 断方李的ID大于0&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isNotZero&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 删除关键字对应的实体&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;teacherService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;deleteTeacherById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 数据查找，看数据是否进行了删除&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findOne&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 断言查询到的实体结果为null&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isNull&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;如上所示，我们导入了&lt;code class=&quot;highlighter-rouge&quot;&gt;org.assertj.core.api.Assertions.assertThat&lt;/code&gt;静态类，并使用了该类的：&lt;code class=&quot;highlighter-rouge&quot;&gt;isNull()&lt;/code&gt;来断言值为&lt;code class=&quot;highlighter-rouge&quot;&gt;null&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;isNotNull()&lt;/code&gt;来断言值不为&lt;code class=&quot;highlighter-rouge&quot;&gt;null&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;inNotZero()&lt;/code&gt;来断言值不为&lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;此时，当我们再次启动单元测试时。只需要观察最后的测试结果就可以了。如果测试通过，测试的结果将显示绿色，如果测试不通过，测试的结果将显示红色。此外，我还还可以启动一个测试类中的所有测试用例，最终通过观察测试结果的方法来判断这个类中的所有的测试方法是否通过。&lt;/p&gt;
+
+&lt;p&gt;比如我们在测试类中，有5个测试方法，则可以通过对类的测试，一次性的完成5个测试用例:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/35.png&quot; alt=&quot;class unit test&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;此时，如果我们随意修改一个断言值，制造一些不成的用例，那么，将得到如下的测试失败的提示:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/36.png&quot; alt=&quot;class unit test failed&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;控制台会提示我们共进了5个测试，其中有一个测试失败了，这个测试是&lt;code class=&quot;highlighter-rouge&quot;&gt;unitDeleteTest&lt;/code&gt;。当我们修改代码后，我们可以点击最左侧的第二个按钮（图中红圈）来单独启动这个错误的用例。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;table&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td&gt;参考文档：&lt;/td&gt;
+        &lt;td&gt;&lt;a href=&quot;https://joel-costigliola.github.io/assertj/&quot;&gt;https://joel-costigliola.github.io/assertj/&lt;/a&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;a href=&quot;http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/AbstractCharSequenceAssert.html#containsOnlyDigits--&quot;&gt;http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/AbstractCharSequenceAssert.html#containsOnlyDigits–&lt;/a&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;实际开发&quot;&gt;实际开发&lt;/h1&gt;
+&lt;p&gt;在实际的开发中，往往是这样的：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;高级工程师根据项目经理的要求以及项目原型、需求说明，研发类图、时序图。&lt;/li&gt;
+  &lt;li&gt;中级工程师会按类图与时序图进行基础代码的编写。
+    &lt;ul&gt;
+      &lt;li&gt;基本代码的编写过程中，我们只给出函数名，参数，返回值直接为null。&lt;/li&gt;
+      &lt;li&gt;中级工程师们针对每一个方法，都去建立一个单元测试的方法，在这个方法中，写清楚单元测试的内容。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;初级工程师们按照类图，时序图，以及单元测试，进行代码的开发。
+    &lt;ul&gt;
+      &lt;li&gt;以是否通过单元测试，做为方法是否开发完毕的依据。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;所以，如果我们根本没有接触过单元测试，或是认为单元测试繁琐，完全没有必要的话。那么，我们的定位只能是程序员(computer programmer)，而非软件工程师（software development engineer）。
+下图诠释了两者的区别:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/37.png&quot; alt=&quot;cs sde&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;让我们一起，在计算机工程中，不倦地追求高远，彻底脱离cs队伍，投入software development engineer的怀抱。Just do it!&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">我们在前面进行单元测试时，启动测试程序后，需要查看控制台来提到是否达到了我们的预期。这在一些基本的CRUD操作中，还可以实现。但如果实现的逻辑过多，再使用这种办法，便会捉襟见肘了。SpringMVC为我们提供了更加强大的测试方法。</summary></entry><entry><title type="html">第十节：删除数据 – delete</title><link href="http://localhost:4000/SpringMVC/chapter2/10-delete/" rel="alternate" type="text/html" title="第十节：删除数据 -- delete" /><published>2017-04-12T08:45:20+08:00</published><updated>2017-04-12T08:45:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/10-delete</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/10-delete/">&lt;p&gt;数据删除的时序图与更新相同，由&lt;code class=&quot;highlighter-rouge&quot;&gt;C&lt;/code&gt;层调用&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;，然后由&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;调用&lt;code class=&quot;highlighter-rouge&quot;&gt;repository&lt;/code&gt;来完成删除操作。&lt;/p&gt;
+
+&lt;p&gt;我们参考&lt;code class=&quot;highlighter-rouge&quot;&gt;spring data jpa&lt;/code&gt;的开发文档&lt;a href=&quot;http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/&quot;&gt;http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/&lt;/a&gt;, 找到4.1 Core concepts。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/32.png&quot; alt=&quot;4.1 Core concepts&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;此时，我们使用的便是其为我们提供的删除操作。&lt;/p&gt;
+
+&lt;h2 id=&quot;在接口中建立方法&quot;&gt;在接口中建立方法&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TeacherService&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;saveTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EntityNotFoundException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deleteTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// 删除实体&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;实现接口中的方法&quot;&gt;实现接口中的方法&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deleteTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;测试&quot;&gt;测试&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    &lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deleteTeacherTest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 实例化教师 李四&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;lisi&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;s&quot;&gt;&quot;lisi@email.com&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;s&quot;&gt;&quot;scse of hebut&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 保存李四至数据库&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// 打印插入的数据&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 执行删除操作&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;teacherService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;deleteTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 数据查找，看数据是否进行了删除&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findOne&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;控制台：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 插入新数据 -- 在执行save()操作时， Hibernate 自动生成
+Hibernate: insert into teacher (address, email, name, sex) values (?, ?, ?, ?)
+// 打印插入的数据 -- System.out.println(teacherLisi)
+Teacher{id=1, name='lisi', email='lisi@email.com', address='scse of hebut', sex=false}
+// 在删除前，先查询数据表中是否存在该条数据 -- 执行delelteTacher操作时, Hibernate 自动生成
+Hibernate: select teacher0_.id as id1_0_0_, teacher0_.address as address2_0_0_, teacher0_.email as email3_0_0_, teacher0_.name as name4_0_0_, teacher0_.sex as sex5_0_0_ from teacher teacher0_ where teacher0_.id=?
+// 删除数据 -- 执行delelteTacher操作时, Hibernate 自动生成
+Hibernate: delete from teacher where id=?
+// 查打数据 -- 执行findOne操作时，Hibernate 自动生成
+Hibernate: select teacher0_.id as id1_0_0_, teacher0_.address as address2_0_0_, teacher0_.email as email3_0_0_, teacher0_.name as name4_0_0_, teacher0_.sex as sex5_0_0_ from teacher teacher0_ where teacher0_.id=?
+// 打印查询到的数据 -- System.out.println(teacher);
+null
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;对接c层&quot;&gt;对接C层&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    &lt;span class=&quot;c1&quot;&gt;// @DeleteMapping 表明该方法只接收 delete 请求.&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@DeleteMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/{id}&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deleteTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@PathVariable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findOne&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;teacherService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;deleteTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;测试-1&quot;&gt;测试&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;增加数据&lt;/li&gt;
+  &lt;li&gt;查询数据&lt;/li&gt;
+  &lt;li&gt;删除数据&lt;/li&gt;
+  &lt;li&gt;再查询数据&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/4.gif&quot; alt=&quot;delete action test&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;有人可能会有一些疑问：我们进行删除操作时，并没有返回任何值，我们怎么知道删除成功了呢？当删除失败时，又会得到什么样的提示呢？&lt;/p&gt;
+
+&lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;中，返回的结果状态值存在于&lt;code class=&quot;highlighter-rouge&quot;&gt;header&lt;/code&gt;中。当&lt;code class=&quot;highlighter-rouge&quot;&gt;header&lt;/code&gt;中的&lt;code class=&quot;highlighter-rouge&quot;&gt;status&lt;/code&gt;为&lt;code class=&quot;highlighter-rouge&quot;&gt;200&lt;/code&gt;时，表示操作成功。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/33.png&quot; alt=&quot;status 200&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;更多方法&quot;&gt;更多方法&lt;/h1&gt;
+&lt;p&gt;相信在上面书写代码的过程中，我们已经发现了&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;给我们提供的不止一个删除方法。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/34.png&quot; alt=&quot;more delete&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;当我们调用&lt;code class=&quot;highlighter-rouge&quot;&gt;delete()&lt;/code&gt;时，会提示我们有3个参数可选。这说明有3个&lt;code class=&quot;highlighter-rouge&quot;&gt;delete()&lt;/code&gt;方法，分别接收了3种参数类型:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;第一种是&lt;code class=&quot;highlighter-rouge&quot;&gt;Long&lt;/code&gt;类型，表示要删除的实体的关键字。&lt;/li&gt;
+  &lt;li&gt;第二种是&lt;code class=&quot;highlighter-rouge&quot;&gt;Teacher&lt;/code&gt;实体类型，表示要删除的实体。&lt;/li&gt;
+  &lt;li&gt;第三种是&lt;code class=&quot;highlighter-rouge&quot;&gt;Iterable&lt;/code&gt;类型，表示要删除的&lt;code class=&quot;highlighter-rouge&quot;&gt;Teacher&lt;/code&gt;实体迭代器（单向链表，链表上的每个节点为一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Teacher&lt;/code&gt;实体）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;官方的&lt;a href=&quot;http://docs.spring.io/spring-data/jpa/docs/1.11.1.RELEASE/reference/html/#repositories.core-concepts&quot;&gt;说明文档&lt;/a&gt;中注释中的一句&lt;code class=&quot;highlighter-rouge&quot;&gt;// … more functionality omitted.&lt;/code&gt;也充分的说明了这个问题。&lt;/p&gt;
+
+&lt;p&gt;在此，我们在&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;补充&lt;code class=&quot;highlighter-rouge&quot;&gt;deleteTeacherById()&lt;/code&gt;方法。&lt;/p&gt;
+
+&lt;h3 id=&quot;增加接口&quot;&gt;增加接口&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TeacherService&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;cm&quot;&gt;/**
+     * 保存
+     * @param id 关键字
+     * @param teacher 教师
+     * @return 保存后的教师
+     */&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;saveTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EntityNotFoundException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deleteTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// 删除实体&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deleteTeacherById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;        &lt;span class=&quot;c1&quot;&gt;// 删除实体&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;实现接口&quot;&gt;实现接口&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deleteTeacherById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;测试-2&quot;&gt;测试&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    &lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deleteTeacherByIdTest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 实例化教师 李四&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;lisi&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;s&quot;&gt;&quot;lisi@email.com&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;s&quot;&gt;&quot;scse of hebut&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 保存李四至数据库&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 删除关键字对应的实体&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;teacherService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;deleteTeacherById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 数据查找，看数据是否进行了删除&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findOne&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacherLisi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;控制台：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Hibernate: insert into teacher (address, email, name, sex) values (?, ?, ?, ?)
+Teacher{id=1, name='lisi', email='lisi@email.com', address='scse of hebut', sex=false}
+Hibernate: select teacher0_.id as id1_0_0_, teacher0_.address as address2_0_0_, teacher0_.email as email3_0_0_, teacher0_.name as name4_0_0_, teacher0_.sex as sex5_0_0_ from teacher teacher0_ where teacher0_.id=?
+Hibernate: delete from teacher where id=?
+Hibernate: select teacher0_.id as id1_0_0_, teacher0_.address as address2_0_0_, teacher0_.email as email3_0_0_, teacher0_.name as name4_0_0_, teacher0_.sex as sex5_0_0_ from teacher teacher0_ where teacher0_.id=?
+null
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;自本节开始，不再提供完整代码。如果有参考完整代码的需求，请参考&lt;code class=&quot;highlighter-rouge&quot;&gt;github&lt;/code&gt;中的项目仓库中的&lt;code class=&quot;highlighter-rouge&quot;&gt;api&lt;/code&gt;文件夹。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">数据删除的时序图与更新相同，由C层调用service，然后由service调用repository来完成删除操作。</summary></entry><entry><title type="html">第九节：更新数据 – 对接C层</title><link href="http://localhost:4000/SpringMVC/chapter2/9-update-to-controller/" rel="alternate" type="text/html" title="第九节：更新数据 -- 对接C层" /><published>2017-04-07T15:25:59+08:00</published><updated>2017-04-07T15:25:59+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/9-update-to-controller</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/9-update-to-controller/">&lt;p&gt;以数据更新为例，在&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;的世界里，大体的操作是这样的：
 &lt;img src=&quot;/SpringMVC/assets/image/chapter2/29.png&quot; alt=&quot;springmvc seq&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Spring&lt;/code&gt;为我们自动实现了&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherRepository&lt;/code&gt;接口，我们手动的实现了&lt;code class=&quot;highlighter-rouge&quot;&gt;TeacherService&lt;/code&gt;接口，并进行单元测试。在以上两个接口可用并测试的基础上，我们的C层所要做的工作就是，直接将数据转发给&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // @PutMapping 表明该方法只接收 put 请求.
-    @PutMapping(&quot;/{id}&quot;)
-    public Teacher updateTeacher(@PathVariable Long id, @RequestBody Teacher teacher) throws EntityNotFoundException {
-        // 数据转发
-        return teacherService.saveTeacher(id, teacher);
-    }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    &lt;span class=&quot;c1&quot;&gt;// @PutMapping 表明该方法只接收 put 请求.&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@PutMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/{id}&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;updateTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@PathVariable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@RequestBody&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EntityNotFoundException&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 数据转发&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;saveTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;由于&lt;code class=&quot;highlighter-rouge&quot;&gt;teacherService&lt;/code&gt;在执行&lt;code class=&quot;highlighter-rouge&quot;&gt;saveTeacher&lt;/code&gt;时，可能会抛出一个异常。我们在这里，可以手动的使用&lt;code class=&quot;highlighter-rouge&quot;&gt;try catch&lt;/code&gt;来进行处理后，重新定制一个新的异常，返回给&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;，也可以在函数声明中，加入&lt;code class=&quot;highlighter-rouge&quot;&gt;throws EntityNotFoundException&lt;/code&gt;来直接抛出这个异常。在这里，我们直接将异常向上抛出。&lt;/p&gt;
 
 &lt;p&gt;完整代码：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
 
-import com.mengyunzhi.repository.Teacher;
-import com.mengyunzhi.repository.TeacherRepository;
-import com.mengyunzhi.service.TeacherService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;mengyunzhi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 
-import javax.persistence.EntityNotFoundException;
-import javax.validation.Valid;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.mengyunzhi.repository.Teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.mengyunzhi.repository.TeacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.mengyunzhi.service.TeacherService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.beans.factory.annotation.Autowired&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.web.bind.annotation.*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 
-/**
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;javax.persistence.EntityNotFoundException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;javax.validation.Valid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**
  * Created by panjie on 17/4/6.
- */
-// 声明为Rest控制器（支持前后台分离）
-@RestController
-@RequestMapping(&quot;/teacher&quot;)
-public class TeacherController {
-    @Autowired
-    private TeacherRepository teacherRepository;
+ */&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// 声明为Rest控制器（支持前后台分离）&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@RestController&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/teacher&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TeacherController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Autowired&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TeacherRepository&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 
-    @Autowired
-    private TeacherService teacherService;
+    &lt;span class=&quot;nd&quot;&gt;@Autowired&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TeacherService&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 
-    // 设置路由
-    @PostMapping(&quot;/save&quot;)
-    // 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象
-    public Teacher saveTeacher(@Valid @RequestBody Teacher teacher) {
-        // 打印加载的数据
-        System.out.println(teacher);
+    &lt;span class=&quot;c1&quot;&gt;// 设置路由&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@PostMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/save&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 使用@RequestBody注解，将请求的`json`数据，直接加载至teacher对象&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;saveTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@Valid&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@RequestBody&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 打印加载的数据&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 
-        // 调用保存操作
-        return teacherRepository.save(teacher);
-    }
+        &lt;span class=&quot;c1&quot;&gt;// 调用保存操作&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 
-    // @GetMapping 表明该方法只接收 get 请求.
-    // {id}即为url中传入教师关键字
-    @GetMapping(&quot;/{id}&quot;)
-    // @PathVariable 获取路由中的id值
-    public Teacher getTeacherById(@PathVariable Long id) {
-        return teacherRepository.findOne(id);
-    }
+    &lt;span class=&quot;c1&quot;&gt;// @GetMapping 表明该方法只接收 get 请求.&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// {id}即为url中传入教师关键字&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/{id}&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// @PathVariable 获取路由中的id值&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getTeacherById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@PathVariable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findOne&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 
-    // @PutMapping 表明该方法只接收 put 请求.
-    @PutMapping(&quot;/{id}&quot;)
-    public Teacher updateTeacher(@PathVariable Long id, @RequestBody Teacher teacher) throws EntityNotFoundException {
-        // 数据转发
-        return teacherService.saveTeacher(id, teacher);
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+    &lt;span class=&quot;c1&quot;&gt;// @PutMapping 表明该方法只接收 put 请求.&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@PutMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/{id}&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;updateTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@PathVariable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@RequestBody&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EntityNotFoundException&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 数据转发&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacherService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;saveTeacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;h2 id=&quot;测试&quot;&gt;测试&lt;/h2&gt;
 &lt;p&gt;正确用例，略。
 错误用例：
 &lt;img src=&quot;/SpringMVC/assets/image/chapter2/30.png&quot; alt=&quot;update error unit test&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;作业&quot;&gt;作业&lt;/h2&gt;
-&lt;p&gt;将数据增加与删除，由直接调用&lt;code class=&quot;highlighter-rouge&quot;&gt;repository&lt;/code&gt;改写为调用&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">以数据更新为例，在SpringMVC的世界里，大体的操作是这样的：</summary></entry><entry><title type="html">第七节：更新数据 – service</title><link href="http://localhost:4000/SpringMVC/chapter2/7-update-service/" rel="alternate" type="text/html" title="第七节：更新数据 -- service" /><published>2017-04-07T15:20:42+08:00</published><updated>2017-04-07T15:20:42+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/7-update-service</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/7-update-service/">&lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;中，&lt;code class=&quot;highlighter-rouge&quot;&gt;C&lt;/code&gt;层更多在功能是：数据转发，数据验证，数据绑定，路由设定等。而不负责具体的数据的处理。显然的，我们上述代码的C层中，对数据进行逻辑处理。这违背了上述的原则。&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;中，&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;层负责对进行逻辑运算及数据的处理。&lt;/p&gt;
+&lt;p&gt;将数据增加与删除，由直接调用&lt;code class=&quot;highlighter-rouge&quot;&gt;repository&lt;/code&gt;改写为调用&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">以数据更新为例，在SpringMVC的世界里，大体的操作是这样的：</summary></entry><entry><title type="html">第八节：更新数据 – service</title><link href="http://localhost:4000/SpringMVC/chapter2/8-update-service/" rel="alternate" type="text/html" title="第八节：更新数据 -- service" /><published>2017-04-07T15:20:42+08:00</published><updated>2017-04-07T15:20:42+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/8-update-service</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/8-update-service/">&lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;中，&lt;code class=&quot;highlighter-rouge&quot;&gt;C&lt;/code&gt;层更多在功能是：数据转发，数据验证，数据绑定，路由设定等。而不负责具体的数据的处理。显然的，我们上述代码的C层中，对数据进行逻辑处理。这违背了上述的原则。&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;中，&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;层负责对进行逻辑运算及数据的处理。&lt;/p&gt;
 
 &lt;p&gt;我们在使用&lt;code class=&quot;highlighter-rouge&quot;&gt;teacherRepository&lt;/code&gt;时，已经体验了&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;面向接口编程的魅力。和前面一样，在建立&lt;code class=&quot;highlighter-rouge&quot;&gt;service&lt;/code&gt;时，同样也是面向接口的。我们在其实类中引用的，也是接口，而非对象。&lt;/p&gt;
 
@@ -1471,82 +1725,4 @@ spring.datasource.password=
 
 &lt;blockquote&gt;
   &lt;p&gt;参考官方文档：&lt;a href=&quot;https://spring.io/guides/gs/accessing-data-mysql/&quot;&gt;https://spring.io/guides/gs/accessing-data-mysql/&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>潘杰</name></author><summary type="html">如果在项目刚刚生成时，你查看过生成项目的目录信息，不难发现我们在前面选择过一个叫做web的Spring核心模块，被写入了根目录下的pom.xml中。</summary></entry><entry><title type="html">第一节：ER图</title><link href="http://localhost:4000/SpringMVC/chapter2/er-diagram/" rel="alternate" type="text/html" title="第一节：ER图" /><published>2017-04-05T14:26:57+08:00</published><updated>2017-04-05T14:26:57+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/er-diagram</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/er-diagram/">&lt;p&gt;和以前的我们接触到的教程一下，在教师管理中，我们也会按照增查改删（CRUD）的顺序，来进行程序的开发。
-在进行数据的增加操作前，我们参照的ER图如下。&lt;/p&gt;
-
-&lt;p&gt;逻辑模型：
-&lt;img src=&quot;/SpringMVC/assets/image/chapter2/6.png&quot; alt=&quot;Logical model&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;物理模型：
-&lt;img src=&quot;/SpringMVC/assets/image/chapter2/7.png&quot; alt=&quot;physical model&quot; /&gt;&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">和以前的我们接触到的教程一下，在教师管理中，我们也会按照增查改删（CRUD）的顺序，来进行程序的开发。 在进行数据的增加操作前，我们参照的ER图如下。</summary></entry><entry><title type="html">第五节：HelloWorld</title><link href="http://localhost:4000/SpringMVC/chapter1/5-hello-world/" rel="alternate" type="text/html" title="第五节：HelloWorld" /><published>2017-04-01T15:55:20+08:00</published><updated>2017-04-01T15:55:20+08:00</updated><id>http://localhost:4000/SpringMVC/chapter1/5-hello-world</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter1/5-hello-world/">&lt;h1 id=&quot;建立c层&quot;&gt;建立C层&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;建立第一个包，控制器&lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt;: 在&lt;code class=&quot;highlighter-rouge&quot;&gt;com.mengyunzhi&lt;/code&gt;上点击右键，选择&lt;code class=&quot;highlighter-rouge&quot;&gt;package&lt;/code&gt;, 然后输入&lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt; -&amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;ok&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt;上点右键，新建一个&lt;code class=&quot;highlighter-rouge&quot;&gt;java class&lt;/code&gt;, 文件名为&lt;code class=&quot;highlighter-rouge&quot;&gt;HelloController&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/12.png&quot; alt=&quot;new Hello class&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;上述文件名及类名有误，应该为HelloController. todo:修正截图。&lt;/p&gt;
-
-&lt;p&gt;然后&lt;b&gt;使用&lt;code class=&quot;highlighter-rouge&quot;&gt;RestController&lt;/code&gt;注解来说明该类是一个控制器。&lt;/b&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
-
-import org.springframework.web.bind.annotation.RestController;
-
-/**
- * Created by panjie on 17/4/1.
- */
-@RestController
-public class HelloController {
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;在SpringMVC中，将大量的来使用注解&lt;code class=&quot;highlighter-rouge&quot;&gt;@&lt;/code&gt;来进行声明。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h1 id=&quot;新建-funciton&quot;&gt;新建 funciton&lt;/h1&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
-...
-@Controller
-public class HelloController {
-
-    public String world() {
-        return &quot;Hello World!&quot;;
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;&lt;b&gt; 使用&lt;code class=&quot;highlighter-rouge&quot;&gt;RequestMapping&lt;/code&gt;注解来声明该方法是一个触发器，并设置该触发器对应的路由信息.&lt;/b&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package com.mengyunzhi.controller;
-...
-import org.springframework.web.bind.annotation.RequestMapping;
-...
-    // 设置该方法为一个触发器，并设置该触发器对应的路由信息&quot;/&quot;
-    @RequestMapping(&quot;/&quot;)
-    public String world() {
-        return &quot;Hello World!&quot;;
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;最后，我们点击控制台左上角的重启按钮，重新启动应用（重新进行编译）。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter1/13.png&quot; alt=&quot;rerun&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;IDEA在编写的过程中，没有提示错误，且启动时控制台无报错信息，则说明代码正确。&lt;/p&gt;
-
-&lt;h1 id=&quot;测试&quot;&gt;测试&lt;/h1&gt;
-&lt;p&gt;此时，我们打开浏览器，输入:&lt;code class=&quot;highlighter-rouge&quot;&gt;http://127.0.0.1:8080/&lt;/code&gt;
-将得到如下界面。
-&lt;img src=&quot;/SpringMVC/assets/image/chapter1/14.png&quot; alt=&quot;hello world&quot; /&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h3 id=&quot;总结&quot;&gt;总结：&lt;/h3&gt;
-&lt;p&gt;没错，在强大的idea的帮助下，搭建一个SpringMVC API后台接口环境，就是如此的简单。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">建立C层 建立第一个包，控制器controller: 在com.mengyunzhi上点击右键，选择package, 然后输入controller -&amp;gt; ok 在controller上点右键，新建一个java class, 文件名为HelloController</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>潘杰</name></author><summary type="html">如果在项目刚刚生成时，你查看过生成项目的目录信息，不难发现我们在前面选择过一个叫做web的Spring核心模块，被写入了根目录下的pom.xml中。</summary></entry></feed>

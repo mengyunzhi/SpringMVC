@@ -37,7 +37,7 @@ public class HelloController {
 ```
 package com.mengyunzhi.controller;
 ...
-@Controller
+@RestController
 public class HelloController {
 
     public String world() {

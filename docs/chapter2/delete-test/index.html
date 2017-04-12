@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第十一节：完善测试</title>
+    <meta name="description" content="引用断言，进行单元测试"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第十一节：完善测试</h1>
+    <p class="post-meta"><time datetime="2017-04-12T15:12:37+08:00" itemprop="datePublished">Apr 12, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>我们在前面进行单元测试时，启动测试程序后，需要查看控制台来提到是否达到了我们的预期。这在一些基本的<code class="highlighter-rouge">CRUD</code>操作中，还可以实现。但如果实现的逻辑过多，再使用这种办法，便会捉襟见肘了。<code class="highlighter-rouge">SpringMVC</code>为我们提供了更加强大的测试方法。</p>
+
+<p>本节中，让我们共同学习使用<code class="highlighter-rouge">SpringMVC</code>的<code class="highlighter-rouge">test</code>依赖来进行单元测试。</p>
+
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>官方教程:</td>
+        <td><a href="https://spring.io/guides/gs/testing-web/">https://spring.io/guides/gs/testing-web/</a></td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+<h2 id="测试是否新增成功">测试是否新增成功</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// import static :导入的类为静态类，在本测试用例中只导入一次</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">assertj</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">unitDeleteTest</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 实例化教师 李四</span>
+        <span class="n">Teacher</span> <span class="n">teacherLisi</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Teacher</span><span class="o">(</span><span class="s">"lisi"</span><span class="o">,</span>
+                <span class="s">"lisi@email.com"</span><span class="o">,</span>
+                <span class="s">"scse of hebut"</span><span class="o">,</span>
+                <span class="kc">false</span><span class="o">);</span>
+
+        <span class="c1">// 断言新增教程的ID为null</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">.</span><span class="na">getId</span><span class="o">()).</span><span class="na">isNull</span><span class="o">();</span>
+
+        <span class="c1">// 保存李四至数据库</span>
+        <span class="n">teacherLisi</span> <span class="o">=</span> <span class="n">teacherRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">);</span>
+
+        <span class="c1">// 断言李四的id不是null</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">.</span><span class="na">getId</span><span class="o">()).</span><span class="na">isNotNull</span><span class="o">();</span>
+        <span class="c1">// 断方李的ID大于0</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">.</span><span class="na">getId</span><span class="o">()).</span><span class="na">isNotZero</span><span class="o">();</span>
+
+        <span class="c1">// 删除关键字对应的实体</span>
+        <span class="n">teacherService</span><span class="o">.</span><span class="na">deleteTeacherById</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+
+        <span class="c1">// 数据查找，看数据是否进行了删除</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="n">teacherRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="n">teacherLisi</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+        <span class="c1">// 断言查询到的实体结果为null</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">teacher</span><span class="o">).</span><span class="na">isNull</span><span class="o">();</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>如上所示，我们导入了<code class="highlighter-rouge">org.assertj.core.api.Assertions.assertThat</code>静态类，并使用了该类的：<code class="highlighter-rouge">isNull()</code>来断言值为<code class="highlighter-rouge">null</code>，<code class="highlighter-rouge">isNotNull()</code>来断言值不为<code class="highlighter-rouge">null</code>, <code class="highlighter-rouge">inNotZero()</code>来断言值不为<code class="highlighter-rouge">0</code>。</p>
+
+<p>此时，当我们再次启动单元测试时。只需要观察最后的测试结果就可以了。如果测试通过，测试的结果将显示绿色，如果测试不通过，测试的结果将显示红色。此外，我还还可以启动一个测试类中的所有测试用例，最终通过观察测试结果的方法来判断这个类中的所有的测试方法是否通过。</p>
+
+<p>比如我们在测试类中，有5个测试方法，则可以通过对类的测试，一次性的完成5个测试用例:</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/35.png" alt="class unit test" /></p>
+
+<p>此时，如果我们随意修改一个断言值，制造一些不成的用例，那么，将得到如下的测试失败的提示:</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/36.png" alt="class unit test failed" /></p>
+
+<p>控制台会提示我们共进了5个测试，其中有一个测试失败了，这个测试是<code class="highlighter-rouge">unitDeleteTest</code>。当我们修改代码后，我们可以点击最左侧的第二个按钮（图中红圈）来单独启动这个错误的用例。</p>
+
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>参考文档：</td>
+        <td><a href="https://joel-costigliola.github.io/assertj/">https://joel-costigliola.github.io/assertj/</a></td>
+        <td><a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/AbstractCharSequenceAssert.html#containsOnlyDigits--">http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/AbstractCharSequenceAssert.html#containsOnlyDigits–</a></td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+<h1 id="实际开发">实际开发</h1>
+<p>在实际的开发中，往往是这样的：</p>
+<ul>
+  <li>高级工程师根据项目经理的要求以及项目原型、需求说明，研发类图、时序图。</li>
+  <li>中级工程师会按类图与时序图进行基础代码的编写。
+    <ul>
+      <li>基本代码的编写过程中，我们只给出函数名，参数，返回值直接为null。</li>
+      <li>中级工程师们针对每一个方法，都去建立一个单元测试的方法，在这个方法中，写清楚单元测试的内容。</li>
+    </ul>
+  </li>
+  <li>初级工程师们按照类图，时序图，以及单元测试，进行代码的开发。
+    <ul>
+      <li>以是否通过单元测试，做为方法是否开发完毕的依据。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>所以，如果我们根本没有接触过单元测试，或是认为单元测试繁琐，完全没有必要的话。那么，我们的定位只能是程序员(computer programmer)，而非软件工程师（software development engineer）。
+下图诠释了两者的区别:</p>
+
+<p><img src="/SpringMVC/assets/image/chapter2/37.png" alt="cs sde" /></p>
+
+<p>让我们一起，在计算机工程中，不倦地追求高远，彻底脱离cs队伍，投入software development engineer的怀抱。Just do it!</p>
+
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>
