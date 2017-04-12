@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-12T16:19:06+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-12T16:32:36+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
 </subtitle><entry><title type="html">第十一节：完善测试</title><link href="http://localhost:4000/SpringMVC/chapter2/delete-test/" rel="alternate" type="text/html" title="第十一节：完善测试" /><published>2017-04-12T15:12:37+08:00</published><updated>2017-04-12T15:12:37+08:00</updated><id>http://localhost:4000/SpringMVC/chapter2/delete-test</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter2/delete-test/">&lt;p&gt;我们在前面进行单元测试时，启动测试程序后，需要查看控制台来提到是否达到了我们的预期。这在一些基本的&lt;code class=&quot;highlighter-rouge&quot;&gt;CRUD&lt;/code&gt;操作中，还可以实现。但如果实现的逻辑过多，再使用这种办法，便会捉襟见肘了。&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;为我们提供了更加强大的测试方法。&lt;/p&gt;
 
 &lt;p&gt;本节中，让我们共同学习使用&lt;code class=&quot;highlighter-rouge&quot;&gt;SpringMVC&lt;/code&gt;的&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;依赖来进行单元测试。&lt;/p&gt;
@@ -14,7 +14,7 @@
   &lt;/table&gt;
 &lt;/blockquote&gt;
 
-&lt;h2 id=&quot;测试是否新增成功&quot;&gt;测试是否新增成功&lt;/h2&gt;
+&lt;h2 id=&quot;断言测试&quot;&gt;断言测试&lt;/h2&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// import static :导入的类为静态类，在本测试用例中只导入一次&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;assertj&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;core&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;api&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Assertions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
@@ -59,7 +59,7 @@
 
 &lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter2/36.png&quot; alt=&quot;class unit test failed&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;控制台会提示我们共进了5个测试，其中有一个测试失败了，这个测试是&lt;code class=&quot;highlighter-rouge&quot;&gt;unitDeleteTest&lt;/code&gt;。当我们修改代码后，我们可以点击最左侧的第二个按钮（图中红圈）来单独启动这个错误的用例。&lt;/p&gt;
+&lt;p&gt;控制台会提示我们共进行了5个测试，其中有一个测试失败了，这个测试是&lt;code class=&quot;highlighter-rouge&quot;&gt;unitDeleteTest&lt;/code&gt;。当我们修改代码后，我们可以点击最左侧的第二个按钮（图中红圈）来单独启动这个错误的用例。&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;table&gt;
@@ -74,7 +74,7 @@
 &lt;/blockquote&gt;
 
 &lt;h1 id=&quot;实际开发&quot;&gt;实际开发&lt;/h1&gt;
-&lt;p&gt;在实际的开发中，往往是这样的：&lt;/p&gt;
+&lt;p&gt;在实际的开发中，流程往往是这样的：&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;高级工程师根据项目经理的要求以及项目原型、需求说明，研发类图、时序图。&lt;/li&gt;
   &lt;li&gt;中级工程师会按类图与时序图进行基础代码的编写。

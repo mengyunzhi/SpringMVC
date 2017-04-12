@@ -45,7 +45,7 @@
   </table>
 </blockquote>
 
-<h2 id="测试是否新增成功">测试是否新增成功</h2>
+<h2 id="断言测试">断言测试</h2>
 
 <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// import static :导入的类为静态类，在本测试用例中只导入一次</span>
 <span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">assertj</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;</span>
@@ -90,7 +90,7 @@
 
 <p><img src="/SpringMVC/assets/image/chapter2/36.png" alt="class unit test failed" /></p>
 
-<p>控制台会提示我们共进了5个测试，其中有一个测试失败了，这个测试是<code class="highlighter-rouge">unitDeleteTest</code>。当我们修改代码后，我们可以点击最左侧的第二个按钮（图中红圈）来单独启动这个错误的用例。</p>
+<p>控制台会提示我们共进行了5个测试，其中有一个测试失败了，这个测试是<code class="highlighter-rouge">unitDeleteTest</code>。当我们修改代码后，我们可以点击最左侧的第二个按钮（图中红圈）来单独启动这个错误的用例。</p>
 
 <blockquote>
   <table>
@@ -105,7 +105,7 @@
 </blockquote>
 
 <h1 id="实际开发">实际开发</h1>
-<p>在实际的开发中，往往是这样的：</p>
+<p>在实际的开发中，流程往往是这样的：</p>
 <ul>
   <li>高级工程师根据项目经理的要求以及项目原型、需求说明，研发类图、时序图。</li>
   <li>中级工程师会按类图与时序图进行基础代码的编写。

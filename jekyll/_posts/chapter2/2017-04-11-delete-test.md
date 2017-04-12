@@ -12,7 +12,7 @@ author: "潘杰"
 
 > 官方教程: | [https://spring.io/guides/gs/testing-web/](https://spring.io/guides/gs/testing-web/)
 
-## 测试是否新增成功
+## 断言测试
 {% highlight java %}
 // import static :导入的类为静态类，在本测试用例中只导入一次
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,12 +58,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 ![class unit test failed]({{site.imageurl}}/chapter2/36.png)
 
-控制台会提示我们共进了5个测试，其中有一个测试失败了，这个测试是`unitDeleteTest`。当我们修改代码后，我们可以点击最左侧的第二个按钮（图中红圈）来单独启动这个错误的用例。
+控制台会提示我们共进行了5个测试，其中有一个测试失败了，这个测试是`unitDeleteTest`。当我们修改代码后，我们可以点击最左侧的第二个按钮（图中红圈）来单独启动这个错误的用例。
 
 > 参考文档：| [https://joel-costigliola.github.io/assertj/](https://joel-costigliola.github.io/assertj/) | [http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/AbstractCharSequenceAssert.html#containsOnlyDigits--](http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/AbstractCharSequenceAssert.html#containsOnlyDigits--)
 
 # 实际开发
-在实际的开发中，往往是这样的：
+在实际的开发中，流程往往是这样的：
 *   高级工程师根据项目经理的要求以及项目原型、需求说明，研发类图、时序图。
 *   中级工程师会按类图与时序图进行基础代码的编写。
     *   基本代码的编写过程中，我们只给出函数名，参数，返回值直接为null。
