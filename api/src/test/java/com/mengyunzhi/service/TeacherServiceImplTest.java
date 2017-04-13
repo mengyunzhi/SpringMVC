@@ -126,7 +126,7 @@ public class TeacherServiceImplTest {
         teacherLisi = teacherRepository.save(teacherLisi);
 
         // 断言李四的id不是null
-        assertThat(teacherLisi.getId()).isNull();
+        assertThat(teacherLisi.getId()).isNotNull();
         // 断方李的ID大于0
         assertThat(teacherLisi.getId()).isNotZero();
 

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第一节：新建数据表 </title>
+    <meta name="description" content="根据ER图建立数据表, 并配置实体间多对一关系。配置数据库连接信息，解决数据插入乱码。测试了关联删除"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第一节：新建数据表 </h1>
+    <p class="post-meta"><time datetime="2017-04-13T08:59:26+08:00" itemprop="datePublished">Apr 13, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>建表先画图:
+在<code class="highlighter-rouge">Teacher</code>实体中，我们<code class="highlighter-rouge">id</code>的类型为<code class="highlighter-rouge">Long</code>，为了前台统一，我们在图中，也将其声明为<code class="highlighter-rouge">Long</code>。并新建<code class="highlighter-rouge">Klass</code>实体，增加一个关键字<code class="highlighter-rouge">id</code>,一个字段<code class="highlighter-rouge">name</code>。</p>
+
+<p>逻辑视图:
+<img src="/SpringMVC/assets/image/chapter3/1.png" alt="/SpringMVC/assets/image/chapter3/1.png" /></p>
+
+<p>物理视图：
+<img src="/SpringMVC/assets/image/chapter3/2.png" alt="/SpringMVC/assets/image/chapter3/2.png" /></p>
+
+<h1 id="建立实体">建立实体</h1>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">repository</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.persistence.*</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/13.
+ *  班级
+ */</span>
+<span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Klass</span> <span class="o">{</span>
+    <span class="nd">@Id</span> <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">)</span> <span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+   
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>        <span class="c1">// 班级名称</span>
+<span class="o">}</span></code></pre></figure>
+
+<h2 id="测试">测试</h2>
+<p>启动程序，查看是否生成了数据表
+<img src="/SpringMVC/assets/image/chapter3/3.png" alt="/SpringMVC/assets/image/chapter3/3.png" /></p>
+
+<h1 id="建立实体间联系">建立实体间联系</h1>
+<p>逻辑视图:
+<img src="/SpringMVC/assets/image/chapter3/4.png" alt="/SpringMVC/assets/image/chapter3/4.png" /></p>
+
+<p>物理视图：
+<img src="/SpringMVC/assets/image/chapter3/5.png" alt="/SpringMVC/assets/image/chapter3/5.png" /></p>
+
+<p><code class="highlighter-rouge">n:1</code>的关系，在<code class="highlighter-rouge">Hibernate</code>(<code class="highlighter-rouge">SrpingMVC</code>的<code class="highlighter-rouge">jpa</code>使用的为<code class="highlighter-rouge">Hibernate</code>)中以<code class="highlighter-rouge">@ManyToOne</code>来声明。同以往我们会在模型中，建立一个外键的字段不同，我们在此直接建立这个外键对应的实体。</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Klass</span> <span class="o">{</span>
+    <span class="nd">@Id</span> <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">)</span> <span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+
+    <span class="nd">@ManyToOne</span> <span class="c1">// 多对一关联</span>
+    <span class="kd">private</span> <span class="n">Teacher</span> <span class="n">teacher</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>        <span class="c1">// 名称</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>最后，让我们使用<code class="highlighter-rouge">IDEA</code>自动、快速生成一个空的构造函数、一个带有参数的构造函数、set\get函数及toString函数。我们现在所需要记住的仅仅是：规范规定我们必须这么做!</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">repository</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.persistence.*</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/13.
+ */</span>
+<span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Klass</span> <span class="o">{</span>
+    <span class="nd">@Id</span> <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">)</span> <span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+
+    <span class="nd">@ManyToOne</span> <span class="c1">// 多对一关联</span>
+    <span class="kd">private</span> <span class="n">Teacher</span> <span class="n">teacher</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>        <span class="c1">// 名称</span>
+
+    <span class="kd">public</span> <span class="nf">Klass</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">Klass</span><span class="o">(</span><span class="n">Teacher</span> <span class="n">teacher</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">teacher</span> <span class="o">=</span> <span class="n">teacher</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Long</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setId</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Teacher</span> <span class="nf">getTeacher</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">teacher</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTeacher</span><span class="o">(</span><span class="n">Teacher</span> <span class="n">teacher</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">teacher</span> <span class="o">=</span> <span class="n">teacher</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>此时，当我们再次重新启动程序时，<code class="highlighter-rouge">Hibernate</code>为我们自动创建了数据的同时，还写入了索引及外键。</p>
+
+<h2 id="测试-1">测试</h2>
+<p>表结构：
+<img src="/SpringMVC/assets/image/chapter3/6.png" alt="/SpringMVC/assets/image/chapter3/6.png" /></p>
+
+<p>表索引：
+<img src="/SpringMVC/assets/image/chapter3/7.png" alt="/SpringMVC/assets/image/chapter3/7.png" /></p>
+
+<p>表外键:
+<img src="/SpringMVC/assets/image/chapter3/8.png" alt="/SpringMVC/assets/image/chapter3/8.png" /></p>
+
+<blockquote>
+  <p>表索引将加快我们的查询效率，表外键将会自动产生约束。</p>
+</blockquote>
+
+<p>有人说，在这没有<code class="highlighter-rouge">teacherId</code>字段的话，如果我想获取这个字段值怎么办呢? 带着这个问题往下学习，相信你会得到答案。</p>
+
+<h1 id="建立实体仓库">建立实体仓库</h1>
+<p>有了实体，想进一步进行数据的<code class="highlighter-rouge">CRUD</code>操作时，就需要有一个与实体相对应的仓库接口文件了。</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">repository</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.springframework.data.repository.CrudRepository</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/14.
+ */</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">KlassRepository</span> <span class="kd">extends</span> <span class="n">CrudRepository</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">,</span> <span class="n">Long</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>至此，根据ER图转化的数据表的基本工作完成。</p>
+
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>参考：</td>
+        <td><a href="https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.htm">https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.htm</a></td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>
