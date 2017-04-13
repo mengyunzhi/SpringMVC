@@ -45,4 +45,13 @@ public class Klass {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Klass{" +
+                "id=" + id +
+                ", teacher=" + teacher +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
