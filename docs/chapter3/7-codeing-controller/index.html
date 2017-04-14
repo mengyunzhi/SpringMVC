@@ -26,11 +26,143 @@
 
   <header class="post-header">
     <h1 class="post-title" itemprop="name headline">第七节：代码开发 -- controller</h1>
-    <p class="post-meta"><time datetime="2017-04-13T16:44:51+08:00" itemprop="datePublished">Apr 13, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+    <p class="post-meta"><time datetime="2017-04-14T13:48:51+08:00" itemprop="datePublished">Apr 14, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    
+    <h1 id="save">save</h1>
+<p>我们删除上节的测试代码，正式开始进行控制器中各触发器的编写。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/15.png" alt="/SpringMVC/assets/image/chapter3/15.png" /></p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">controller</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.service.KlassService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.repository.Klass</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.Logger</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.LoggerFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+
+
+<span class="cm">/**
+ * Created by panjie on 17/4/13.
+ */</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/klass"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">KlassController</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">KlassController</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">KlassService</span> <span class="n">klassService</span><span class="o">;</span>
+
+    <span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">save</span><span class="o">(</span><span class="nd">@RequestBody</span> <span class="n">JsonInput</span> <span class="n">jsonInput</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">klassService</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">jsonInput</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="n">jsonInput</span><span class="o">.</span><span class="na">getTeacherId</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">JsonInput</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">Long</span> <span class="n">TeacherId</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>添加构造函数及<code class="highlighter-rouge">set\get</code>方法:</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">JsonInput</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">Long</span> <span class="n">TeacherId</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">JsonInput</span><span class="o">()</span> <span class="o">{</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">Long</span> <span class="nf">getTeacherId</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">TeacherId</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTeacherId</span><span class="o">(</span><span class="n">Long</span> <span class="n">teacherId</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">TeacherId</span> <span class="o">=</span> <span class="n">teacherId</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>启动应用并测试：</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/30.png" alt="/SpringMVC/assets/image/chapter3/30.png" /></p>
+
+<p>查看返回值，发现<code class="highlighter-rouge">teacher</code>的值为<code class="highlighter-rouge">null</code>，是的，这是由于我们启动程序时，<code class="highlighter-rouge">Spring</code>将自动把表清空。所以此时，并没有<code class="highlighter-rouge">teacherId</code>为1的实体，<code class="highlighter-rouge">Spring</code>在进行班级实体保存时，发现了这一点，进而用<code class="highlighter-rouge">null</code>来替代了这个教师实体。</p>
+
+<blockquote>
+  <p>思索：如果避免在测试时<code class="highlighter-rouge">teacher</code>返回<code class="highlighter-rouge">null</code>呢?</p>
+</blockquote>
+
+<h2 id="增加验证">增加验证</h2>
+<p>我们对用户传入的班级名称进行验证，不能为空，最大长度为10.
+加入验证注解：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">org.hibernate.validator.constraints.NotEmpty</span><span class="o">;</span>
+        <span class="o">...</span>
+        <span class="nd">@NotEmpty</span>
+        <span class="nd">@Size</span><span class="o">(</span><span class="n">max</span> <span class="o">=</span> <span class="mi">10</span><span class="o">)</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span></code></pre></figure>
+
+<p>然后，我们在请求的注解中，开启验证</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">Klass</span> <span class="nf">save</span><span class="o">(</span><span class="nd">@Valid</span> <span class="nd">@RequestBody</span> <span class="n">JsonInput</span> <span class="n">jsonInput</span><span class="o">)</span> <span class="o">{</span></code></pre></figure>
+
+<p>启动应用并测试：
+输入<code class="highlighter-rouge">name</code>为空时:</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/31.png" alt="/SpringMVC/assets/image/chapter3/31.png" /></p>
+
+<p>输入<code class="highlighter-rouge">name</code>过长时:</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/33.png" alt="/SpringMVC/assets/image/chapter3/33.png" /></p>
+
+<h3 id="小结">小结</h3>
+<p>我们不仅可以在实体中使用验证，还可以在其它类中使用验证。我们不仅可以将数据直接绑定到实体上，还可以将数据绑定至其它的对象上。</p>
+
+<h1 id="get">get</h1>
+<p><img src="/SpringMVC/assets/image/chapter3/14.png" alt="/SpringMVC/assets/image/chapter3/14.png" /></p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/{id}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">get</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>测试略。</p>
+
+<h1 id="update">update</h1>
+<p><img src="/SpringMVC/assets/image/chapter3/17.png" alt="/SpringMVC/assets/image/chapter3/17.png" /></p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@PutMapping</span><span class="o">(</span><span class="s">"/{id}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">update</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">Long</span> <span class="n">id</span><span class="o">,</span> <span class="nd">@Valid</span> <span class="nd">@RequestBody</span> <span class="n">JsonInput</span> <span class="n">jsonInput</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">klassService</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">jsonInput</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="n">jsonInput</span><span class="o">.</span><span class="na">getTeacherId</span><span class="o">());</span>
+    <span class="o">}</span></code></pre></figure>
+
+<h1 id="delete">delete</h1>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@DeleteMapping</span><span class="o">(</span><span class="s">"/{id}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">klassService</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>测试略。</p>
+
+<p>由于每启动一次应用，都用清空数据表。所以在上面的测试过程中，相信你也会得到了很多想不到的异常。原因也很简单，比如你在查询数据前，没有增加这个班级。比如你在增加这个班级前没有先增加一个教师；再比如，你在更新数据前没有新增一个班级。总之，我们发现使用<code class="highlighter-rouge">postman</code>测试的时候，好像也并没有那么简单了。</p>
+
+<h1 id="总结">总结</h1>
+<p>在第二章教师管理中，我们将用户的输入信息，直接绑定到了实体上。本节中，我们将用户的输入信息绑定到了自定义类中，并进行了验证。这是两种不同的数据绑定方式，在实际的开发过程中，我们可以按实际需求进行选择。</p>
+
 
   </div>
 

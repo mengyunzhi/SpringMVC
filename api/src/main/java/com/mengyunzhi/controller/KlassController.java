@@ -1,16 +1,17 @@
 package com.mengyunzhi.controller;
 
 import com.mengyunzhi.service.KlassService;
+import com.mengyunzhi.repository.Klass;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 
 /**
  * Created by panjie on 17/4/13.
@@ -18,26 +19,40 @@ import javax.validation.constraints.NotNull;
 @RestController
 @RequestMapping("/klass")
 public class KlassController {
-    // 引入日志类的固有写法
     private final static Logger logger = LoggerFactory.getLogger(KlassController.class);
 
     @Autowired
     private KlassService klassService;
 
+    @PostMapping("/")
+    public Klass save(@Valid @RequestBody JsonInput jsonInput) {
+        return klassService.save(jsonInput.getName(), jsonInput.getTeacherId());
+    }
 
+    @GetMapping("/{id}")
+    public Klass get(@PathVariable Long id) {
+        return klassService.get(id);
+    }
 
-    @RequestMapping("/test/")
-    public void test(@Valid @RequestBody JsonInput jsonInput, BindingResult result) {
-        if (result.hasErrors()) {
-            logger.info(result.getAllErrors().toString());
-        }
-        logger.info("获取到的RequestBody为:" + jsonInput.toString());
+    @PutMapping("/{id}")
+    public Klass update(@PathVariable Long id,@Valid @RequestBody JsonInput jsonInput) {
+        return klassService.update(id, jsonInput.getName(), jsonInput.getTeacherId());
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        klassService.delete(id);
+        return;
     }
 
     private static class JsonInput {
-        @NotNull
+        @NotEmpty
+        @Size(max = 10)
         private String name;
-        private String sex;
+        private Long TeacherId;
+
+        public JsonInput() {
+        }
 
         public String getName() {
             return name;
@@ -47,28 +62,12 @@ public class KlassController {
             this.name = name;
         }
 
-        public String getSex() {
-            return sex;
+        public Long getTeacherId() {
+            return TeacherId;
         }
 
-        public void setSex(String sex) {
-            this.sex = sex;
-        }
-
-        @Override
-        public String toString() {
-            return "JsonInput{" +
-                    "name='" + name + '\'' +
-                    ", sex='" + sex + '\'' +
-                    '}';
-        }
-
-        public JsonInput() {
-        }
-
-        public JsonInput(String name, String sex) {
-            this.name = name;
-            this.sex = sex;
+        public void setTeacherId(Long teacherId) {
+            TeacherId = teacherId;
         }
     }
 }

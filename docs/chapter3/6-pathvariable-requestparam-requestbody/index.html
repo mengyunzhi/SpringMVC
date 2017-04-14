@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第六节：@PathVariable @RequestRaram @RequestBody</title>
+    <meta name="description" content="讲述并验证了3种常用的获取输入变量的注解"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第六节：@PathVariable @RequestRaram @RequestBody</h1>
+    <p class="post-meta"><time datetime="2017-04-14T13:47:21+08:00" itemprop="datePublished">Apr 14, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>在一章中，我们使用了<code class="highlighter-rouge">@PathVariable</code>获取了<code class="highlighter-rouge">pathInfo</code>中的变量，使用<code class="highlighter-rouge">@RequestBody</code>获取到了<code class="highlighter-rouge">post</code>过来<code class="highlighter-rouge">json</code>数据。除了上述两种方法外，来有一种获取输入变量的注解<code class="highlighter-rouge">@RequestRaram</code>。</p>
+
+<p>本节中，让我们结合班级管理，同时通过三个测试代码段，来更深一步的对其进行学习。</p>
+
+<p>首先，我们参考类图及时序图新建控制器。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/18.png" alt="/SpringMVC/assets/image/chapter3/18.png" /></p>
+
+<h1 id="新建控制器">新建控制器</h1>
+<p>新建控制器，并引用日志类<code class="highlighter-rouge">org.slf4j.Logger</code></p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">controller</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.slf4j.Logger</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.LoggerFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/13.
+ */</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/klass"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">KlassController</span> <span class="o">{</span>
+    <span class="c1">// 引入日志类的固有写法</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">KlassController</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>然后，我们分别进行测试：</p>
+<h3 id="pathvariable">@PathVariable</h3>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/test/{value}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span>
+            <span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">value</span><span class="o">,)</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"获取到的pathVariable为:"</span> <span class="o">+</span> <span class="n">value</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>测试：</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/3.gif" alt="/SpringMVC/assets/image/chapter3/3.gif" /></p>
+
+<h3 id="requestparam">@RequestParam</h3>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/test/{value}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span>
+            <span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">value</span><span class="o">,</span>
+            <span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">param</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"获取到的pathVariable为:"</span> <span class="o">+</span> <span class="n">value</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"获取到的requestParam为:"</span> <span class="o">+</span> <span class="n">param</span><span class="o">);</span>
+
+    <span class="o">}</span></code></pre></figure>
+
+<p>测试：</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/4.gif" alt="/SpringMVC/assets/image/chapter3/4.gif" /></p>
+
+<h3 id="requestbody">@RequestBody</h3>
+
+<p>相对前面两个注解，@Requestbody比较灵活。</p>
+
+<h4 id="1直接转化为字符串">1.直接转化为字符串</h4>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/test/{value}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span>
+            <span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">value</span><span class="o">,</span>
+            <span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">param</span><span class="o">,</span>
+            <span class="nd">@RequestBody</span><span class="o">(</span><span class="n">required</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span> <span class="n">String</span> <span class="n">requestBody</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"获取到的pathVariable为:"</span> <span class="o">+</span> <span class="n">value</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"获取到的requestParam为:"</span> <span class="o">+</span> <span class="n">param</span><span class="o">);</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"获取到的RequestBody为:"</span> <span class="o">+</span> <span class="n">requestBody</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<blockquote>
+  <p><code class="highlighter-rouge">required = false</code>表示，此项非必须。
+分别点一下这些标签卡，然后随便加一些信息，最后点击<code class="highlighter-rouge">code</code>查看<code class="highlighter-rouge">postman</code>为我们自动生成的数据提交代码，看看最终我们在控制台都打印出了什么内容。</p>
+</blockquote>
+
+<h4 id="2转化为multivaluemap">2.转化为MultiValueMap</h4>
+
+<p>下面，为了更清晰的查看的@RequestBody绑定行为，我们去掉获取<code class="highlighter-rouge">@PathVariable</code>及<code class="highlighter-rouge">@RequestParam</code>的代码，并我们对代码进行如下改写：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/test/"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nd">@RequestBody</span> <span class="n">MultiValueMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">requestBody</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"获取到的RequestBody为:"</span> <span class="o">+</span> <span class="n">requestBody</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>自己测试一下吧，看看在控制台中，都打印了什么信息。</p>
+
+<h4 id="3绑定转化为到对象">3.绑定（转化为）到对象</h4>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">controller</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.service.KlassService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.Logger</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.LoggerFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.springframework.util.MultiValueMap</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.repository.Klass</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/13.
+ */</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/klass"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">KlassController</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">KlassController</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">KlassService</span> <span class="n">klassService</span><span class="o">;</span>
+
+    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/test/"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nd">@RequestBody</span> <span class="n">JsonInput</span> <span class="n">jsonInput</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"获取到的RequestBody为:"</span> <span class="o">+</span> <span class="n">jsonInput</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">JsonInput</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">sex</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getSex</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">sex</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setSex</span><span class="o">(</span><span class="n">String</span> <span class="n">sex</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">sex</span> <span class="o">=</span> <span class="n">sex</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">"JsonInput{"</span> <span class="o">+</span>
+                    <span class="s">"name='"</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="sc">'\''</span> <span class="o">+</span>
+                    <span class="s">", sex='"</span> <span class="o">+</span> <span class="n">sex</span> <span class="o">+</span> <span class="sc">'\''</span> <span class="o">+</span>
+                    <span class="sc">'}'</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="nf">JsonInput</span><span class="o">()</span> <span class="o">{</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="nf">JsonInput</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">sex</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">sex</span> <span class="o">=</span> <span class="n">sex</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p><img src="/SpringMVC/assets/image/chapter3/28.png" alt="/SpringMVC/assets/image/chapter3/28.png" /></p>
+
+<p>上面的代码中，我们建立了一个私有对象，并使用<code class="highlighter-rouge">@RequestBody</code>将传入的<code class="highlighter-rouge">Json</code>数据绑定到了这个私有对象上,最终成功的在控制台将其打印了出来。</p>
+
+<h2 id="总结">总结：</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>@PathVariable</td>
+      <td>接收pathInfo中的变量</td>
+    </tr>
+    <tr>
+      <td>@RequestParam</td>
+      <td>接收get和post信息,当两者都存在同一变时，进行字符串拼接。</td>
+    </tr>
+    <tr>
+      <td>@RequestBody</td>
+      <td>形式多样，但做API，我们主要接收<code class="highlighter-rouge">Content-Type</code>为<code class="highlighter-rouge">application/json</code>的<code class="highlighter-rouge">json</code>信息。</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>参考文档:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>@PathVariable</td>
+      <td><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-requestmapping-uri-templates">官方文档</a></td>
+    </tr>
+    <tr>
+      <td>@RequestParam</td>
+      <td><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-requestparam">官方文档</a></td>
+    </tr>
+    <tr>
+      <td>@RequestBody</td>
+      <td><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-requestbody">官方文档</a></td>
+    </tr>
+    <tr>
+      <td>MultiValueMap</td>
+      <td><a href="http://blog.csdn.net/yanzhenjie1003/article/details/51550264">http://blog.csdn.net/yanzhenjie1003/article/details/51550264</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>最终测试代码：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">controller</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.service.KlassService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.Logger</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.LoggerFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+
+
+<span class="cm">/**
+ * Created by panjie on 17/4/13.
+ */</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/klass"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">KlassController</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">KlassController</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">KlassService</span> <span class="n">klassService</span><span class="o">;</span>
+
+    <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/test/"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nd">@RequestBody</span> <span class="n">JsonInput</span> <span class="n">jsonInput</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"获取到的RequestBody为:"</span> <span class="o">+</span> <span class="n">jsonInput</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">JsonInput</span> <span class="o">{</span>
+
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">sex</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getSex</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">sex</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setSex</span><span class="o">(</span><span class="n">String</span> <span class="n">sex</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">sex</span> <span class="o">=</span> <span class="n">sex</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">"JsonInput{"</span> <span class="o">+</span>
+                    <span class="s">"name='"</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="sc">'\''</span> <span class="o">+</span>
+                    <span class="s">", sex='"</span> <span class="o">+</span> <span class="n">sex</span> <span class="o">+</span> <span class="sc">'\''</span> <span class="o">+</span>
+                    <span class="sc">'}'</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="nf">JsonInput</span><span class="o">()</span> <span class="o">{</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="nf">JsonInput</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">sex</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">sex</span> <span class="o">=</span> <span class="n">sex</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>
