@@ -1,9 +1,16 @@
 package com.mengyunzhi.controller;
 
-import com.mengyunzhi.repository.Klass;
 import com.mengyunzhi.service.KlassService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by panjie on 17/4/13.
@@ -11,30 +18,57 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/klass")
 public class KlassController {
+    // 引入日志类的固有写法
+    private final static Logger logger = LoggerFactory.getLogger(KlassController.class);
+
     @Autowired
     private KlassService klassService;
 
-    @PostMapping("/")
-    public Klass save(@RequestParam String name, @RequestParam Long teacherId) {
-        return klassService.save(name, teacherId);
+
+
+    @RequestMapping("/test/")
+    public void test(@Valid @RequestBody JsonInput jsonInput, BindingResult result) {
+        if (result.hasErrors()) {
+            logger.info(result.getAllErrors().toString());
+        }
+        logger.info("获取到的RequestBody为:" + jsonInput.toString());
     }
 
-    @GetMapping("/{id}")
-    public Klass get(@PathVariable Long id) {
-        return klassService.get(id);
-    }
+    private static class JsonInput {
+        @NotNull
+        private String name;
+        private String sex;
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        klassService.delete(id);
-        return;
-    }
+        public String getName() {
+            return name;
+        }
 
-    @PutMapping("/{id}")
-    public Klass update(
-            @PathVariable Long id,
-            @RequestParam String name,
-            @RequestParam Long teacherId) {
-        return klassService.update(id, name, teacherId);
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getSex() {
+            return sex;
+        }
+
+        public void setSex(String sex) {
+            this.sex = sex;
+        }
+
+        @Override
+        public String toString() {
+            return "JsonInput{" +
+                    "name='" + name + '\'' +
+                    ", sex='" + sex + '\'' +
+                    '}';
+        }
+
+        public JsonInput() {
+        }
+
+        public JsonInput(String name, String sex) {
+            this.name = name;
+            this.sex = sex;
+        }
     }
 }
