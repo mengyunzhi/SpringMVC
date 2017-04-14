@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第四节：初始化单元测试 -- service</title>
+    <meta name="description" content="根据图表初始化单元测试内容"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第四节：初始化单元测试 -- service</h1>
+    <p class="post-meta"><time datetime="2017-04-13T15:15:30+08:00" itemprop="datePublished">Apr 13, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>有了时序图，也有了基本的代码。下一步，我们需要做的并<strong>不是</strong>开始去编写<code class="highlighter-rouge">service</code>的实现类，而是先写测试用例。</p>
+
+<blockquote>
+  <p>在初期的阶段，由于我们对<code class="highlighter-rouge">SpringMVC</code>的掌握程度较低，往往是先编写实现类，再编写测试用例。</p>
+</blockquote>
+
+<h1 id="生成测试类">生成测试类</h1>
+<p><code class="highlighter-rouge">idea</code>为我们提供了快速生成测试类的快捷操作。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/2.gif" alt="/SpringMVC/assets/image/chapter3/2.gif" /></p>
+
+<blockquote>
+  <p>我们直接建立了<code class="highlighter-rouge">KlassService</code>的测试类，而不是<code class="highlighter-rouge">KlassServiceImpl</code>的测试类，这是为什么呢？</p>
+</blockquote>
+
+<p>测试类生成后，我们加入<code class="highlighter-rouge">SpringMVC</code>的测试注解后代码如下：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">service</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.boot.test.context.SpringBootTest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.test.context.junit4.SpringRunner</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">assertj</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/13.
+ */</span>
+<span class="nd">@RunWith</span><span class="o">(</span><span class="n">SpringRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="nd">@SpringBootTest</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">KlassServiceTest</span> <span class="o">{</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+
+    <span class="o">}</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">get</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+
+    <span class="o">}</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+
+    <span class="o">}</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+
+    <span class="o">}</span>
+
+<span class="o">}</span></code></pre></figure>
+
+<h2 id="savetest">saveTest</h2>
+<p>和以前的方法相同，我们先要做的是写注释，再然后按注释写入代码</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 新增教师</span>
+        
+        <span class="c1">// 新增班级</span>
+
+        <span class="c1">// 断言返回值非NULL</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>代码：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 新增教师</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Teacher</span><span class="o">(</span>
+                <span class="s">"zhangsan"</span><span class="o">,</span>
+                <span class="s">"zhangsan@yunzhiclub.com"</span><span class="o">,</span>
+                <span class="s">"scse of hebut"</span><span class="o">,</span>
+                <span class="kc">true</span><span class="o">);</span>
+        <span class="n">teacherRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">teacher</span><span class="o">);</span>
+
+        <span class="c1">// 新增班级</span>
+        <span class="n">Klass</span> <span class="n">klass</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="s">"软件班"</span><span class="o">,</span> <span class="n">teacher</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+
+        <span class="c1">// 断言返回值非NULL</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">klass</span><span class="o">).</span><span class="na">isNotNull</span><span class="o">();</span>
+    <span class="o">}</span></code></pre></figure>
+
+<h2 id="gettest">getTest</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">get</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 断言查询ID为0的结果为null</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">10000L</span><span class="o">)).</span><span class="na">isNull</span><span class="o">();</span>
+
+        <span class="c1">// 新增教师</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Teacher</span><span class="o">(</span>
+                <span class="s">"zhangsan"</span><span class="o">,</span>
+                <span class="s">"zhangsan@yunzhiclub.com"</span><span class="o">,</span>
+                <span class="s">"scse of hebut"</span><span class="o">,</span>
+                <span class="kc">true</span><span class="o">);</span>
+        <span class="n">teacherRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">teacher</span><span class="o">);</span>
+
+        <span class="c1">// 新增班级</span>
+        <span class="n">Klass</span> <span class="n">klass</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="s">"软件班"</span><span class="o">,</span> <span class="n">teacher</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+
+        <span class="c1">// 断言查询到的新增的的ID不为null</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">())).</span><span class="na">isNotNull</span><span class="o">();</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>当我们写完这个测试方法，我们发现竟然有这么多的重复代码。是的，如果我们现在不重构的这样写下去，还有会更多的冗余代码，就是由于数据<code class="highlighter-rouge">CRUD</code>，都是基本<code class="highlighter-rouge">C</code>这个操作的。下面，我们使用<code class="highlighter-rouge">@Before</code>注解来解决代码冗余的问题。</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="kd">private</span> <span class="n">Klass</span> <span class="n">klass</span><span class="o">;</span>
+
+    <span class="nd">@Before</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">before</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 新增教师</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Teacher</span><span class="o">(</span>
+                <span class="s">"zhangsan"</span><span class="o">,</span>
+                <span class="s">"zhangsan@yunzhiclub.com"</span><span class="o">,</span>
+                <span class="s">"scse of hebut"</span><span class="o">,</span>
+                <span class="kc">true</span><span class="o">);</span>
+        <span class="n">teacherRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">teacher</span><span class="o">);</span>
+
+        <span class="c1">// 新增班级</span>
+        <span class="n">klass</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="s">"软件班"</span><span class="o">,</span> <span class="n">teacher</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 断言返回值非NULL</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">klass</span><span class="o">).</span><span class="na">isNotNull</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">get</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 断言查询ID为0的结果为null</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">10000L</span><span class="o">)).</span><span class="na">isNull</span><span class="o">();</span>
+
+        <span class="c1">// 断言查询到的新增的的ID不为null</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">())).</span><span class="na">isNotNull</span><span class="o">();</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>上述代码中，我们将代码重复的部分，移至了<code class="highlighter-rouge">Before</code>方法，并增加<code class="highlighter-rouge">@Before</code>注解，意为:在执行每个测试前，都执行一遍这个注解中的内容。</p>
+
+<h2 id="deletetest">deleteTest</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 查询实体，断言其存在</span>
+
+        <span class="c1">// 将实体删除</span>
+
+        <span class="c1">// 查询实体，断言不存在</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>加入代码:</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 查询实体，断言其存在</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">klass</span><span class="o">).</span><span class="na">isNotNull</span><span class="o">();</span>
+
+        <span class="c1">// 将实体删除</span>
+        <span class="n">klassService</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+
+        <span class="c1">// 查询实体，断言其不存在</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">())).</span><span class="na">isNull</span><span class="o">();</span>
+    <span class="o">}</span></code></pre></figure>
+
+<h2 id="updatetest">updateTest</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 新建一个教师实体</span>
+
+        <span class="c1">// 更新</span>
+
+        <span class="c1">// 查询, 并断言</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>加入代码：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 新建一个教师实体</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Teacher</span><span class="o">(</span>
+                <span class="s">"zhangsan"</span><span class="o">,</span>
+                <span class="s">"zhangsan@yunzhiclub.com"</span><span class="o">,</span>
+                <span class="s">"scse of hebut"</span><span class="o">,</span>
+                <span class="kc">true</span><span class="o">);</span>
+        <span class="n">teacherRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">teacher</span><span class="o">);</span>
+
+        <span class="c1">// 更新</span>
+        <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"软件工程"</span><span class="o">;</span>
+        <span class="n">klassService</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">(),</span> <span class="n">name</span><span class="o">,</span> <span class="n">teacher</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+
+        <span class="c1">// 查询, 并断言</span>
+        <span class="n">Klass</span> <span class="n">newKlass</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">newKlass</span><span class="o">.</span><span class="na">getName</span><span class="o">()).</span><span class="na">isEqualTo</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">newKlass</span><span class="o">.</span><span class="na">getTeacher</span><span class="o">().</span><span class="na">getId</span><span class="o">()).</span><span class="na">isEqualTo</span><span class="o">(</span><span class="n">teacher</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="o">}</span></code></pre></figure>
+
+<hr />
+
+<p>是的，对于基本的<code class="highlighter-rouge">CRUD</code>操作，这样做的确有些过了。我们在教程中强调的单元测试，是让大家养成好的单元测试的习惯，把它做为开发的必需条件，有代码，就有测试。这样当我们以后涉及到越来越多的，逻辑运算的时候，便会因良好的测试习惯而事半功倍了。</p>
+
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>

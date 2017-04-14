@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第五节：代码开发 -- service</title>
+    <meta name="description" content="进行实现类的代码开发，并最终通过测试用例"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第五节：代码开发 -- service</h1>
+    <p class="post-meta"><time datetime="2017-04-13T16:10:24+08:00" itemprop="datePublished">Apr 13, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>本节中，我们共同开实现<code class="highlighter-rouge">KlassService</code>接口，并实现其功能，最终通过所有的测试用例。使用<code class="highlighter-rouge">idea</code>默认为我们生成的实现类代码如下:</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">service</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.repository.Klass</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/13.
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">KlassServiceImpl</span> <span class="kd">implements</span> <span class="n">KlassService</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">save</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">get</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">update</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>在此基础上，我们增加<code class="highlighter-rouge">@Service</code>注解，以使<code class="highlighter-rouge">SpringMVC</code>我们自动实例化，并注入到相应类中。</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Service</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">KlassServiceImpl</span> <span class="kd">implements</span> <span class="n">KlassService</span> <span class="o">{</span></code></pre></figure>
+
+<h2 id="save">save</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">KlassRepository</span> <span class="n">klassRepository</span><span class="o">;</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">TeacherRepository</span> <span class="n">teacherRepository</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">save</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 实例化，并设置班级名称</span>
+        <span class="n">Klass</span> <span class="n">klass</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Klass</span><span class="o">();</span>
+        <span class="n">klass</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+
+        <span class="c1">// 获取教师</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="n">teacherRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="n">teacherId</span><span class="o">);</span>
+
+        <span class="c1">// 设置教师</span>
+        <span class="n">klass</span><span class="o">.</span><span class="na">setTeacher</span><span class="o">(</span><span class="n">teacher</span><span class="o">);</span>
+
+        <span class="c1">// 保存</span>
+        <span class="k">return</span> <span class="n">klassRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">klass</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>测试：</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/19.png" alt="/SpringMVC/assets/image/chapter3/19.png" /></p>
+
+<h2 id="get">get</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">get</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">klassRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>测试：
+<img src="/SpringMVC/assets/image/chapter3/20.png" alt="/SpringMVC/assets/image/chapter3/20.png" /></p>
+
+<h2 id="delete">delete</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">klassRepository</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>测试：
+<img src="/SpringMVC/assets/image/chapter3/21.png" alt="/SpringMVC/assets/image/chapter3/21.png" /></p>
+
+<h2 id="update">update</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">update</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 实例化班级，赋班级名称</span>
+        <span class="n">Klass</span> <span class="n">klass</span> <span class="o">=</span> <span class="n">klassRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+        <span class="n">klass</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+
+        <span class="c1">// 实例化传入的教师，设置教师</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="n">teacherRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="n">teacherId</span><span class="o">);</span>
+        <span class="n">klass</span><span class="o">.</span><span class="na">setTeacher</span><span class="o">(</span><span class="n">teacher</span><span class="o">);</span>
+
+        <span class="k">return</span> <span class="n">klassRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">klass</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p><img src="/SpringMVC/assets/image/chapter3/22.png" alt="/SpringMVC/assets/image/chapter3/22.png" /></p>
+
+<h1 id="测试全部用例">测试全部用例</h1>
+
+<p><img src="/SpringMVC/assets/image/chapter3/23.png" alt="/SpringMVC/assets/image/chapter3/23.png" /></p>
+
+<p>当我们看到这个成绩时，就可以自豪的进行<code class="highlighter-rouge">pull request</code>了。</p>
+
+<hr />
+
+<h1 id="完善代码">完善代码</h1>
+<p>我们刚刚在实例化一个班级时，由于其与教师存在关联关系，所以，我们需要在实例化班级以前，首先实例化一个教师实体。显得的，随着我们的数据表关联越来越多，越来越复杂。这种做法将越来越难以维护。</p>
+
+<p>为此，为了便于测试，我们在<code class="highlighter-rouge">TeacherSerice</code>及<code class="highlighter-rouge">KlassService</code>中，分别增加一个获取一个新实例的方法。</p>
+
+<p><code class="highlighter-rouge">KlassService</code></p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">KlassService</span> <span class="o">{</span>
+    <span class="n">Klass</span> <span class="nf">save</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">);</span>
+    <span class="n">Klass</span> <span class="nf">get</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">);</span>
+    <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">);</span>
+    <span class="n">Klass</span> <span class="nf">update</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">);</span>
+    <span class="n">Klass</span> <span class="nf">getNewKlass</span><span class="o">();</span>    <span class="c1">// 获取一个新的教师实例</span>
+<span class="o">}</span></code></pre></figure>
+
+<p><code class="highlighter-rouge">TeacherSerice</code></p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">TeacherService</span> <span class="o">{</span>
+    <span class="cm">/**
+     * 保存
+     * @param id 关键字
+     * @param teacher 教师
+     * @return 保存后的教师
+     */</span>
+    <span class="n">Teacher</span> <span class="nf">saveTeacher</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">,</span> <span class="n">Teacher</span> <span class="n">teacher</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">EntityNotFoundException</span><span class="o">;</span>
+    <span class="kt">void</span> <span class="nf">deleteTeacher</span><span class="o">(</span><span class="n">Teacher</span> <span class="n">teacher</span><span class="o">);</span>    <span class="c1">// 删除实体</span>
+    <span class="kt">void</span> <span class="nf">deleteTeacherById</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">);</span>        <span class="c1">// 删除实体</span>
+    <span class="n">Teacher</span> <span class="nf">getNewTeacher</span><span class="o">();</span>                <span class="c1">// 获取一个新的教师实例</span>
+<span class="o">}</span></code></pre></figure>
+
+<h2 id="单元测试">单元测试</h2>
+<p>然后我们分别期待这两个方法应该返回一个非<code class="highlighter-rouge">null</code>的的实体，据此，我们写两个单元测试:</p>
+
+<p>由于历史原因，我们有以下两个测试类，分别对应<code class="highlighter-rouge">KlassService</code>及<code class="highlighter-rouge">KlassServerImpl</code>的测试。以下代码，便是分别这入这两上测试类中的。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/24.png" alt="/SpringMVC/assets/image/chapter3/24.png" /></p>
+
+<p>断言返回的对象非<code class="highlighter-rouge">null</code></p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">getNewTeacher</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">teacherService</span><span class="o">.</span><span class="na">getNewTeacher</span><span class="o">()).</span><span class="na">isNotNull</span><span class="o">();</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>断言返回的对象非<code class="highlighter-rouge">null</code></p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">getNewKlass</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">klassService</span><span class="o">.</span><span class="na">getNewKlass</span><span class="o">()).</span><span class="na">isNotNull</span><span class="o">();</span>
+    <span class="o">}</span></code></pre></figure>
+
+<h2 id="实现类编码">实现类编码</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Teacher</span> <span class="nf">getNewTeacher</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Teacher</span><span class="o">(</span>
+                <span class="s">"示例教师"</span><span class="o">,</span>
+                <span class="s">"zhangsan@yunzhiclub.com"</span><span class="o">,</span>
+                <span class="s">"scse of hebut"</span><span class="o">,</span>
+                <span class="kc">true</span><span class="o">);</span>
+        <span class="n">teacherRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">teacher</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">teacher</span><span class="o">;</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>单元测试：</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/25.png" alt="/SpringMVC/assets/image/chapter3/25.png" /></p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">getNewKlass</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Klass</span> <span class="n">klass</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Klass</span><span class="o">();</span>
+        <span class="n">klass</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"示例班级"</span><span class="o">);</span>                               <span class="c1">// 设置名称</span>
+        <span class="n">klass</span><span class="o">.</span><span class="na">setTeacher</span><span class="o">(</span><span class="n">teacherService</span><span class="o">.</span><span class="na">getNewTeacher</span><span class="o">());</span>       <span class="c1">// 设置教师</span>
+
+        <span class="n">klassRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">klass</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">klass</span><span class="o">;</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>单元测试：</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/26.png" alt="/SpringMVC/assets/image/chapter3/26.png" /></p>
+
+<p>有了这两个方法，当我们再次需要一个新的实体时，便可以直接调用上述方法来获取一个新的实体，不需要再次写冗余的新建实体代码了。</p>
+
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>

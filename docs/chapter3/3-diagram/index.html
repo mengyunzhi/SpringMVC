@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第三节：先画图、后编程</title>
+    <meta name="description" content="画时序图、类图，并根据时序图类图自动生成一系列代码"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第三节：先画图、后编程</h1>
+    <p class="post-meta"><time datetime="2017-04-13T14:18:49+08:00" itemprop="datePublished">Apr 13, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>作为初学者，我们的开发，往往是这样的，在心中画好了时序图，然后开始编码。如果你也是这个习惯，那么足以证明你就是我刚刚描述的初学者。但有些小的项目，只有简单的<code class="highlighter-rouge">CRUD</code>，所以我们排斥画图，这也是可以理解的。我的做法是这样：</p>
+<ul>
+  <li>在纸上画功能实现的时序图.</li>
+  <li>按时序图编码.</li>
+  <li>将java文件转化为类图文件.</li>
+  <li>在软件中使用转换好的类图文件画出时序图.</li>
+</ul>
+
+<p>是的，在教程中我也是这么做的。</p>
+
+<h1 id="时序图">时序图</h1>
+<p><img src="/SpringMVC/assets/image/chapter3/14.png" alt="/SpringMVC/assets/image/chapter3/14.png" />
+<img src="/SpringMVC/assets/image/chapter3/15.png" alt="/SpringMVC/assets/image/chapter3/15.png" />
+<img src="/SpringMVC/assets/image/chapter3/16.png" alt="/SpringMVC/assets/image/chapter3/16.png" />
+<img src="/SpringMVC/assets/image/chapter3/17.png" alt="/SpringMVC/assets/image/chapter3/17.png" /></p>
+
+<h1 id="类图">类图</h1>
+<p><img src="/SpringMVC/assets/image/chapter3/18.png" alt="/SpringMVC/assets/image/chapter3/18.png" /></p>
+
+<h2 id="建立接口">建立接口</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">service</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.repository.Klass</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/7.
+ */</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">KlassService</span> <span class="o">{</span>
+    <span class="n">Klass</span> <span class="nf">add</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">);</span>
+    <span class="n">Klass</span> <span class="nf">get</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">);</span>
+    <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">);</span>
+    <span class="n">Klass</span> <span class="nf">update</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">);</span>
+<span class="o">}</span></code></pre></figure>
+
+<h2 id="创建实现类">创建实现类</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">service</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.repository.Klass</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/13.
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">KlassServiceImpl</span> <span class="kd">implements</span> <span class="n">KlassService</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">save</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">get</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">update</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<h2 id="创建c层">创建C层</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">controller</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.repository.Klass</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.service.KlassService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/13.
+ */</span>
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/klass"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">KlassController</span> <span class="o">{</span>
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">KlassService</span> <span class="n">klassService</span><span class="o">;</span>
+
+    <span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">save</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="nd">@RequestParam</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">klassService</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">teacherId</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/{id}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">get</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@DeleteMapping</span><span class="o">(</span><span class="s">"/{id}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">klassService</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@PutMapping</span><span class="o">(</span><span class="s">"/{id}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">Klass</span> <span class="nf">update</span><span class="o">(</span>
+            <span class="nd">@PathVariable</span> <span class="n">Long</span> <span class="n">id</span><span class="o">,</span>
+            <span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">name</span><span class="o">,</span>
+            <span class="nd">@RequestParam</span> <span class="n">Long</span> <span class="n">teacherId</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">klassService</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">teacherId</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>让我们共同复习一遍各个请求方式默认对应的操作:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>POST</td>
+      <td>数据增加</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>数据查询</td>
+    </tr>
+    <tr>
+      <td>DELETE</td>
+      <td>数据删除</td>
+    </tr>
+    <tr>
+      <td>PUT</td>
+      <td>数据更新</td>
+    </tr>
+    <tr>
+      <td>PATCH</td>
+      <td>数据更新（部分字段）</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="总结">总结</h1>
+<p>我们由时序图总结中类图，并使用<code class="highlighter-rouge">astah</code>及<code class="highlighter-rouge">idea</code>将图表（<code class="highlighter-rouge">java</code>代码）快速的转化（逆向转化）成了<code class="highlighter-rouge">java</code>代码(图表)。</p>
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>

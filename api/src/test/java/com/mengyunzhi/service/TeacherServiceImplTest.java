@@ -138,4 +138,9 @@ public class TeacherServiceImplTest {
         // 断言查询到的实体结果为null
         assertThat(teacher).isNull();
     }
+
+    @Test
+    public void getNewTeacher() {
+        assertThat(teacherService.getNewTeacher()).isNotNull();
+    }
 }
