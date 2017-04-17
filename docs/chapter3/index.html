@@ -86,7 +86,7 @@
           </td>
           <td style="text-align: left">
             
-                画时序图、类图，并根据时序图类图自动生成一系列代码
+                我们由时序图总结中类图，并使用`astah`及`idea`将图表（`java`代码）快速的转化（逆向转化）成了`java`代码(图表)。
             
           </td>
           <td style="text-align: left">
@@ -104,7 +104,7 @@
           </td>
           <td style="text-align: left">
             
-                根据图表初始化单元测试内容
+                我们在教程中强调的单元测试，是让大家养成好的单元测试的习惯，把它做为开发的必需条件，有代码，就有测试。这样当我们以后涉及到越来越多的，逻辑运算的时候，便会因良好的测试习惯而事半功倍了。
             
           </td>
           <td style="text-align: left">
@@ -158,7 +158,7 @@
           </td>
           <td style="text-align: left">
             
-                进行单元测试下的代码开发
+                在第二章教师管理中，我们将用户的输入信息，直接绑定到了实体上。本节中，我们将用户的输入信息绑定到了自定义类中，并进行了验证。这是两种不同的数据绑定方式，在实际的开发过程中，我们可以按实际需求进行选择。
             
           </td>
           <td style="text-align: left">
@@ -171,17 +171,35 @@
         <tr>
           <td style="text-align: left">
             <a href="/SpringMVC/chapter3/8-init-unit-test-controller/">
-                第八节：初始化单元测试 -- controller
+                第八节：初始化单元测试 -- controller -- get
             </a>
           </td>
           <td style="text-align: left">
             
-                初始化C层中对应的单元测试，告别使用postMan进行数据查看
+                本节中，我们使用了`mockMvc`模拟进行`http`请求，并使用`print()`方法，将请求结果打印到了控制台中。最后，使用`jsonPath()`对响应结果进行了`json`转换，转换后，使用`is()`成功的进行了断言。
             
           </td>
           <td style="text-align: left">
             
                 Apr 14, 2017
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td style="text-align: left">
+            <a href="/SpringMVC/chapter3/9-controller-unit-test-save/">
+                第九节：单元测试 -- controller -- save
+            </a>
+          </td>
+          <td style="text-align: left">
+            
+                本节中，我们使用`mockMvc`进行模似`post`请求，并使用`jsonPath("$.id", notNullValue())`来对返回值是否为`null`进行断言；触发异常，并使用`status().is4xxClientError()`对发生的异常成功进行了断言。
+            
+          </td>
+          <td style="text-align: left">
+            
+                Apr 17, 2017
             
           </td>
         </tr>
