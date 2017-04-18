@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第十节：单元测试 -- controller -- update</title>
+    <meta name="description" content="我们由时序图出发，获取了update操作的请求数据与响应数据类型与格式，并依据该类型格式及我们的制定的开发规范（更新操作为put,格式为json）,书写了测试用例。同时，在测试中，针对用户可以传入数据错误的问题"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第十节：单元测试 -- controller -- update</h1>
+    <p class="post-meta"><time datetime="2017-04-18T08:35:06+08:00" itemprop="datePublished">Apr 18, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>通过前面两节的学习，我们总结出：在进行一个单元测试以前，需要对请求数据与响应数据的内容、格式有着非常清晰正确的认识。</p>
+
+<p>所以，在进行单元测试前，我们首先查看时序图对该触发器是如何进行描述的。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/17.png" alt="/SpringMVC/assets/image/chapter3/17.png" /></p>
+
+<p>由时序图，我们不难发现请求与响应（返回）数据的类型, 又由于我们规定了请求与响应的数据的格式均为<code class="highlighter-rouge">json</code>，时此，数据的请求响应类型与格式便全部都确定了。</p>
+
+<h1 id="初始化">初始化</h1>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 创建一个新班级</span>
+
+        <span class="c1">// 更新这个班级的名称</span>
+
+        <span class="c1">// 断言返回状态码为200</span>
+
+        <span class="c1">// 获取这个班级的名称，并断言其更新成功</span>
+
+        <span class="c1">// 创建一个教师</span>
+
+        <span class="c1">// 为新教师来更新这个班级的teacherId</span>
+
+        <span class="c1">// 获取这个班级的教师信息，并断言其更新成功</span>
+
+        <span class="c1">// 更新这个班级的名称为空</span>
+
+        <span class="c1">// 断言其会发生400异常</span>
+
+        <span class="c1">// 更新这个班级的teacherId为不可能存在的值</span>
+
+        <span class="c1">// 断言对应的教师信息为null</span>
+        
+    <span class="o">}</span></code></pre></figure>
+
+<blockquote>
+  <p>先有注释，再有代码，你做到了吗？</p>
+</blockquote>
+
+<h2 id="更新班级名称">更新班级名称</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">assertj</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 创建一个新班级</span>
+        <span class="n">Klass</span> <span class="n">klass</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">getNewKlass</span><span class="o">();</span>
+
+        <span class="c1">// 更新这个班级的名称</span>
+        <span class="n">String</span> <span class="n">klassName</span> <span class="o">=</span> <span class="s">"testName"</span><span class="o">;</span>
+
+        <span class="c1">// 断言返回状态码为200</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">mockMvc</span><span class="o">.</span><span class="na">perform</span><span class="o">(</span>
+                <span class="n">put</span><span class="o">(</span><span class="s">"/klass/"</span> <span class="o">+</span> <span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">().</span><span class="na">toString</span><span class="o">())</span>
+                        <span class="o">.</span><span class="na">contentType</span><span class="o">(</span><span class="s">"application/json"</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">content</span><span class="o">(</span><span class="s">"{\"name\":\""</span> <span class="o">+</span> <span class="n">klassName</span> <span class="o">+</span> <span class="s">"\",\"teacherId\":"</span> <span class="o">+</span> <span class="n">klass</span><span class="o">.</span><span class="na">getTeacher</span><span class="o">().</span><span class="na">getId</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">"}"</span><span class="o">))</span>
+                <span class="o">.</span><span class="na">andDo</span><span class="o">(</span><span class="n">print</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">andExpect</span><span class="o">(</span><span class="n">status</span><span class="o">().</span><span class="na">isOk</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">andExpect</span><span class="o">(</span><span class="n">status</span><span class="o">().</span><span class="na">is</span><span class="o">(</span><span class="mi">200</span><span class="o">));</span>
+
+        <span class="c1">// 获取这个班级的名称，并断言其更新成功</span>
+        <span class="n">Klass</span> <span class="n">newKlass</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">klassName</span><span class="o">).</span><span class="na">isEqualTo</span><span class="o">(</span><span class="n">newKlass</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p><code class="highlighter-rouge">isOk()</code>与<code class="highlighter-rouge">is(200)</code>的作用完全相同。
+<code class="highlighter-rouge">assertThat(klassName).isEqualTo(newKlass.getName())</code>断言获得的<code class="highlighter-rouge">name</code>值与传入的<code class="highlighter-rouge">name</code>值相同。</p>
+
+<h2 id="更新teacherid">更新teacherId</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">TeacherService</span> <span class="n">teacherService</span><span class="o">;</span>
+    <span class="o">...</span>
+        <span class="c1">// 创建一个教师</span>
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="n">teacherService</span><span class="o">.</span><span class="na">getNewTeacher</span><span class="o">();</span>
+
+        <span class="c1">// 为新教师来更新这个班级的teacherId</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">mockMvc</span><span class="o">.</span><span class="na">perform</span><span class="o">(</span>
+                <span class="n">put</span><span class="o">(</span><span class="s">"/klass/"</span> <span class="o">+</span> <span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">().</span><span class="na">toString</span><span class="o">())</span>
+                        <span class="o">.</span><span class="na">contentType</span><span class="o">(</span><span class="s">"application/json"</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">content</span><span class="o">(</span><span class="s">"{\"name\":\""</span> <span class="o">+</span> <span class="n">klassName</span> <span class="o">+</span> <span class="s">"\",\"teacherId\":"</span> <span class="o">+</span> <span class="n">teacher</span><span class="o">.</span><span class="na">getId</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">"}"</span><span class="o">))</span>
+                <span class="o">.</span><span class="na">andDo</span><span class="o">(</span><span class="n">print</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">andExpect</span><span class="o">(</span><span class="n">status</span><span class="o">().</span><span class="na">isOk</span><span class="o">());</span>
+
+        <span class="c1">// 获取这个班级的教师信息，并断言其更新成功</span>
+        <span class="n">Klass</span> <span class="n">newKlassWithNewTeacher</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">teacher</span><span class="o">.</span><span class="na">getId</span><span class="o">()).</span><span class="na">isEqualTo</span><span class="o">(</span><span class="n">newKlassWithNewTeacher</span><span class="o">.</span><span class="na">getTeacher</span><span class="o">().</span><span class="na">getId</span><span class="o">());</span></code></pre></figure>
+
+<h2 id="更新名称为空">更新名称为空</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">        <span class="c1">// 更新这个班级的名称为空</span>
+        <span class="n">String</span> <span class="n">newKlassName</span> <span class="o">=</span> <span class="s">""</span><span class="o">;</span>
+
+        <span class="c1">// 断言其会发生400异常</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">mockMvc</span><span class="o">.</span><span class="na">perform</span><span class="o">(</span>
+                <span class="n">put</span><span class="o">(</span><span class="s">"/klass/"</span> <span class="o">+</span> <span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">().</span><span class="na">toString</span><span class="o">())</span>
+                        <span class="o">.</span><span class="na">contentType</span><span class="o">(</span><span class="s">"application/json"</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">content</span><span class="o">(</span><span class="s">"{\"name\":\""</span> <span class="o">+</span> <span class="n">newKlassName</span> <span class="o">+</span> <span class="s">"\",\"teacherId\":"</span> <span class="o">+</span> <span class="n">teacher</span><span class="o">.</span><span class="na">getId</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">"}"</span><span class="o">))</span>
+                <span class="o">.</span><span class="na">andDo</span><span class="o">(</span><span class="n">print</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">andExpect</span><span class="o">(</span><span class="n">status</span><span class="o">().</span><span class="na">is</span><span class="o">(</span><span class="mi">400</span><span class="o">));</span></code></pre></figure>
+
+<h2 id="更新不存在的实体的teacherid">更新不存在的实体的teacherId</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">        <span class="c1">// 更新这个班级的teacherId为不可能存在的值</span>
+        <span class="n">String</span> <span class="n">teacherId</span> <span class="o">=</span> <span class="s">"3000"</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">mockMvc</span><span class="o">.</span><span class="na">perform</span><span class="o">(</span>
+                <span class="n">put</span><span class="o">(</span><span class="s">"/klass/"</span> <span class="o">+</span> <span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">().</span><span class="na">toString</span><span class="o">())</span>
+                        <span class="o">.</span><span class="na">contentType</span><span class="o">(</span><span class="s">"application/json"</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">content</span><span class="o">(</span><span class="s">"{\"name\":\""</span> <span class="o">+</span> <span class="n">klassName</span> <span class="o">+</span> <span class="s">"\",\"teacherId\":"</span> <span class="o">+</span> <span class="n">teacherId</span> <span class="o">+</span> <span class="s">"}"</span><span class="o">))</span>
+                <span class="o">.</span><span class="na">andDo</span><span class="o">(</span><span class="n">print</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">andExpect</span><span class="o">(</span><span class="n">status</span><span class="o">().</span><span class="na">isOk</span><span class="o">());</span>
+
+        <span class="c1">// 断言对应的教师信息为null</span>
+        <span class="n">Klass</span> <span class="n">newKlassWithNullTeacher</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">newKlassWithNullTeacher</span><span class="o">.</span><span class="na">getTeacher</span><span class="o">()).</span><span class="na">isNull</span><span class="o">();</span></code></pre></figure>
+
+<p>至此，我们测试了更新正常的名称、班级ID，测试也更新非正常的名称、班级id，并且全部获得了预期结果。</p>
+
+<h1 id="总结">总结：</h1>
+<p>我们由时序图出发，获取了<code class="highlighter-rouge">update</code>操作的请求数据与响应数据类型与格式，并依据该类型格式及我们的制定的开发规范（更新操作为<code class="highlighter-rouge">put</code>,格式为<code class="highlighter-rouge">json</code>）,书写了测试用例。同时，在测试中，针对用户可以传入数据错误的问题</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>参考：</td>
+      <td><a href="http://joel-costigliola.github.io/assertj/">assertj</a></td>
+    </tr>
+  </tbody>
+</table>
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>

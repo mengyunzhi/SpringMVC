@@ -1,7 +1,9 @@
 package com.mengyunzhi.controller;
 
 import com.mengyunzhi.repository.Klass;
+import com.mengyunzhi.repository.Teacher;
 import com.mengyunzhi.service.KlassService;
+import com.mengyunzhi.service.TeacherService;
 import org.junit.Before;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by panjie on 17/4/14.
@@ -35,6 +39,9 @@ public class KlassControllerTest {
 
     @Autowired
     private KlassService klassService;
+
+    @Autowired
+    private TeacherService teacherService;
 
     private Klass klass;
     private Long teacherId;
@@ -92,7 +99,63 @@ public class KlassControllerTest {
 
     @Test
     public void update() throws Exception {
+        // 创建一个新班级
+        Klass klass = klassService.getNewKlass();
 
+        // 更新这个班级的名称
+        String klassName = "testName";
+
+        // 断言返回状态码为200
+        this.mockMvc.perform(
+                put("/klass/" + klass.getId().toString())
+                        .contentType("application/json")
+                        .content("{\"name\":\"" + klassName + "\",\"teacherId\":" + klass.getTeacher().getId().toString() + "}"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(status().is(200));
+
+        // 获取这个班级的名称，并断言其更新成功
+        Klass newKlass = klassService.get(klass.getId());
+        assertThat(klassName).isEqualTo(newKlass.getName());
+
+        // 创建一个教师
+        Teacher teacher = teacherService.getNewTeacher();
+
+        // 为新教师来更新这个班级的teacherId
+        this.mockMvc.perform(
+                put("/klass/" + klass.getId().toString())
+                        .contentType("application/json")
+                        .content("{\"name\":\"" + klassName + "\",\"teacherId\":" + teacher.getId().toString() + "}"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        // 获取这个班级的教师信息，并断言其更新成功
+        Klass newKlassWithNewTeacher = klassService.get(klass.getId());
+        assertThat(teacher.getId()).isEqualTo(newKlassWithNewTeacher.getTeacher().getId());
+
+        // 更新这个班级的名称为空
+        String newKlassName = "";
+
+        // 断言其会发生400异常
+        this.mockMvc.perform(
+                put("/klass/" + klass.getId().toString())
+                        .contentType("application/json")
+                        .content("{\"name\":\"" + newKlassName + "\",\"teacherId\":" + teacher.getId().toString() + "}"))
+                .andDo(print())
+                .andExpect(status().is(400));
+
+        // 更新这个班级的teacherId为不可能存在的值
+        String teacherId = "3000";
+        this.mockMvc.perform(
+                put("/klass/" + klass.getId().toString())
+                        .contentType("application/json")
+                        .content("{\"name\":\"" + klassName + "\",\"teacherId\":" + teacherId + "}"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        // 断言对应的教师信息为null
+        Klass newKlassWithNullTeacher = klassService.get(klass.getId());
+        assertThat(newKlassWithNullTeacher.getTeacher()).isNull();
     }
 
     @Test

@@ -15,7 +15,7 @@ author: "潘杰"
 在官方教程的`Building REST services with Spring`中，也专门对控制器测试进行了讲解：[https://spring.io/guides/tutorials/bookmarks/](https://spring.io/guides/tutorials/bookmarks/)
 
 此外，官方文档中，测试又单独的做为一个章节来呈现给我们：
-[https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html)
+[https://docs.spring.io/spring-boot/docs/4.3.7.RELEASE/reference/html/boot-features-testing.html](https://docs.spring.io/spring-boot/docs/4.3.7.RELEASE/reference/html/boot-features-testing.html)
 
 
 
@@ -292,4 +292,4 @@ public class KlassControllerTest {
 
 ## 参考
 
-[https://spring.io/guides/gs/testing-web/](https://spring.io/guides/gs/testing-web/)|[https://spring.io/guides/tutorials/bookmarks/](https://spring.io/guides/tutorials/bookmarks/)|[https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html) | [https://docs.spring.io/spring-boot/docs/current/reference/html/test-auto-configuration.html](https://docs.spring.io/spring-boot/docs/current/reference/html/test-auto-configuration.html)
+[https://spring.io/guides/gs/testing-web/](https://spring.io/guides/gs/testing-web/)|[https://spring.io/guides/tutorials/bookmarks/](https://spring.io/guides/tutorials/bookmarks/)|[https://docs.spring.io/spring-boot/docs/4.3.7.RELEASE/reference/html/boot-features-testing.html](https://docs.spring.io/spring-boot/docs/4.3.7.RELEASE/reference/html/boot-features-testing.html) | [https://docs.spring.io/spring-boot/docs/4.3.7.RELEASE/reference/html/test-auto-configuration.html](https://docs.spring.io/spring-boot/docs/4.3.7.RELEASE/reference/html/test-auto-configuration.html)

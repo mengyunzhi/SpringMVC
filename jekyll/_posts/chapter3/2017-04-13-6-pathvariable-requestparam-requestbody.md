@@ -183,9 +183,9 @@ public class KlassController {
 <hr />
 参考文档:
 
-@PathVariable | [官方文档](https://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-requestmapping-uri-templates)
-@RequestParam | [官方文档](https://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-requestparam)
-@RequestBody  | [官方文档](https://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-requestbody)
+@PathVariable | [官方文档](https://docs.spring.io/spring/docs/4.3.7.RELEASE/spring-framework-reference/html/mvc.html#mvc-ann-requestmapping-uri-templates)
+@RequestParam | [官方文档](https://docs.spring.io/spring/docs/4.3.7.RELEASE/spring-framework-reference/html/mvc.html#mvc-ann-requestparam)
+@RequestBody  | [官方文档](https://docs.spring.io/spring/docs/4.3.7.RELEASE/spring-framework-reference/html/mvc.html#mvc-ann-requestbody)
 MultiValueMap | [http://blog.csdn.net/yanzhenjie1003/article/details/51550264](http://blog.csdn.net/yanzhenjie1003/article/details/51550264)
 
 

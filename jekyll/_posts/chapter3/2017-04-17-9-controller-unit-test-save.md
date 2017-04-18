@@ -42,9 +42,6 @@ MockHttpServletRequest:
 
 正如我们看到的一样，在调用`contentType()`，`mockMvc`在提交请示时，为我们设置了`Content-Type`的值，同时，还添加了系统的默认编码。
 
-TODO: 讲报错，一个抛出异常，另一个给出的JSON提示信息。
-
-
 ## json 数据
 在使用`postMan`的过程中，我们可以尝试点击`body`标签中的各个选项卡，并输入一些测试数据，最后查看`code`。你会发现，各个不同类型反映至最终发送的数据上，一是`content type`值不同，二就是发送数据的格式不同。但本质上，都是在发送普通字符串。
 
@@ -180,6 +177,7 @@ import static org.hamcrest.Matchers.notNullValue;
                 .andExpect(status().is4xxClientError());
     }
 {% endhighlight %}
+代码分析：使用`status().`代表返回状态，`is4xxClientError()`代表断言是4xx的错误，比如400,401,402都属于4xx。
 
 班级名称过长：
 {% highlight java %}
@@ -198,6 +196,11 @@ import static org.hamcrest.Matchers.notNullValue;
                 .andExpect(status().is4xxClientError());
     }
 {% endhighlight %}
+
+除使用`is4xxClientError()`来判断是否发生4xx错误以外，我们还可以使得`is(int status)`,如`is(400)`来判断发生的具体的状态码。还可以使用`isNotFound()`来判断是否发生`404`错误。`Spring`的官方`API`中，为我们总结了可用的断言方法:[https://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/test/web/servlet/result/StatusResultMatchers.html](https://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/test/web/servlet/result/StatusResultMatchers.html)。
+
+> 至此，我们已经接触到了官方的两个最重要的文档：[官方参考文档](https://docs.spring.io/spring/docs/4.3.7.RELEASE/spring-framework-reference/htmlsingle/)，[官方API文档](https://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/)。
+
 
 ## 代码重构
 当我们开始重复造轮子的时候，就应该思索自己是否应该马上进行代码重构了。
@@ -248,3 +251,6 @@ import static org.hamcrest.Matchers.notNullValue;
 
 # 总结
 本节中，我们使用`mockMvc`进行模似`post`请求，并使用`jsonPath("$.id", notNullValue())`来对返回值是否为`null`进行断言；触发异常，并使用`status().is4xxClientError()`对发生的异常成功进行了断言。
+
+
+参考： | [StatusResultMatchers](https://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/test/web/servlet/result/StatusResultMatchers.html) | [MockMvc](https://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/test/web/servlet/MockMvc.html) | [ResultActions](https://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/test/web/servlet/ResultActions.html) | [MockMvcResultMatchers](https://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html)
