@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,9 +43,14 @@ public class KlassController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        klassService.delete(id);
-        return;
+    public ResponseEntity<Klass> delete(@PathVariable Long id) {
+        try {
+            klassService.delete(id);
+        } catch (Exception e) {
+            return new ResponseEntity<Klass>(new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<Klass>(new HttpHeaders(), HttpStatus.OK);
     }
 
     private static class JsonInput {

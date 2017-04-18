@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>第十一节：单元测试 -- controller -- delete</title>
-    <meta name="description" content="描述信息"/>
+    <meta name="description" content="本节中，我们对`delete`进行了测试，在测试过程中控制台中报出了异常。就此，我们就验证类的**异常**与程序执行中发生的**异常**做了对比。并由此修改了`delete`方法，在该方法中，我们手动抛出了一个带有异常的`ResponseEntity`来模拟验证失败时发送异常的情景。"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#157878">
     <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
@@ -30,7 +30,109 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    
+    <h2 id="时序图">时序图</h2>
+
+<p><img src="/SpringMVC/assets/image/chapter3/16.png" alt="/SpringMVC/assets/image/chapter3/16.png" /></p>
+
+<h2 id="初始化">初始化</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 创建班级</span>
+
+        <span class="c1">// 删除班级</span>
+
+        <span class="c1">// 断言删除成功</span>
+
+        <span class="c1">// 删除一个不存在的班级</span>
+
+        <span class="c1">// 断言发生错误</span>
+    <span class="o">}</span></code></pre></figure>
+
+<h2 id="正常删除">正常删除</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="c1">// 改名为deleteTest，避免与测试中的delete()方法冲突</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteTest</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// 创建班级</span>
+        <span class="n">Klass</span> <span class="n">klass</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">getNewKlass</span><span class="o">();</span>
+
+        <span class="c1">// 删除班级</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">mockMvc</span><span class="o">.</span><span class="na">perform</span><span class="o">(</span><span class="n">delete</span><span class="o">(</span><span class="s">"/klass/"</span> <span class="o">+</span> <span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">().</span><span class="na">toString</span><span class="o">()))</span>
+                <span class="o">.</span><span class="na">andDo</span><span class="o">(</span><span class="n">print</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">andExpect</span><span class="o">(</span><span class="n">status</span><span class="o">().</span><span class="na">isOk</span><span class="o">());</span>
+
+        <span class="c1">// 断言删除成功</span>
+        <span class="n">Klass</span> <span class="n">newKlass</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">klass</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">newKlass</span><span class="o">).</span><span class="na">isNull</span><span class="o">();</span></code></pre></figure>
+
+<h2 id="异常删除">异常删除</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">        <span class="c1">// 删除一个不存在的班级</span>
+        <span class="c1">// 断言发生错误</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">mockMvc</span><span class="o">.</span><span class="na">perform</span><span class="o">(</span><span class="n">delete</span><span class="o">(</span><span class="s">"/klass/3000"</span><span class="o">))</span>
+                <span class="o">.</span><span class="na">andDo</span><span class="o">(</span><span class="n">print</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">andExpect</span><span class="o">(</span><span class="n">status</span><span class="o">().</span><span class="na">isBadRequest</span><span class="o">());</span></code></pre></figure>
+
+<p>测试:</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/45.png" alt="/SpringMVC/assets/image/chapter3/45.png" /></p>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">org.springframework.web.util.NestedServletException: Request processing failed; nested exception is org.springframework.dao.EmptyResultDataAccessException: No class com.mengyunzhi.repository.Klass entity with id 3000 exists!</code></pre></figure>
+
+<p>我们本来是想得到一个请求的错误，这样以便使用<code class="highlighter-rouge">andExpect</code>来获取这个错误。却不想在控制台得到了一个异常。此时，我们回想下在前面进行其它的测试时，比如说更新姓名为空，是可以得到一个请求错误的400异常的。而非系统的异常。这是什么原因导致的呢？</p>
+
+<p>这是由于在前面更新姓名为空时，我们使用的是<code class="highlighter-rouge">@Valid</code>注解，这验证未通过时，将自动的向请求者抛出一个验证异常（该异常采用设置header中的status值来实现）。
+而在此，我们删除一个不存在的实体时，得到是一个<code class="highlighter-rouge">java</code>内部异常。执行到此时，程序由于异常而中断了。</p>
+
+<p>解决这个测试报异常的方法有两种：</p>
+
+<p>第一种是以前我们学过的，即为这个测试增加一个期待异常的注解。</p>
+
+<p>第二种是在触发器中，去获取这个异常。然后手动对异常进行处理。<code class="highlighter-rouge">Spring</code>的异常类型很多，处理异常的方法也不止一种。官方也给我们处理异常的相关教程 <a href="https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc">Exception Handling in Spring MVC</a></p>
+
+<p>第一种：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span><span class="o">(</span><span class="n">expected</span> <span class="o">=</span> <span class="n">NestedServletException</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+    <span class="c1">// 改名为deleteTest，避免与测试中的delete()方法冲突</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteTest</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span></code></pre></figure>
+
+<p>第二种代码改动也不大，做为选学内容，如果你感觉自己并不能够很快的看明白，这仅是由于我们接触<code class="highlighter-rouge">Spring</code>接触<code class="highlighter-rouge">java</code>的时间过短而已。没关系，现在的我们的，直接跳过就可以了。</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@DeleteMapping</span><span class="o">(</span><span class="s">"/{id}"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;</span> <span class="nf">delete</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">klassService</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;(</span><span class="k">new</span> <span class="n">HttpHeaders</span><span class="o">(),</span> <span class="n">HttpStatus</span><span class="o">.</span><span class="na">BAD_REQUEST</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;(</span><span class="k">new</span> <span class="n">HttpHeaders</span><span class="o">(),</span> <span class="n">HttpStatus</span><span class="o">.</span><span class="na">OK</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>无论哪种方式，最后我们都会得到一个测试通过的结果。</p>
+
+<hr />
+
+<p>最后，我们对启动测试类来查看是否通过了全部的测试：</p>
+
+<p><img src="/SpringMVC/assets/image/chapter3/45.png" alt="/SpringMVC/assets/image/chapter3/45.png" /></p>
+
+<h1 id="总结">总结</h1>
+<p>本节中，我们对<code class="highlighter-rouge">delete</code>进行了测试，在测试过程中控制台中报出了异常。就此，我们就验证类的<strong>异常</strong>与程序执行中发生的<strong>异常</strong>做了对比。并由此修改了<code class="highlighter-rouge">delete</code>方法，在该方法中，我们手动抛出了一个带有异常的<code class="highlighter-rouge">ResponseEntity</code>来模拟验证失败时发送异常的情景。</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>参考:</td>
+      <td><a href="http://docs.spring.io/spring/docs/4.3.7.RELEASE/spring-framework-reference/htmlsingle/#mvc-exceptionhandlers">Handling exceptions</a></td>
+      <td><a href="http://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/http/ResponseEntity.html">ResponseEntity</a></td>
+      <td><a href="http://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/http/HttpHeaders.html">HttpHeaders</a></td>
+      <td><a href="http://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/util/MultiValueMap.html">Interface MultiValueMap&lt;K,V&gt;</a></td>
+      <td><a href="http://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/http/HttpStatus.html">HttpStatus</a></td>
+    </tr>
+  </tbody>
+</table>
 
   </div>
 

@@ -1,5 +1,107 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-18T10:38:50+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
-</subtitle><entry><title type="html">第十一节：单元测试 – controller – delete</title><link href="http://localhost:4000/SpringMVC/chapter3/11-unit-test-delete/" rel="alternate" type="text/html" title="第十一节：单元测试 -- controller -- delete" /><published>2017-04-18T10:38:46+08:00</published><updated>2017-04-18T10:38:46+08:00</updated><id>http://localhost:4000/SpringMVC/chapter3/11-unit-test-delete</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter3/11-unit-test-delete/"></content><author><name>潘杰</name></author><summary type="html"></summary></entry><entry><title type="html">第十节：单元测试 – controller – update</title><link href="http://localhost:4000/SpringMVC/chapter3/10-unit-test-update/" rel="alternate" type="text/html" title="第十节：单元测试 -- controller -- update" /><published>2017-04-18T08:35:06+08:00</published><updated>2017-04-18T08:35:06+08:00</updated><id>http://localhost:4000/SpringMVC/chapter3/10-unit-test-update</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter3/10-unit-test-update/">&lt;p&gt;通过前面两节的学习，我们总结出：在进行一个单元测试以前，需要对请求数据与响应数据的内容、格式有着非常清晰正确的认识。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-18T13:57:54+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
+</subtitle><entry><title type="html">第十一节：单元测试 – controller – delete</title><link href="http://localhost:4000/SpringMVC/chapter3/11-unit-test-delete/" rel="alternate" type="text/html" title="第十一节：单元测试 -- controller -- delete" /><published>2017-04-18T10:38:46+08:00</published><updated>2017-04-18T10:38:46+08:00</updated><id>http://localhost:4000/SpringMVC/chapter3/11-unit-test-delete</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter3/11-unit-test-delete/">&lt;h2 id=&quot;时序图&quot;&gt;时序图&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter3/16.png&quot; alt=&quot;/SpringMVC/assets/image/chapter3/16.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;初始化&quot;&gt;初始化&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    &lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 创建班级&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 删除班级&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 断言删除成功&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 删除一个不存在的班级&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 断言发生错误&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;正常删除&quot;&gt;正常删除&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    &lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 改名为deleteTest，避免与测试中的delete()方法冲突&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deleteTest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 创建班级&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klassService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getNewKlass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 删除班级&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;mockMvc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;perform&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/klass/&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()))&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;andDo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;andExpect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isOk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 断言删除成功&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newKlass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klassService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newKlass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isNull&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;异常删除&quot;&gt;异常删除&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;        &lt;span class=&quot;c1&quot;&gt;// 删除一个不存在的班级&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 断言发生错误&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;mockMvc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;perform&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/klass/3000&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;andDo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;andExpect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isBadRequest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;测试:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter3/45.png&quot; alt=&quot;/SpringMVC/assets/image/chapter3/45.png&quot; /&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;org.springframework.web.util.NestedServletException: Request processing failed; nested exception is org.springframework.dao.EmptyResultDataAccessException: No class com.mengyunzhi.repository.Klass entity with id 3000 exists!&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;我们本来是想得到一个请求的错误，这样以便使用&lt;code class=&quot;highlighter-rouge&quot;&gt;andExpect&lt;/code&gt;来获取这个错误。却不想在控制台得到了一个异常。此时，我们回想下在前面进行其它的测试时，比如说更新姓名为空，是可以得到一个请求错误的400异常的。而非系统的异常。这是什么原因导致的呢？&lt;/p&gt;
+
+&lt;p&gt;这是由于在前面更新姓名为空时，我们使用的是&lt;code class=&quot;highlighter-rouge&quot;&gt;@Valid&lt;/code&gt;注解，这验证未通过时，将自动的向请求者抛出一个验证异常（该异常采用设置header中的status值来实现）。
+而在此，我们删除一个不存在的实体时，得到是一个&lt;code class=&quot;highlighter-rouge&quot;&gt;java&lt;/code&gt;内部异常。执行到此时，程序由于异常而中断了。&lt;/p&gt;
+
+&lt;p&gt;解决这个测试报异常的方法有两种：&lt;/p&gt;
+
+&lt;p&gt;第一种是以前我们学过的，即为这个测试增加一个期待异常的注解。&lt;/p&gt;
+
+&lt;p&gt;第二种是在触发器中，去获取这个异常。然后手动对异常进行处理。&lt;code class=&quot;highlighter-rouge&quot;&gt;Spring&lt;/code&gt;的异常类型很多，处理异常的方法也不止一种。官方也给我们处理异常的相关教程 &lt;a href=&quot;https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc&quot;&gt;Exception Handling in Spring MVC&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;第一种：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    &lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NestedServletException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 改名为deleteTest，避免与测试中的delete()方法冲突&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deleteTest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;第二种代码改动也不大，做为选学内容，如果你感觉自己并不能够很快的看明白，这仅是由于我们接触&lt;code class=&quot;highlighter-rouge&quot;&gt;Spring&lt;/code&gt;接触&lt;code class=&quot;highlighter-rouge&quot;&gt;java&lt;/code&gt;的时间过短而已。没关系，现在的我们的，直接跳过就可以了。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;    &lt;span class=&quot;nd&quot;&gt;@DeleteMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/{id}&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ResponseEntity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@PathVariable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;klassService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ResponseEntity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HttpHeaders&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HttpStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;BAD_REQUEST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ResponseEntity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HttpHeaders&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HttpStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;OK&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;无论哪种方式，最后我们都会得到一个测试通过的结果。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;最后，我们对启动测试类来查看是否通过了全部的测试：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter3/45.png&quot; alt=&quot;/SpringMVC/assets/image/chapter3/45.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;总结&quot;&gt;总结&lt;/h1&gt;
+&lt;p&gt;本节中，我们对&lt;code class=&quot;highlighter-rouge&quot;&gt;delete&lt;/code&gt;进行了测试，在测试过程中控制台中报出了异常。就此，我们就验证类的&lt;strong&gt;异常&lt;/strong&gt;与程序执行中发生的&lt;strong&gt;异常&lt;/strong&gt;做了对比。并由此修改了&lt;code class=&quot;highlighter-rouge&quot;&gt;delete&lt;/code&gt;方法，在该方法中，我们手动抛出了一个带有异常的&lt;code class=&quot;highlighter-rouge&quot;&gt;ResponseEntity&lt;/code&gt;来模拟验证失败时发送异常的情景。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;参考:&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;http://docs.spring.io/spring/docs/4.3.7.RELEASE/spring-framework-reference/htmlsingle/#mvc-exceptionhandlers&quot;&gt;Handling exceptions&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;http://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/http/ResponseEntity.html&quot;&gt;ResponseEntity&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;http://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/http/HttpHeaders.html&quot;&gt;HttpHeaders&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;http://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/util/MultiValueMap.html&quot;&gt;Interface MultiValueMap&amp;lt;K,V&amp;gt;&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;http://docs.spring.io/spring/docs/4.3.7.RELEASE/javadoc-api/org/springframework/http/HttpStatus.html&quot;&gt;HttpStatus&lt;/a&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</content><author><name>潘杰</name></author><summary type="html">时序图</summary></entry><entry><title type="html">第十节：单元测试 – controller – update</title><link href="http://localhost:4000/SpringMVC/chapter3/10-unit-test-update/" rel="alternate" type="text/html" title="第十节：单元测试 -- controller -- update" /><published>2017-04-18T08:35:06+08:00</published><updated>2017-04-18T08:35:06+08:00</updated><id>http://localhost:4000/SpringMVC/chapter3/10-unit-test-update</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter3/10-unit-test-update/">&lt;p&gt;通过前面两节的学习，我们总结出：在进行一个单元测试以前，需要对请求数据与响应数据的内容、格式有着非常清晰正确的认识。&lt;/p&gt;
 
 &lt;p&gt;所以，在进行单元测试前，我们首先查看时序图对该触发器是如何进行描述的。&lt;/p&gt;
 

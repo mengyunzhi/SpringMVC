@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.util.NestedServletException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -159,8 +161,28 @@ public class KlassControllerTest {
     }
 
     @Test
-    public void delete() throws Exception {
+    // 改名为deleteTest，避免与测试中的delete()方法冲突
+    public void deleteTest() throws Exception {
+        // 创建班级
+        Klass klass = klassService.getNewKlass();
 
+        // 删除班级
+        this.mockMvc.perform(delete("/klass/" + klass.getId().toString()))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        // 断言删除成功
+        Klass newKlass = klassService.get(klass.getId());
+        assertThat(newKlass).isNull();
+
+        // 删除一个不存在的班级
+        // 断言发生错误
+        this.mockMvc.perform(
+                delete("/klass/3000")
+                        .contentType("application/json")
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }
 
