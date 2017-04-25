@@ -6,6 +6,8 @@ import org.hibernate.validator.constraints.Email;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by panjie on 17/4/5.
@@ -31,6 +33,17 @@ public class Teacher {
 
     @Size(max = 255)                // 最大长度为255
     private String address = "";    // 地址. 不进行@Column声明，则默认长度为255
+
+    @OneToMany
+    private Set<Klass> klass = new HashSet<Klass>();
+
+    public Set<Klass> getKlass() {
+        return klass;
+    }
+
+    public void setKlass(Set<Klass> klass) {
+        this.klass = klass;
+    }
 
     private Boolean sex = false;    // 性别：false(0)，男。true(1)，女.
 
@@ -83,6 +96,7 @@ public class Teacher {
 
     public Teacher() {
     }
+
 
     @Override
     public String toString() {

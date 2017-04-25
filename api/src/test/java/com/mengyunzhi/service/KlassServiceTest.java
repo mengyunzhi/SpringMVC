@@ -1,6 +1,7 @@
 package com.mengyunzhi.service;
 
 import com.mengyunzhi.repository.Klass;
+import com.mengyunzhi.repository.KlassRepository;
 import com.mengyunzhi.repository.Teacher;
 import com.mengyunzhi.repository.TeacherRepository;
 import org.junit.Before;
@@ -9,6 +10,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -88,5 +92,34 @@ public class KlassServiceTest {
     @Test
     public void getNewKlass() {
         assertThat(klassService.getNewKlass()).isNotNull();
+    }
+
+
+    @Autowired
+    private KlassRepository klassRepository;
+
+    @Test
+    @Transactional
+    public void oneToManyTest() {
+        // 创建一个新的教师
+        Teacher teacher = teacherService.getNewTeacher();
+
+        // 创建两个新的班级
+        Klass klass1 = klassService.getNewKlass();
+        Klass klass2 = klassService.getNewKlass();
+
+        // 为这两个班级更新教师
+        klass1.setTeacher(teacher);
+        klass2.setTeacher(teacher);
+
+        klassRepository.save(klass1);
+        klassRepository.save(klass2);
+
+        // 查询这个教师所对应的班级信息
+        teacher = teacherRepository.findOne(teacher.getId());
+
+        // 断言不为空，而且班级数为2个
+        assertThat(teacher).isNotNull();
+        assertThat(teacher.getKlass().size()).isEqualTo(2);
     }
 }
