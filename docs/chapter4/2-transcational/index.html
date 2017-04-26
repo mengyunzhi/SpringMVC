@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第二节：深入理解事务</title>
+    <meta name="description" content="通过单元测试深入理解事务"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第二节：深入理解事务</h1>
+    <p class="post-meta"><time datetime="2017-04-26T11:05:41+08:00" itemprop="datePublished">Apr 26, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>上一节中，我们在测试的方法中，加入了<code class="highlighter-rouge">@Transactional</code>注解。这使得<code class="highlighter-rouge">spring</code>在此方法结束前，不去关闭事务，从而达到了正确处理数据的目的。其实除了将<code class="highlighter-rouge">@Transactional</code>加入到方法上以外，还可以将其加入到类的注解中。比如：</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@RunWith</span><span class="o">(</span><span class="n">SpringRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="nd">@SpringBootTest</span> <span class="nd">@Transactional</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CourseRepositoryTest</span> <span class="o">{</span></code></pre></figure>
+
+<p>这样一来，我们就不需要为每个方法单独加入应用事务的注解了。那么我们说什么是事务呢？简单来讲，事务就是将一组数据库操作语句当做一条来进行执行，如果执行成功，那么就全部执行成功，如果执行失败呢，那么就全部执行失败。下面，我们使用<code class="highlighter-rouge">idea</code>另一个强大的功能 – 中断，来具体理解 事务 这个即陌生又熟悉的名词。</p>
+
+<h1 id="jpa">JPA</h1>
+<p>我们早早的就接触了 <code class="highlighter-rouge">jpa</code>这个名词，那么具体在使用过程中，哪里体现了<code class="highlighter-rouge">JPA</code>呢？为了更好的理解这个问题，我们去掉<code class="highlighter-rouge">@Transactional</code>注解，然后为了防止惰性加载的异常，注释到最后需要事务才能返回数据的代码。</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@RunWith</span><span class="o">(</span><span class="n">SpringRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="nd">@SpringBootTest</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CourseRepositoryTest</span> <span class="o">{</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">manyToMany</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 创建两个班级</span>
+        <span class="n">Klass</span> <span class="n">klass1</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">getNewKlass</span><span class="o">();</span>
+        <span class="n">Klass</span> <span class="n">klass2</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">getNewKlass</span><span class="o">();</span>
+
+        <span class="c1">// 创建一个课程</span>
+        <span class="n">Course</span> <span class="n">course</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Course</span><span class="o">();</span>
+        <span class="n">course</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"测试课程"</span><span class="o">);</span>
+
+        <span class="c1">// 设置这个课程对应刚刚创建的两个班级</span>
+        <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;</span> <span class="n">klasses</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;();</span>
+        <span class="n">klasses</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">klass1</span><span class="o">);</span>
+        <span class="n">klasses</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">klass2</span><span class="o">);</span>
+        <span class="n">course</span><span class="o">.</span><span class="na">setKlass</span><span class="o">(</span><span class="n">klasses</span><span class="o">);</span>
+
+        <span class="c1">// 保存数据</span>
+        <span class="n">courseRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">course</span><span class="o">);</span>
+
+        <span class="c1">// 查询并断言</span>
+        <span class="n">course</span> <span class="o">=</span> <span class="n">courseRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="n">course</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+        <span class="c1">// 断言能查到这个实体</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">course</span><span class="o">).</span><span class="na">isNotNull</span><span class="o">();</span>
+        <span class="c1">// 断言这个实体上对应两个班级实体</span>
+<span class="c1">//        assertThat(course.getKlass().size()).isEqualTo(2);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>再然后，我们在方法的第一行，打一个断点，并在启动单元测试时选择<code class="highlighter-rouge">debug</code>。</p>
+
+<h3 id="debug">debug</h3>
+
+<p><img src="/SpringMVC/assets/image/chapter4/4.png" alt="/SpringMVC/assets/image/chapter4/4.png" /></p>
+
+<p>此时，代码被<code class="highlighter-rouge">IEDA</code>中断执行了，变量的类型与值，直接显示在了<code class="highlighter-rouge">idea</code>的编辑界面中，这的确是我们使用过的最人性化的编辑器了。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/5.png" alt="/SpringMVC/assets/image/chapter4/5.png" /></p>
+
+<p>和其它的调试系统一样，这里我们可以使用步进、步入、步出来进行程序的调试。除此以外，<code class="highlighter-rouge">idea</code>还提供了排除库文件的步入与步出。在前期，我们只需要使用两点： 步进，即执行下一行；跳到下一断点。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/6.png" alt="/SpringMVC/assets/image/chapter4/6.png" /></p>
+
+<h3 id="数据持久化">数据持久化</h3>
+<p>我们在第一行打断点的情况，启动<code class="highlighter-rouge">debug</code>。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/5.png" alt="/SpringMVC/assets/image/chapter4/5.png" /></p>
+
+<p>然后查看数据表中，发现teacher表中和klass表中，并没有生成数据。此时，我们将点”步进”，执行到下一行。</p>
+
+<p>再查看数据表：</p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/7.png" alt="/SpringMVC/assets/image/chapter4/7.png" /></p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/8.png" alt="/SpringMVC/assets/image/chapter4/8.png" /></p>
+
+<p>这说明，执行完第33行代码后，<code class="highlighter-rouge">spring</code>执行了<code class="highlighter-rouge">sql</code>语句，完成了将实体变为数据表中的对应数据的过程。我们说把数据写入到了数据库，这个数据即使是程序关闭，也仍然会存在，那么就认为是持久存在了。所以，这个过程就是数据持久化。</p>
+
+<p>此时，我们在 步进，再打开数据表查看，还会发现又生成了两条新数据。也就是说，第34行，<code class="highlighter-rouge">spring</code>也进行数据库的具体操作，从而将数据写入到了数据库。</p>
+
+<p>看完这个过程以后，我们在加入事务注解，重新看看具体的执行过程中会发生什么。</p>
+
+<h3 id="加入事务">加入事务</h3>
+
+<p>我们在第一行打断点的情况，启动<code class="highlighter-rouge">debug</code>。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/5.png" alt="/SpringMVC/assets/image/chapter4/5.png" /></p>
+
+<p>和前面一样，我们每 步进 一步，便查看一便数据表。没错，奇怪的事情发生了，数据表中，竟然。。。没有生成一条数据。是的，正如你看到的这样，由于将这个方法使用事务进行了注解，所以在方法执行完毕前，事务中的<code class="highlighter-rouge">sql</code>语句是不会进行提交的。那么，由于没有进行<code class="highlighter-rouge">sql</code>语句的提交，当然也就不会在数据表中生成数据了。</p>
+
+<p>那么，为什么当这个方法执行完毕后，我们去查看数据表，仍然看不到任何数据呢？按上面的说法，当方法结束后，事务应该进行了提交，那么数据表当中应该生成数据才对。</p>
+
+<p>这是由于我们当前使用的是<code class="highlighter-rouge">junit</code>单元测试，当它看到我们将方法使用 事务 进行注解时，单元测试的方法完毕后，<code class="highlighter-rouge">junit</code>直接指挥下的事务，并没有进行任何的<code class="highlighter-rouge">sql</code>语句提交的工作。所以，我们当然在数据表中看不到数据了。当然了，这正是我们在单元测试中还要的结果，进行完单元测试时，我们对数据表没有进行任何的更改，但却起到了测试的效果。</p>
+
+<p>最后，为了验证 事务 的确是在方法结束后起作用的。我们新建<code class="highlighter-rouge">CourseSerive</code>方法，并在其方法上应用<code class="highlighter-rouge">@Transactional</code>注解，最后进行测试。</p>
+
+<h1 id="service层应用事务">service层应用事务</h1>
+
+<h2 id="新建接口">新建接口</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">service</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/26.
+ */</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">CourseService</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">transactional</span><span class="o">();</span>
+<span class="o">}</span></code></pre></figure>
+
+<h2 id="实现接口">实现接口</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">service</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.repository.Course</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.repository.CourseRepository</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.repository.Klass</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.mengyunzhi.repository.Teacher</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Service</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.HashSet</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/26.
+ */</span>
+<span class="nd">@Service</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CourseServiceImpl</span> <span class="kd">implements</span> <span class="n">CourseService</span> <span class="o">{</span>
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">KlassService</span> <span class="n">klassService</span><span class="o">;</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">CourseRepository</span> <span class="n">courseRepository</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="nd">@Transactional</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">transactional</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 创建两个班级</span>
+        <span class="n">Klass</span> <span class="n">klass1</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">getNewKlass</span><span class="o">();</span>
+        <span class="n">Klass</span> <span class="n">klass2</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">getNewKlass</span><span class="o">();</span>
+
+        <span class="n">Teacher</span> <span class="n">teacher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Teacher</span><span class="o">();</span>
+
+        <span class="c1">// 创建一个课程</span>
+        <span class="n">Course</span> <span class="n">course</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Course</span><span class="o">();</span>
+        <span class="n">course</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"测试课程"</span><span class="o">);</span>
+
+        <span class="c1">// 设置这个课程对应刚刚创建的两个班级</span>
+        <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;</span> <span class="n">klasses</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;();</span>
+        <span class="n">klasses</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">klass1</span><span class="o">);</span>
+        <span class="n">klasses</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">klass2</span><span class="o">);</span>
+        <span class="n">course</span><span class="o">.</span><span class="na">setKlass</span><span class="o">(</span><span class="n">klasses</span><span class="o">);</span>
+
+        <span class="c1">// 保存数据</span>
+        <span class="n">courseRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">course</span><span class="o">);</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<h2 id="测试接口">测试接口</h2>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">service</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.boot.test.context.SpringBootTest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.test.context.junit4.SpringRunner</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.*;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/26.
+ */</span>
+<span class="nd">@RunWith</span><span class="o">(</span><span class="n">SpringRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="nd">@SpringBootTest</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CourseServiceTest</span> <span class="o">{</span>
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">CourseService</span> <span class="n">courseService</span><span class="o">;</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">transactional</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">courseService</span><span class="o">.</span><span class="na">transactional</span><span class="o">();</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<h2 id="打中断测试">打中断，测试</h2>
+
+<p>我们如下图，打3个断点。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/9.png" alt="/SpringMVC/assets/image/chapter4/9.png" /></p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/10.png" alt="/SpringMVC/assets/image/chapter4/10.png" /></p>
+
+<p>然后启动<code class="highlighter-rouge">debug</code>，并按点击 跳转到下一断点 来直接查看执行到此的结果。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/11.png" alt="/SpringMVC/assets/image/chapter4/11.png" /></p>
+
+<p>最终结果和我们预测的一致，当执行完带有<code class="highlighter-rouge">@Transactional</code>注解的<code class="highlighter-rouge">transactional()</code>方法时，数据被持久化到了数据表。</p>
+
+<p>试想下，如果在执行带有<code class="highlighter-rouge">@Transactional</code>注解的方法时，发生异常，那么数据就不会被久持化，这就是我们平常所说的“回滚”。也就是说，<code class="highlighter-rouge">spring</code>的事务管理中的 回滚 是针对每一个事务而言的，在一个事务中，如果发生了错误或是异常，那么这个事务就不进行提交，从而达到了类似于 回滚 的效果。每这个事务已经结束，那么数据是没有办法进行 回滚 的，因为此时数据已经被持久化到了数据表中。在实际的项目中，我们将会更深入的接触到这个问题。相信到时候你会更加清晰的掌握事务这个东西。</p>
+
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>
