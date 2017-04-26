@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-26T16:02:12+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-26T16:19:38+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
 </subtitle><entry><title type="html">第二节：深入理解事务</title><link href="http://localhost:4000/SpringMVC/chapter4/2-transcational/" rel="alternate" type="text/html" title="第二节：深入理解事务" /><published>2017-04-26T11:05:41+08:00</published><updated>2017-04-26T11:05:41+08:00</updated><id>http://localhost:4000/SpringMVC/chapter4/2-transcational</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter4/2-transcational/">&lt;p&gt;上一节中，我们在测试的方法中，加入了&lt;code class=&quot;highlighter-rouge&quot;&gt;@Transactional&lt;/code&gt;注解。这使得&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;在此方法结束前，不去关闭事务，从而达到了正确处理数据的目的。其实除了将&lt;code class=&quot;highlighter-rouge&quot;&gt;@Transactional&lt;/code&gt;加入到方法上以外，还可以将其加入到类的注解中。比如：&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;nd&quot;&gt;@RunWith&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringRunner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@SpringBootTest&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@Transactional&lt;/span&gt;
@@ -65,9 +65,9 @@
 
 &lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter4/8.png&quot; alt=&quot;/SpringMVC/assets/image/chapter4/8.png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;这说明，执行完第33行代码后，&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;执行了&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;语句，完成了将实体变为数据表中的对应数据的过程。我们说把数据写入到了数据库，这个数据即使是程序关闭，也仍然会存在，那么就认为是持久存在了。所以，这个过程就是数据持久化。&lt;/p&gt;
+&lt;p&gt;这说明，执行完第1行代码后，&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;执行了&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;语句，完成了将实体变为数据表中的对应数据的过程。我们说把数据写入到了数据库，这个数据即使是程序关闭，也仍然会存在，那么就认为是持久存在了。所以，这个过程就是数据持久化。&lt;/p&gt;
 
-&lt;p&gt;此时，我们在 步进，再打开数据表查看，还会发现又生成了两条新数据。也就是说，第34行，&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;也进行数据库的具体操作，从而将数据写入到了数据库。&lt;/p&gt;
+&lt;p&gt;此时，我们在 步进，再打开数据表查看，还会发现又生成了两条新数据。也就是说，第2行，&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;也进行数据库的具体操作，从而将数据写入到了数据库。&lt;/p&gt;
 
 &lt;p&gt;看完这个过程以后，我们在加入事务注解，重新看看具体的执行过程中会发生什么。&lt;/p&gt;
 
