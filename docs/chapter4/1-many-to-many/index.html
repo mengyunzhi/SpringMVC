@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>第一节：多对多</title>
+    <meta name="description" content="描述信息"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/SpringMVC/assets/css/style.css?v=">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">SpringMVC API入门教程</h1>
+      <h2 class="project-tagline">技术支持：河北工业大学梦云智软件开发团队
+</h2>
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/mengyunzhi/SpringMVC/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">第一节：多对多</h1>
+    <p class="post-meta"><time datetime="2017-04-18T14:09:56+08:00" itemprop="datePublished">Apr 18, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">潘杰</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>在前面的章节中，我们使用了多对一关联。本节中，我们增加课程管理来查看如何进行多对多的关联：</p>
+
+<p>编码先画图，建立数据表当然也是如此。</p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/1.png" alt="/SpringMVC/assets/image/chapter4/1.png" /></p>
+
+<p>如上图所示，一个班级对应多个课程，一个课程也对应多个班级，两个实体是一对一的关系。</p>
+
+<h1 id="定义实体">定义实体</h1>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">repository</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.persistence.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashSet</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/25.
+ */</span>
+<span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Course</span> <span class="o">{</span>
+    <span class="nd">@Id</span> <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>    <span class="c1">// 名称</span>
+
+    <span class="nd">@ManyToMany</span>
+    <span class="kd">private</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;</span> <span class="n">klass</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;();</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>我们使用了<code class="highlighter-rouge">@ManyToMany</code>注解，来说明了实体间的关系为多对多。那么如此声明以后<code class="highlighter-rouge">SpringMVC</code>能为我们自动做什么呢？</p>
+
+<blockquote>
+  <p>变量名设置为: <code class="highlighter-rouge">klass</code> – 它直接对应到中间表名、中间表字段名。</p>
+</blockquote>
+
+<p>下面，我们让我们来添加<code class="highlighter-rouge">set\get</code>及其它辅助函数，最终来进行实际验证。</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">repository</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.persistence.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashSet</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/25.
+ */</span>
+<span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Course</span> <span class="o">{</span>
+    <span class="nd">@Id</span> <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>    <span class="c1">// 名称</span>
+
+    <span class="nd">@ManyToMany</span>
+    <span class="kd">private</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;</span> <span class="n">klass</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;();</span>
+
+    <span class="kd">public</span> <span class="nf">Course</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;</span> <span class="n">klass</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">klass</span> <span class="o">=</span> <span class="n">klass</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">Course</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Long</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setId</span><span class="o">(</span><span class="n">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;</span> <span class="nf">getKlass</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">klass</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setKlass</span><span class="o">(</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;</span> <span class="n">klass</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">klass</span> <span class="o">=</span> <span class="n">klass</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">"Course{"</span> <span class="o">+</span>
+                <span class="s">"id="</span> <span class="o">+</span> <span class="n">id</span> <span class="o">+</span>
+                <span class="s">", name='"</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="sc">'\''</span> <span class="o">+</span>
+                <span class="s">", klass="</span> <span class="o">+</span> <span class="n">klass</span> <span class="o">+</span>
+                <span class="sc">'}'</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<h1 id="新建repository">新建repository</h1>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">repository</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.springframework.data.repository.CrudRepository</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by panjie on 17/4/25.
+ */</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">CourseRepository</span> <span class="kd">extends</span> <span class="n">CrudRepository</span><span class="o">&lt;</span><span class="n">Course</span><span class="o">,</span> <span class="n">Long</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="o">}</span></code></pre></figure>
+
+<h1 id="测试">测试</h1>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mengyunzhi</span><span class="o">.</span><span class="na">repository</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.boot.test.context.SpringBootTest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.test.context.junit4.SpringRunner</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">assertj</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.*;</span>
+<span class="cm">/**
+ * Created by panjie on 17/4/25.
+ */</span>
+<span class="nd">@RunWith</span><span class="o">(</span><span class="n">SpringRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="nd">@SpringBootTest</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CourseRepositoryTest</span> <span class="o">{</span>
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">CourseRepository</span> <span class="n">courseRepository</span><span class="o">;</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 无异常，则说明测试通过</span>
+        <span class="n">courseRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="mi">1L</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>执行测试用例，我们将得到如下数据表：</p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/2.png" alt="/SpringMVC/assets/image/chapter4/2.png" /></p>
+
+<p>同时，为我们设置了索引及外键：</p>
+
+<p><img src="/SpringMVC/assets/image/chapter4/3.png" alt="/SpringMVC/assets/image/chapter4/3.png" /></p>
+
+<h1 id="测试多对多">测试多对多</h1>
+
+<p>写注释:</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">manyToMany</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 创建两个班级</span>
+        <span class="c1">// 创建一个课程</span>
+        <span class="c1">// 设置这个课程对应刚刚创建的两个班级</span>
+
+        <span class="c1">// 保存数据</span>
+
+        <span class="c1">// 查询并断言</span>
+        <span class="c1">// 断言能查到这个实体</span>
+        <span class="c1">// 断言这个实体上对应两个班级实体</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>添加代码:</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">manyToMany</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 创建两个班级</span>
+        <span class="n">Klass</span> <span class="n">klass1</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">getNewKlass</span><span class="o">();</span>
+        <span class="n">Klass</span> <span class="n">klass2</span> <span class="o">=</span> <span class="n">klassService</span><span class="o">.</span><span class="na">getNewKlass</span><span class="o">();</span>
+
+        <span class="c1">// 创建一个课程</span>
+        <span class="n">Course</span> <span class="n">course</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Course</span><span class="o">();</span>
+        <span class="n">course</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"测试课程"</span><span class="o">);</span>
+
+        <span class="c1">// 设置这个课程对应刚刚创建的两个班级</span>
+        <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;</span> <span class="n">klasses</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Klass</span><span class="o">&gt;();</span>
+        <span class="n">klasses</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">klass1</span><span class="o">);</span>
+        <span class="n">klasses</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">klass2</span><span class="o">);</span>
+        <span class="n">course</span><span class="o">.</span><span class="na">setKlass</span><span class="o">(</span><span class="n">klasses</span><span class="o">);</span>
+
+        <span class="c1">// 保存数据</span>
+        <span class="n">courseRepository</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">course</span><span class="o">);</span>
+
+        <span class="c1">// 查询并断言</span>
+        <span class="n">course</span> <span class="o">=</span> <span class="n">courseRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="n">course</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+        <span class="c1">// 断言能查到这个实体</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">course</span><span class="o">).</span><span class="na">isNotNull</span><span class="o">();</span>
+        <span class="c1">// 断言这个实体上对应两个班级实体</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>运行单元测试后，我们将在关联数据表中查询到我们刚刚添加的数据，测试用例通过。</p>
+
+<p>最后，我们再添加另一个断言。看看查询出这个课程对应两个班级。</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">        <span class="o">...</span>
+        <span class="c1">// 查询并断言</span>
+        <span class="n">course</span> <span class="o">=</span> <span class="n">courseRepository</span><span class="o">.</span><span class="na">findOne</span><span class="o">(</span><span class="n">course</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+        <span class="c1">// 断言能查到这个实体</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">course</span><span class="o">).</span><span class="na">isNotNull</span><span class="o">();</span>
+        <span class="c1">// 断言这个实体上对应两个班级实体</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">course</span><span class="o">.</span><span class="na">getKlass</span><span class="o">().</span><span class="na">size</span><span class="o">()).</span><span class="na">isEqualTo</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></figure>
+
+<p>运行单元测试，我们将得到一个如下错误：</p>
+
+<figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="err">org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.mengyunzhi.repository.Course.klass, could not initialize proxy - no Session</span></code></pre></figure>
+
+<p>按关键字去搜索，我们发现原来错误产生的原因有两点：</p>
+
+<ol>
+  <li>由于<code class="highlighter-rouge">hibernate</code>的延迟（惰性）加载，在查询到课程实体时，没有马上取出其对应的班级实体信息。</li>
+  <li>当我们想取其信息时，此时已经没有可用于数据库操作的<code class="highlighter-rouge">session</code>。这是由于<code class="highlighter-rouge">spring</code>对<code class="highlighter-rouge">session</code>进行了统一管理，为了防止误操作带来的错误，<code class="highlighter-rouge">spring</code>在进行完数据库操作后，自动的关闭了<code class="highlighter-rouge">session</code>。</li>
+</ol>
+
+<p>在搜索的过程中，我们也会看到多种解决方案。经过多种解决方案对比，最终我们采用添加<code class="highlighter-rouge">@Transactional</code>的方式来解决这个问题。<code class="highlighter-rouge">@Transactional</code>表示：当本方法执行完毕后，再关闭<code class="highlighter-rouge">session</code>。</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java">    <span class="nd">@Test</span>
+    <span class="nd">@Transactional</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">manyToMany</span><span class="o">()</span> <span class="o">{</span></code></pre></figure>
+
+<p>此时，单元测试顺利通过了。</p>
+
+<blockquote>
+  <p>注：在不需要对中间表进行除CRUD以外的操作时，我们使用多对多的注解来进行实现。当需要进行其它操作时，我们需要使用多对一的关联进行实现。</p>
+</blockquote>
+
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>参考:</td>
+        <td><a href="https://docs.jboss.org/hibernate/stable/annotations/reference/en/html_single/#entity-mapping-association">https://docs.jboss.org/hibernate/stable/annotations/reference/en/html_single/#entity-mapping-association</a></td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+
+  </div>
+
+  
+</article>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages </a> and <a href="http://jekyllrb.com/">Jekyll</a>. Powered By: <a href="http://www.mengyunzhi.com">梦云智</a>. </span>
+      </footer>
+    </section>
+
+  </body>
+</html>

@@ -120,6 +120,5 @@ public class KlassServiceTest {
 
         // 断言不为空，而且班级数为2个
         assertThat(teacher).isNotNull();
-        assertThat(teacher.getKlass().size()).isEqualTo(2);
     }
 }

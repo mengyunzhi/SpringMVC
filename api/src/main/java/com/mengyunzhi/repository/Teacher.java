@@ -34,16 +34,16 @@ public class Teacher {
     @Size(max = 255)                // 最大长度为255
     private String address = "";    // 地址. 不进行@Column声明，则默认长度为255
 
-    @OneToMany
-    private Set<Klass> klass = new HashSet<Klass>();
+//    @OneToMany
+//    private Set<Klass> klass = new HashSet<Klass>();
 
-    public Set<Klass> getKlass() {
-        return klass;
-    }
-
-    public void setKlass(Set<Klass> klass) {
-        this.klass = klass;
-    }
+//    public Set<Klass> getKlass() {
+//        return klass;
+//    }
+//
+//    public void setKlass(Set<Klass> klass) {
+//        this.klass = klass;
+//    }
 
     private Boolean sex = false;    // 性别：false(0)，男。true(1)，女.
 

@@ -27,12 +27,15 @@ public class CourseRepositoryTest {
         courseRepository.findOne(1L);
     }
 
+
     @Test
     @Transactional
     public void manyToMany() {
         // 创建两个班级
         Klass klass1 = klassService.getNewKlass();
         Klass klass2 = klassService.getNewKlass();
+
+        Teacher teacher = new Teacher();
 
         // 创建一个课程
         Course course = new Course();

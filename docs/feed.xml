@@ -1,5 +1,194 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-25T16:42:37+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
-</subtitle><entry><title type="html">5 Paginate</title><link href="http://localhost:4000/SpringMVC/5-paginate/" rel="alternate" type="text/html" title="5 Paginate" /><published>2017-04-25T00:00:00+08:00</published><updated>2017-04-25T00:00:00+08:00</updated><id>http://localhost:4000/SpringMVC/5-paginate</id><content type="html" xml:base="http://localhost:4000/SpringMVC/5-paginate/"></content><author><name></name></author><summary type="html"></summary></entry><entry><title type="html">第一节：多对多</title><link href="http://localhost:4000/SpringMVC/chapter4/1-many-to-many/" rel="alternate" type="text/html" title="第一节：多对多" /><published>2017-04-18T14:09:56+08:00</published><updated>2017-04-18T14:09:56+08:00</updated><id>http://localhost:4000/SpringMVC/chapter4/1-many-to-many</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter4/1-many-to-many/">&lt;p&gt;在前面的章节中，我们使用了多对一关联。本节中，我们增加课程管理来查看如何进行多对多的关联：&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/SpringMVC/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/SpringMVC/" rel="alternate" type="text/html" /><updated>2017-04-26T15:52:17+08:00</updated><id>http://localhost:4000/SpringMVC/</id><title type="html">SpringMVC API入门教程</title><subtitle>技术支持：河北工业大学梦云智软件开发团队
+</subtitle><entry><title type="html">第二节：深入理解事务</title><link href="http://localhost:4000/SpringMVC/chapter4/2-transcational/" rel="alternate" type="text/html" title="第二节：深入理解事务" /><published>2017-04-26T11:05:41+08:00</published><updated>2017-04-26T11:05:41+08:00</updated><id>http://localhost:4000/SpringMVC/chapter4/2-transcational</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter4/2-transcational/">&lt;p&gt;上一节中，我们在测试的方法中，加入了&lt;code class=&quot;highlighter-rouge&quot;&gt;@Transactional&lt;/code&gt;注解。这使得&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;在此方法结束前，不去关闭事务，从而达到了正确处理数据的目的。其实除了将&lt;code class=&quot;highlighter-rouge&quot;&gt;@Transactional&lt;/code&gt;加入到方法上以外，还可以将其加入到类的注解中。比如：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;nd&quot;&gt;@RunWith&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringRunner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@SpringBootTest&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@Transactional&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CourseRepositoryTest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这样一来，我们就不需要为每个方法单独加入应用事务的注解了。那么我们说什么是事务呢？简单来讲，事务就是将一组数据库操作语句当做一条来进行执行，如果执行成功，那么就全部执行成功，如果执行失败呢，那么就全部执行失败。下面，我们使用&lt;code class=&quot;highlighter-rouge&quot;&gt;idea&lt;/code&gt;另一个强大的功能 – 中断，来具体理解 事务 这个即陌生又熟悉的名词。&lt;/p&gt;
+
+&lt;h1 id=&quot;jpa&quot;&gt;JPA&lt;/h1&gt;
+&lt;p&gt;我们早早的就接触了 &lt;code class=&quot;highlighter-rouge&quot;&gt;jpa&lt;/code&gt;这个名词，那么具体在使用过程中，哪里体现了&lt;code class=&quot;highlighter-rouge&quot;&gt;JPA&lt;/code&gt;呢？为了更好的理解这个问题，我们去掉&lt;code class=&quot;highlighter-rouge&quot;&gt;@Transactional&lt;/code&gt;注解，然后为了防止惰性加载的异常，注释到最后需要事务才能返回数据的代码。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;nd&quot;&gt;@RunWith&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringRunner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@SpringBootTest&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CourseRepositoryTest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;manyToMany&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 创建两个班级&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klass1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klassService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getNewKlass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klass2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klassService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getNewKlass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 创建一个课程&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Course&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;course&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Course&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;course&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;测试课程&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 设置这个课程对应刚刚创建的两个班级&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;HashSet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klasses&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HashSet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;klasses&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;klass1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;klasses&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;klass2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;course&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setKlass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;klasses&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 保存数据&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;courseRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;course&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 查询并断言&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;course&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;courseRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;findOne&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;course&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 断言能查到这个实体&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;course&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isNotNull&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 断言这个实体上对应两个班级实体&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//        assertThat(course.getKlass().size()).isEqualTo(2);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;再然后，我们在方法的第一行，打一个断点，并在启动单元测试时选择&lt;code class=&quot;highlighter-rouge&quot;&gt;debug&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;debug&quot;&gt;debug&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter4/4.png&quot; alt=&quot;/SpringMVC/assets/image/chapter4/4.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;此时，代码被&lt;code class=&quot;highlighter-rouge&quot;&gt;IEDA&lt;/code&gt;中断执行了，变量的类型与值，直接显示在了&lt;code class=&quot;highlighter-rouge&quot;&gt;idea&lt;/code&gt;的编辑界面中，这的确是我们使用过的最人性化的编辑器了。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter4/5.png&quot; alt=&quot;/SpringMVC/assets/image/chapter4/5.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;和其它的调试系统一样，这里我们可以使用步进、步入、步出来进行程序的调试。除此以外，&lt;code class=&quot;highlighter-rouge&quot;&gt;idea&lt;/code&gt;还提供了排除库文件的步入与步出。在前期，我们只需要使用两点： 步进，即执行下一行；跳到下一断点。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter4/6.png&quot; alt=&quot;/SpringMVC/assets/image/chapter4/6.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;数据持久化&quot;&gt;数据持久化&lt;/h3&gt;
+&lt;p&gt;我们在第一行打断点的情况，启动&lt;code class=&quot;highlighter-rouge&quot;&gt;debug&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter4/5.png&quot; alt=&quot;/SpringMVC/assets/image/chapter4/5.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后查看数据表中，发现teacher表中和klass表中，并没有生成数据。此时，我们将点”步进”，执行到下一行。&lt;/p&gt;
+
+&lt;p&gt;再查看数据表：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter4/7.png&quot; alt=&quot;/SpringMVC/assets/image/chapter4/7.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter4/8.png&quot; alt=&quot;/SpringMVC/assets/image/chapter4/8.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这说明，执行完第33行代码后，&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;执行了&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;语句，完成了将实体变为数据表中的对应数据的过程。我们说把数据写入到了数据库，这个数据即使是程序关闭，也仍然会存在，那么就认为是持久存在了。所以，这个过程就是数据持久化。&lt;/p&gt;
+
+&lt;p&gt;此时，我们在 步进，再打开数据表查看，还会发现又生成了两条新数据。也就是说，第34行，&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;也进行数据库的具体操作，从而将数据写入到了数据库。&lt;/p&gt;
+
+&lt;p&gt;看完这个过程以后，我们在加入事务注解，重新看看具体的执行过程中会发生什么。&lt;/p&gt;
+
+&lt;h3 id=&quot;加入事务&quot;&gt;加入事务&lt;/h3&gt;
+
+&lt;p&gt;我们在第一行打断点的情况，启动&lt;code class=&quot;highlighter-rouge&quot;&gt;debug&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter4/5.png&quot; alt=&quot;/SpringMVC/assets/image/chapter4/5.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;和前面一样，我们每步进一步，便查看一便数据表。没错，奇怪的事情发生了，数据表中，竟然。。。没有生成一条数据。是的，正如你看到的这样，由于将这个方法使用事务进行了注解，所以在方法执行完毕前，事务中的&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;语句是不会进行提交的。那么，由于没有进行&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;语句的提交，当然也就不会在数据表中生成数据了。&lt;/p&gt;
+
+&lt;p&gt;那么，为什么当这个方法执行完毕后，我们去查看数据表，仍然看不到任何数据呢？按上面的说法，当方法结束后，事务应该进行了提交，那么数据表当中应该生成数据才对。&lt;/p&gt;
+
+&lt;p&gt;这是由于我们当前使用的是&lt;code class=&quot;highlighter-rouge&quot;&gt;junit&lt;/code&gt;单元测试，当它看到我们将方法使用 事务 进行注解时，单元测试的方法完毕后，&lt;code class=&quot;highlighter-rouge&quot;&gt;junit&lt;/code&gt;直接指挥下的事务，并没有进行任何的&lt;code class=&quot;highlighter-rouge&quot;&gt;sql&lt;/code&gt;语句提交的工作。所以，我们当然在数据表中看不到数据了。当然了，这正是我们在单元测试中还要的结果，进行完单元测试时，我们对数据表没有进行任何的更改，但却起到了测试的效果。&lt;/p&gt;
+
+&lt;p&gt;最后，为了验证 事务 的确是在方法结束后起作用的。我们新建&lt;code class=&quot;highlighter-rouge&quot;&gt;CourseSerive&lt;/code&gt;方法，并在其方法上应用&lt;code class=&quot;highlighter-rouge&quot;&gt;@Transactional&lt;/code&gt;注解，最后进行测试。&lt;/p&gt;
+
+&lt;h1 id=&quot;service层应用事务&quot;&gt;service层应用事务&lt;/h1&gt;
+
+&lt;h2 id=&quot;新建接口&quot;&gt;新建接口&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;mengyunzhi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**
+ * Created by panjie on 17/4/26.
+ */&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CourseService&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;transactional&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;实现接口&quot;&gt;实现接口&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;mengyunzhi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.mengyunzhi.repository.Course&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.mengyunzhi.repository.CourseRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.mengyunzhi.repository.Klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.mengyunzhi.repository.Teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.beans.factory.annotation.Autowired&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.stereotype.Service&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.HashSet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**
+ * Created by panjie on 17/4/26.
+ */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@Service&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CourseServiceImpl&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CourseService&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Autowired&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;KlassService&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klassService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Autowired&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CourseRepository&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;courseRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Transactional&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;transactional&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 创建两个班级&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klass1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klassService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getNewKlass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klass2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klassService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getNewKlass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;teacher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Teacher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 创建一个课程&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Course&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;course&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Course&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;course&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;测试课程&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 设置这个课程对应刚刚创建的两个班级&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;HashSet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;klasses&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HashSet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Klass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;klasses&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;klass1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;klasses&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;klass2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;course&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setKlass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;klasses&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 保存数据&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;courseRepository&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;course&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;测试接口&quot;&gt;测试接口&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;mengyunzhi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.junit.Test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.junit.runner.RunWith&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.beans.factory.annotation.Autowired&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.boot.test.context.SpringBootTest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;org.springframework.test.context.junit4.SpringRunner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.*;&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**
+ * Created by panjie on 17/4/26.
+ */&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@RunWith&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringRunner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@SpringBootTest&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CourseServiceTest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Autowired&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CourseService&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;courseService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Test&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;transactional&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;courseService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;transactional&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;打中断测试&quot;&gt;打中断，测试&lt;/h2&gt;
+
+&lt;p&gt;我们如下图，打3个断点。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter4/9.png&quot; alt=&quot;/SpringMVC/assets/image/chapter4/9.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter4/10.png&quot; alt=&quot;/SpringMVC/assets/image/chapter4/10.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后启动&lt;code class=&quot;highlighter-rouge&quot;&gt;debug&lt;/code&gt;，并按点击 跳转到下一断点 来直接查看执行到此的结果。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/SpringMVC/assets/image/chapter4/11.png&quot; alt=&quot;/SpringMVC/assets/image/chapter4/11.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;最终结果和我们预测的一致，当执行完带有&lt;code class=&quot;highlighter-rouge&quot;&gt;@Transactional&lt;/code&gt;注解的&lt;code class=&quot;highlighter-rouge&quot;&gt;transactional()&lt;/code&gt;方法时，数据被持久化到了数据表。&lt;/p&gt;
+
+&lt;p&gt;试想下，如果在执行带有&lt;code class=&quot;highlighter-rouge&quot;&gt;@Transactional&lt;/code&gt;注解的方法时，发生异常，那么数据就不会被久持化，这就是我们平常所说的“回滚”。也就是说，&lt;code class=&quot;highlighter-rouge&quot;&gt;spring&lt;/code&gt;的事务管理中的 回滚 是针对每一个事务而言的，在一个事务中，如果发生了错误或是异常，那么这个事务就不进行提交，从而达到了类似于 回滚 的效果。每这个事务已经结束，那么数据是没有办法进行 回滚 的，因为此时数据已经被持久化到了数据表中。在实际的项目中，我们将会更深入的接触到这个问题。相信到时候你会更加清晰的掌握事务这个东西。&lt;/p&gt;</content><author><name>潘杰</name></author><summary type="html">上一节中，我们在测试的方法中，加入了@Transactional注解。这使得spring在此方法结束前，不去关闭事务，从而达到了正确处理数据的目的。其实除了将@Transactional加入到方法上以外，还可以将其加入到类的注解中。比如：</summary></entry><entry><title type="html">5 Paginate</title><link href="http://localhost:4000/SpringMVC/5-paginate/" rel="alternate" type="text/html" title="5 Paginate" /><published>2017-04-25T00:00:00+08:00</published><updated>2017-04-25T00:00:00+08:00</updated><id>http://localhost:4000/SpringMVC/5-paginate</id><content type="html" xml:base="http://localhost:4000/SpringMVC/5-paginate/"></content><author><name></name></author><summary type="html"></summary></entry><entry><title type="html">第一节：多对多</title><link href="http://localhost:4000/SpringMVC/chapter4/1-many-to-many/" rel="alternate" type="text/html" title="第一节：多对多" /><published>2017-04-18T14:09:56+08:00</published><updated>2017-04-18T14:09:56+08:00</updated><id>http://localhost:4000/SpringMVC/chapter4/1-many-to-many</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter4/1-many-to-many/">&lt;p&gt;在前面的章节中，我们使用了多对一关联。本节中，我们增加课程管理来查看如何进行多对多的关联：&lt;/p&gt;
 
 &lt;p&gt;编码先画图，建立数据表当然也是如此。&lt;/p&gt;
 
@@ -464,7 +653,7 @@
       &lt;td&gt;&lt;a href=&quot;http://joel-costigliola.github.io/assertj/&quot;&gt;assertj&lt;/a&gt;&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
-&lt;/table&gt;</content><author><name>潘杰</name></author><summary type="html">通过前面两节的学习，我们总结出：在进行一个单元测试以前，需要对请求数据与响应数据的内容、格式有着非常清晰正确的认识。</summary></entry><entry><title type="html">3 Json View</title><link href="http://localhost:4000/SpringMVC/3-json-view/" rel="alternate" type="text/html" title="3 Json View" /><published>2017-04-18T00:00:00+08:00</published><updated>2017-04-18T00:00:00+08:00</updated><id>http://localhost:4000/SpringMVC/3-json-view</id><content type="html" xml:base="http://localhost:4000/SpringMVC/3-json-view/"></content><author><name></name></author><summary type="html"></summary></entry><entry><title type="html">第九节：单元测试 – controller – save</title><link href="http://localhost:4000/SpringMVC/chapter3/9-controller-unit-test-save/" rel="alternate" type="text/html" title="第九节：单元测试 -- controller -- save" /><published>2017-04-17T14:53:57+08:00</published><updated>2017-04-17T14:53:57+08:00</updated><id>http://localhost:4000/SpringMVC/chapter3/9-controller-unit-test-save</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter3/9-controller-unit-test-save/">&lt;p&gt;我们在上节中学习对如何测试&lt;code class=&quot;highlighter-rouge&quot;&gt;get&lt;/code&gt;请求。&lt;code class=&quot;highlighter-rouge&quot;&gt;post&lt;/code&gt;的请求与&lt;code class=&quot;highlighter-rouge&quot;&gt;get&lt;/code&gt;请求基本相同。
+&lt;/table&gt;</content><author><name>潘杰</name></author><summary type="html">通过前面两节的学习，我们总结出：在进行一个单元测试以前，需要对请求数据与响应数据的内容、格式有着非常清晰正确的认识。</summary></entry><entry><title type="html">第九节：单元测试 – controller – save</title><link href="http://localhost:4000/SpringMVC/chapter3/9-controller-unit-test-save/" rel="alternate" type="text/html" title="第九节：单元测试 -- controller -- save" /><published>2017-04-17T14:53:57+08:00</published><updated>2017-04-17T14:53:57+08:00</updated><id>http://localhost:4000/SpringMVC/chapter3/9-controller-unit-test-save</id><content type="html" xml:base="http://localhost:4000/SpringMVC/chapter3/9-controller-unit-test-save/">&lt;p&gt;我们在上节中学习对如何测试&lt;code class=&quot;highlighter-rouge&quot;&gt;get&lt;/code&gt;请求。&lt;code class=&quot;highlighter-rouge&quot;&gt;post&lt;/code&gt;的请求与&lt;code class=&quot;highlighter-rouge&quot;&gt;get&lt;/code&gt;请求基本相同。
 我们使用&lt;code class=&quot;highlighter-rouge&quot;&gt;postMan&lt;/code&gt;来查看下，&lt;code class=&quot;highlighter-rouge&quot;&gt;get&lt;/code&gt;与&lt;code class=&quot;highlighter-rouge&quot;&gt;post&lt;/code&gt;生成的实际数据都有什么。&lt;/p&gt;
 
 &lt;p&gt;get:
